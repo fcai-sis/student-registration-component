@@ -9,7 +9,7 @@
     "prestart": "npm run build",
     "start": "node --env-file=.env dist/index.js",
     "preserve": "npm run build",
-    "serve": "npx tsc -w & nodemon"
+    "serve": "concurrently \"npx tsc -w\" \"nodemon\""
   },
   "keywords": [],
   "author": "",
