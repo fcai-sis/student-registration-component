@@ -1,20 +1,11 @@
-import { connect, ConnectOptions } from "mongoose";
+import env from "../env.js";
+import { connect } from "mongoose";
 
-interface IConnectOptions extends ConnectOptions {
-  useNewUrlParser: boolean;
-  useUnifiedTopology: boolean;
-}
-
-const { MONGO_URI } = process.env;
+const MONGO_URI = env.MONGO_URI;
 
 const db = async (): Promise<void> => {
   try {
-    const options: IConnectOptions = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    };
-
-    await connect(MONGO_URI as string, options);
+    await connect(MONGO_URI as string);
     console.log("MongoDB connected");
   } catch (err) {
     console.log("MongoDB connection failed");
