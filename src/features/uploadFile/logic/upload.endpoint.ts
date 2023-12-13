@@ -3,7 +3,7 @@ import xlsx from "xlsx";
 import fs from "fs";
 import StudentModel from "../data/student.model.js";
 
-export default async (req: Request, res: Response) => {
+export default (req: Request, res: Response) => {
   try {
     // Check if the file was uploaded
     if (!req.file) {

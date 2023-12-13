@@ -1,10 +1,10 @@
+import morgan from "morgan";
 import helmet from "helmet";
 import express, { NextFunction, Request, Response } from "express";
 import compression from "compression";
 import cors from "cors";
 import env, { validateEnvironmentVariables } from "./env.js";
 import router from "./router.js";
-import morgan from "morgan";
 import logger from "./core/logger.js";
 
 validateEnvironmentVariables();
@@ -39,10 +39,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // TODO: custom error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
+  logger.error({ message: err.message, stack: err.stack });
   res.status(500).send("Something broke!");
 });
 
 app.listen(env.PORT, () => {
-  console.log("Running on port " + env.PORT);
+  logger.info(`Server is listening on port ${env.PORT}`);
 });

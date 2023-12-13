@@ -1,31 +1,57 @@
 import env from "../env.js";
 import winston from "winston";
 
-const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json() // Structure logs for efficient analysis
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  debug: 4,
+};
+
+const level = () => {
+  return env.NODE_ENV === "development" ? "debug" : "warn";
+};
+
+const colors = {
+  error: "red",
+  warn: "yellow",
+  info: "blue",
+  http: "magenta",
+  debug: "white",
+};
+
+winston.addColors(colors);
+
+const format = winston.format.combine(
+  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
+  winston.format.printf(
+    (info) => `${info.timestamp} ${info.level}: ${info.message}`
   ),
-  transports: [
-    // Write all logs with importance level of `error` or less to `error.log`
-    new winston.transports.File({
-      filename: `${env.LOGS_PATH}/error.log`,
-      level: "error",
-    }),
+  winston.format.json()
+);
 
-    // Write all logs with importance level of `info` or less to `all.log`
-    new winston.transports.File({ filename: `${env.LOGS_PATH}/all.log` }),
-  ],
+const transports = [
+  new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.printf(
+        (info) => `${info.timestamp} ${info.level} ${info.message}`
+      ),
+      winston.format.colorize({ all: true })
+    ),
+  }),
+  new winston.transports.File({
+    filename: `${env.LOGS_PATH}/error.log`,
+    level: "error",
+  }),
+  new winston.transports.File({ filename: `${env.LOGS_PATH}/all.log` }),
+];
+
+const logger = winston.createLogger({
+  level: level(),
+  levels,
+  format,
+  transports,
 });
-
-// If we're not in production then log to the `console`
-if (process.env.NODE_ENV !== "production") {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    })
-  );
-}
 
 export default logger;
