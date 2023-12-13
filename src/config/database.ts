@@ -5,7 +5,7 @@ const MONGO_URI = env.MONGO_URI;
 
 const db = async (): Promise<void> => {
   try {
-    await connect(MONGO_URI as string);
+    await connect(MONGO_URI!);
     console.log("MongoDB connected");
   } catch (err) {
     console.log("MongoDB connection failed");
