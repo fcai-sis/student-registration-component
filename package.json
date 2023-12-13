@@ -7,7 +7,7 @@
   "scripts": {
     "build": "rm -rf dist && npx tsc",
     "prestart": "npm run build",
-    "start": "node --env-file=.env dist/index.js",
+    "start": "NODE_ENV=production node --env-file=.env dist/index.js",
     "preserve": "npm run build",
     "serve": "concurrently \"npx tsc -w\" \"nodemon\""
   },
