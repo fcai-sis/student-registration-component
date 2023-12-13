@@ -3,6 +3,7 @@ export const env = {
   PORT: process.env.PORT,
   FILE_UPLOAD_PATH: process.env.FILE_UPLOAD_PATH,
   LOGS_PATH: process.env.LOGS_PATH,
+  MONGO_URI: process.env.MONGO_URI,
 };
 
 export const isDev = env.NODE_ENV === "development";
