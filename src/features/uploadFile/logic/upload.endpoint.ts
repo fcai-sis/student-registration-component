@@ -18,9 +18,15 @@ export default async (req: Request, res: Response) => {
 
   // Assuming the first sheet of the Excel file contains the students data
   const sheetName = workbook.SheetNames[0];
-  const data = xlsx.utils.sheet_to_json<StudentModel>(
+  const data = xlsx.utils.sheet_to_json<typeof StudentModel>(
     workbook.Sheets[sheetName]
   );
 
-  res.status(200).send(data);
+  // Attempting to map the model into the DB
+  try {
+    await StudentModel.create(data, { validateBeforeSave: true });
+    res.status(200).send("File uploaded successfully.");
+  } catch (err) {
+    res.status(500).send("Something went wrong.");
+  }
 };
