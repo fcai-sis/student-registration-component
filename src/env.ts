@@ -1,5 +1,6 @@
 export const env = {
     PORT: process.env.PORT,
+    FILE_UPLOAD_PATH: process.env.FILE_UPLOAD_PATH,
 };
 
 export default env;
