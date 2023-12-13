@@ -6,7 +6,7 @@ import cors from "cors";
 import env, { isDev, validateEnvironmentVariables } from "./env.js";
 import router from "./router.js";
 import logger from "./core/logger.js";
-
+import db from "./config/database.js";
 validateEnvironmentVariables();
 
 const app = express();
@@ -43,6 +43,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: "Something broke!" });
 });
 
+await db();
 app.listen(env.PORT, () => {
   logger.info(`Server is listening on port ${env.PORT}`);
 });
