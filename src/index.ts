@@ -5,7 +5,7 @@ import cors from "cors";
 import env, { validateEnvironmentVariables } from "./env.js";
 import router from "./router.js";
 import morgan from "morgan";
-import logger from "core/logger.js";
+import logger from "./core/logger.js";
 
 validateEnvironmentVariables();
 

@@ -1,4 +1,4 @@
-import env from "env.js";
+import env from "../env.js";
 import winston from "winston";
 
 const logger = winston.createLogger({
