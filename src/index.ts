@@ -3,15 +3,22 @@ import helmet from 'helmet';
 import express, { NextFunction, Request, Response } from 'express';
 import compression from 'compression';
 import cors from "cors";
-import env, { validateEnvironmentVariables } from './env.js';
-import router from './router.js';
+import morgan from "morgan";
+import logger from "core/logger.js";
 
 validateEnvironmentVariables();
 
 const app = express();
 
-app.use(helmet())
-app.disable('x-powered-by')
+app.use(
+  morgan("combined", {
+    stream: { write: (message) => logger.http(message) },
+    skip: () => env.NODE_ENV !== "development",
+  })
+);
+
+app.use(helmet());
+app.disable("x-powered-by");
 
 app.use(compression());
 
