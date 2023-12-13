@@ -1,11 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import xlsx from "xlsx";
 import fs from "fs";
-
-type sRow = {
-  Timestamp: string;
-  Score: number;
-};
+import StudentModel from "../data/student.model.js";
 
 export default async (req: Request, res: Response) => {
   try {
