@@ -1,10 +1,11 @@
 import mongoose, { Schema } from "mongoose";
+
 type IStudentModel = {
   name: string;
   email: string;
   gpa: number;
   address: string;
-}
+};
 
 const studentSchema: Schema = new Schema<IStudentModel>({
   name: { type: String, required: true },

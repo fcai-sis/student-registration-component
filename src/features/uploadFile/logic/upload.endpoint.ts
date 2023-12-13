@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import xlsx from "xlsx";
 import fs from "fs";
 import StudentModel from "../data/student.model.js";
+import StudentFromExcel from "../data/excelStudent.model.js";
 
 export default async (req: Request, res: Response) => {
   // Check if the file was uploaded
@@ -18,13 +19,23 @@ export default async (req: Request, res: Response) => {
 
   // Assuming the first sheet of the Excel file contains the students data
   const sheetName = workbook.SheetNames[0];
-  const data = xlsx.utils.sheet_to_json<typeof StudentModel>(
+  const data = xlsx.utils.sheet_to_json<StudentFromExcel>(
     workbook.Sheets[sheetName]
   );
 
   // Attempting to map the model into the DB
   try {
-    await StudentModel.create(data, { validateBeforeSave: true });
+    await StudentModel.create(
+      data.map(
+        (studentRow): IStudentModel => ({
+          name: studentRow.name,
+          email: studentRow.email,
+          gpa: studentRow.gpa,
+          address: studentRow.address,
+        })
+      ),
+      { validateBeforeSave: true }
+    );
     res.status(200).send("File uploaded successfully.");
   } catch (err) {
     res.status(500).send("Something went wrong.");
