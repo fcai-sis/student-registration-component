@@ -34,13 +34,13 @@ app.use("/", router());
 
 // TODO: custom 404
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.status(404).send("Sorry can't find that!");
+  res.status(404).json({ message: "Not found" });
 });
 
 // TODO: custom error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  logger.error({ message: err.message, stack: err.stack });
-  res.status(500).send("Something broke!");
+  logger.error(err.stack);
+  res.status(500).json({ message: "Something broke!" });
 });
 
 app.listen(env.PORT, () => {
