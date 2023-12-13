@@ -1,17 +1,25 @@
-
-import helmet from 'helmet';
-import express, { NextFunction, Request, Response } from 'express';
-import compression from 'compression';
+import morgan from "morgan";
+import helmet from "helmet";
+import express, { NextFunction, Request, Response } from "express";
+import compression from "compression";
 import cors from "cors";
-import env, { validateEnvironmentVariables } from './env.js';
-import router from './router.js';
+import env, { validateEnvironmentVariables } from "./env.js";
+import router from "./router.js";
+import logger from "./core/logger.js";
 
 validateEnvironmentVariables();
 
 const app = express();
 
-app.use(helmet())
-app.disable('x-powered-by')
+app.use(
+  morgan("combined", {
+    stream: { write: (message) => logger.http(message) },
+    skip: () => env.NODE_ENV !== "development",
+  })
+);
+
+app.use(helmet());
+app.disable("x-powered-by");
 
 app.use(compression());
 
@@ -20,21 +28,21 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', router());
+app.use("/", router());
 
 // last app.use calls right before app.listen():
 
 // TODO: custom 404
 app.use((req: Request, res: Response, next: NextFunction) => {
-    res.status(404).send("Sorry can't find that!")
-})
+  res.status(404).json({ message: "Not found" });
+});
 
 // TODO: custom error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error(err.stack)
-    res.status(500).send('Something broke!')
-})
+  logger.error(err.stack);
+  res.status(500).json({ message: "Something broke!" });
+});
 
 app.listen(env.PORT, () => {
-    console.log('Running on port ' + env.PORT);
+  logger.info(`Server is listening on port ${env.PORT}`);
 });

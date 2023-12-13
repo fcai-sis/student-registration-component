@@ -1,35 +1,26 @@
-import express, { Request, Response, Router } from "express";
+import { Request, Response } from "express";
 import xlsx from "xlsx";
 import fs from "fs";
-
-type sRow = {
-  Timestamp: string;
-  Score: number;
-};
+import StudentModel from "../data/student.model.js";
 
 export default async (req: Request, res: Response) => {
-  try {
-    // Access the uploaded file from req.file.buffer
-    if (!req.file) {
-      res.status(400).send("No file uploaded.");
-      return;
-    }
-    // console.log(req.file);
-    const buffer = await fs.readFileSync(req.file.path);
-    const workbook = xlsx.read(buffer, { type: "buffer" });
-
-    // Assuming the first sheet of the Excel file is of interest
-    // console.log(workbook);
-
-    const sheetName = workbook.SheetNames[0];
-    const data = xlsx.utils.sheet_to_json<sRow>(workbook.Sheets[sheetName]);
-
-    // Now 'data' contains the parsed data from the Excel file
-    // console.log(data);
-
-    res.json(data[43].Score);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error processing the uploaded file.");
+  // Check if the file was uploaded
+  if (!req.file) {
+    res.status(400).send("No file uploaded.");
+    return;
   }
+
+  // Read the file
+  const buffer = fs.readFileSync(req.file.path);
+
+  // Parse the file
+  const workbook = xlsx.read(buffer, { type: "buffer" });
+
+  // Assuming the first sheet of the Excel file contains the students data
+  const sheetName = workbook.SheetNames[0];
+  const data = xlsx.utils.sheet_to_json<StudentModel>(
+    workbook.Sheets[sheetName]
+  );
+
+  res.status(200).send(data);
 };
