@@ -1,4 +1,4 @@
-import env from "../env.js";
+import env, { isDev } from "../env.js";
 import winston from "winston";
 
 const levels = {
@@ -10,7 +10,7 @@ const levels = {
 };
 
 const level = () => {
-  return env.NODE_ENV === "development" ? "debug" : "warn";
+  return isDev ? "debug" : "warn";
 };
 
 const colors = {

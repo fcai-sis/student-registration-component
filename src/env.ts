@@ -5,6 +5,8 @@ export const env = {
   LOGS_PATH: process.env.LOGS_PATH,
 };
 
+export const isDev = env.NODE_ENV === "development";
+
 export default env;
 
 export const validateEnvironmentVariables = () => {

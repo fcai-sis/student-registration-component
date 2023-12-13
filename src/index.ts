@@ -3,7 +3,7 @@ import helmet from "helmet";
 import express, { NextFunction, Request, Response } from "express";
 import compression from "compression";
 import cors from "cors";
-import env, { validateEnvironmentVariables } from "./env.js";
+import env, { isDev, validateEnvironmentVariables } from "./env.js";
 import router from "./router.js";
 import logger from "./core/logger.js";
 
@@ -14,7 +14,7 @@ const app = express();
 app.use(
   morgan("combined", {
     stream: { write: (message) => logger.http(message) },
-    skip: () => env.NODE_ENV !== "development",
+    skip: () => isDev,
   })
 );
 
