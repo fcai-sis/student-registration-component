@@ -1,16 +1,16 @@
 import mongoose, { Schema } from "mongoose";
 
-type IStudentModel = {
+// The student interface for better dev experience
+export type IStudentModel = {
+  studentId: string;
   name: string;
-  email: string;
-  gpa: number;
   address: string;
 };
 
+// Student in the database
 const studentSchema: Schema = new Schema<IStudentModel>({
+  studentId: { type: String, required: true },
   name: { type: String, required: true },
-  email: { type: String, required: true },
-  gpa: { type: Number, required: true },
   address: { type: String, required: true },
 });
 

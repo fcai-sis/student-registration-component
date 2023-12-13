@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import xlsx from "xlsx";
 import fs from "fs";
-import StudentModel from "../data/student.model.js";
+import StudentModel, { IStudentModel } from "../data/student.model.js";
 import StudentFromExcel from "../data/excelStudent.model.js";
 
 export default async (req: Request, res: Response) => {
@@ -23,19 +23,17 @@ export default async (req: Request, res: Response) => {
     workbook.Sheets[sheetName]
   );
 
+  const students = data.map(
+    (studentRow: StudentFromExcel): IStudentModel => ({
+      studentId: "202000123",
+      name: studentRow.name,
+      address: studentRow.address,
+    })
+  );
+
   // Attempting to map the model into the DB
   try {
-    await StudentModel.create(
-      data.map(
-        (studentRow): IStudentModel => ({
-          name: studentRow.name,
-          email: studentRow.email,
-          gpa: studentRow.gpa,
-          address: studentRow.address,
-        })
-      ),
-      { validateBeforeSave: true }
-    );
+    await StudentModel.create(students, { validateBeforeSave: true });
     res.status(200).send("File uploaded successfully.");
   } catch (err) {
     res.status(500).send("Something went wrong.");
