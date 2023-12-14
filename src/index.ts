@@ -1,12 +1,13 @@
+import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-import express, { NextFunction, Request, Response } from "express";
 import compression from "compression";
-import cors from "cors";
-import env, { isDev, validateEnvironmentVariables } from "./env.js";
+import express, { NextFunction, Request, Response } from "express";
+
+import database from "./database.js";
 import router from "./router.js";
 import logger from "./core/logger.js";
-import db from "./config/database.js";
+import env, { isDev, validateEnvironmentVariables } from "./env.js";
 validateEnvironmentVariables();
 
 // Connect to MongoDB

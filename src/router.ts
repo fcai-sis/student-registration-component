@@ -1,5 +1,6 @@
 import { Router } from "express";
-import uploadFileRoutes from "./features/uploadFile/uploadFile.routes.js";
+
+import uploadFileRoutes from "./features/addStudents/addStudents.routes.js";
 
 const router: Router = Router();
 

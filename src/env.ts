@@ -1,14 +1,12 @@
 export const env = {
-  NODE_ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
-  FILE_UPLOAD_PATH: process.env.FILE_UPLOAD_PATH,
+  NODE_ENV: process.env.NODE_ENV,
   LOGS_PATH: process.env.LOGS_PATH,
   MONGO_URI: process.env.MONGO_URI,
+  FILE_UPLOAD_PATH: process.env.FILE_UPLOAD_PATH,
 };
 
 export const isDev = env.NODE_ENV === "development";
-
-export default env;
 
 export const validateEnvironmentVariables = () => {
   Object.entries(env).forEach(([key, value]) => {
@@ -18,3 +16,5 @@ export const validateEnvironmentVariables = () => {
     }
   });
 };
+
+export default env;
