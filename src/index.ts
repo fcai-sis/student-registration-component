@@ -9,6 +9,8 @@ import logger from "./core/logger.js";
 import db from "./config/database.js";
 validateEnvironmentVariables();
 
+// Connect to MongoDB
+database;
 const app = express();
 
 app.use(
