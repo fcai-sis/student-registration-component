@@ -7,6 +7,24 @@ The list of students can be in any of the following formats:
 - Excel file, supposedly coming from Tansik (مكتب تنسيق القبول بالجامعات والمعاهد)
 - JSON (as a POST request body)
 
+In case of an Excel file, a mapping should be provided to map the columns in the file to the fields in the database. The mapping should be in the following JSON format:
+
+```json
+{
+  "FIELD_NAME_IN_DATABASE": "COLUMN_NAME_IN_FILE"
+}
+```
+
+Here is an example of a mapping:
+
+```json
+{
+  "name": "الاسم",
+  "nationalId": "الرقم القومي",
+  "birthDate": "تاريخ الميلاد"
+}
+```
+
 ## Requirements
 
 - Node.js 20.6.0 or higher
@@ -37,6 +55,10 @@ The server will log a warning if any of the environment variables are missing.
 
 1. Run the application with `npm start`
 
+## Development
+
+1. Run the application in development mode with `npm run serve`
+
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the [MIT](LICENSE) License.
