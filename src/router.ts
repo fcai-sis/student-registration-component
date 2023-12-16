@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import addStudentsRoutes from "features/addStudents/addStudents.routes.js";
+import addStudentsRoutes from "./features/addStudents/addStudents.routes.js";
 
 const router: Router = Router();
 
