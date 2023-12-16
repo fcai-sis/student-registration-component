@@ -4,8 +4,8 @@ import helmet from "helmet";
 import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
 
-import database from "./database.js";
 import router from "./router.js";
+import database from "./database.js";
 import logger from "./core/logger.js";
 import env, { isDev, validateEnvironmentVariables } from "./env.js";
 

@@ -1,16 +1,21 @@
 import { NextFunction, Request, Response } from "express";
 
+import { getStudentKeys } from "../utils/mapping.utils.js";
+import ExcelMapping from "../../data/types/mapping.type.js";
 import StudentModel from "../../data/models/student.model.js";
+
+type MiddlewareRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 
 /**
  * Validates the `mapping` field against the Student model, ensuring that all
  * Student model fields are present in the `mapping` field.
  */
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (req: MiddlewareRequest, res: Response, next: NextFunction) => {
+  // Get the mapping keys
   const mapping = req.body.mapping;
-  const mappingKeys = Object.keys(mapping);
+  const mappingKeys = getStudentKeys(mapping);
 
-  const studentModelFields = Object.keys(StudentModel.schema.obj);
+  const studentModelFields = getStudentKeys(StudentModel.schema.obj);
 
   // Get all student model fields that are missing from the mapping
   const missingFields = studentModelFields.filter(
@@ -30,6 +35,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
       missing: missingFields,
       incorrect: incorrectMappingFields,
     });
+
     return;
   }
 

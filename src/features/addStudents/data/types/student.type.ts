@@ -1,5 +1,8 @@
+/**
+ * The Student model type.
+ */
 type StudentType = {
-  studentId: string;
+  studentId: number;
   fullName: string;
   address: string;
 };

@@ -10,15 +10,18 @@ import validateMappingAgainstExcelFileMiddleware from "./logic/middlewares/valid
 import validateMappingAgainstStudentModelMiddleware from "./logic/middlewares/validateMappingAgainstStudentModel.middleware.js";
 
 export default (router: Router) => {
+  /**
+   * Upload students data from an Excel file to the database.
+   */
   router.post(
     "/upload",
 
-    // Validate uploaded excel file
+    // Validate the uploaded excel file
     uploadFileMiddleware,
     ensureFileUploadedMiddleware,
     ensureFileIsExcelMiddleware,
 
-    // Validate `mapping` field
+    // Validate the `mapping` field, used to map the excel file columns to the Student model fields
     validateMappingJsonMiddleware,
     validateMappingAgainstStudentModelMiddleware,
     validateMappingAgainstExcelFileMiddleware,

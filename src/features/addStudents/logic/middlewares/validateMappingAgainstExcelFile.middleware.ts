@@ -1,23 +1,33 @@
 import xlsx from "xlsx";
 import { Request, Response, NextFunction } from "express";
 
-import { getExcelColumnsHeaders } from "../utils/excel.utils.js";
+import {
+  getExcelColumnsHeaders,
+  getStudentsWorkSheet,
+} from "../utils/excel.utils.js";
+import ExcelMapping from "../../data/types/mapping.type.js";
+import { getStudentKeys } from "../utils/mapping.utils.js";
+
+type MiddlewareRequest = Request<
+  {},
+  {},
+  { workbook: xlsx.WorkBook; mapping: ExcelMapping }
+>;
 
 /**
  * Validates the `mapping` field against the uploaded excel file, ensuring that
  * all values of keys in the `mapping` field are present in the excel file.
  */
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (req: MiddlewareRequest, res: Response, next: NextFunction) => {
   const workbook = req.body.workbook as xlsx.WorkBook;
-  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
   // Get all excel columns headers
+  const worksheet = getStudentsWorkSheet(workbook);
   const excelColumnsHeaders = getExcelColumnsHeaders(worksheet);
 
-  const mapping = req.body.mapping;
-
   // Get mapping keys
-  const mappingKeys = Object.keys(mapping);
+  const mapping = req.body.mapping;
+  const mappingKeys = getStudentKeys(mapping);
 
   // Get all mapping keys that do not exist in the excel file
   const incorrectMappingKeys = mappingKeys.filter(
