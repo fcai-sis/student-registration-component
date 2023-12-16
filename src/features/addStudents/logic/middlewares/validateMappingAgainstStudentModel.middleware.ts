@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { getStudentKeys } from "../utils/mapping.utils.js";
 import ExcelMapping from "../../data/types/mapping.type.js";
 import StudentModel from "../../data/models/student.model.js";
+import HasStudentFields from "../../data/types/hasStudentFields.type.js";
 
 type MiddlewareRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 
@@ -15,7 +16,9 @@ export default (req: MiddlewareRequest, res: Response, next: NextFunction) => {
   const mapping = req.body.mapping;
   const mappingKeys = getStudentKeys(mapping);
 
-  const studentModelFields = getStudentKeys(StudentModel.schema.obj);
+  const studentModelFields = getStudentKeys(
+    StudentModel.schema.obj as HasStudentFields
+  );
 
   // Get all student model fields that are missing from the mapping
   const missingFields = studentModelFields.filter(

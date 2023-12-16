@@ -1,4 +1,5 @@
 import StudentField from "../../data/types/studentField.type.js";
+import HasStudentFields from "../../data/types/hasStudentFields.type.js";
 
 /**
  * Gets the fields of the Student model as an array of strings.
@@ -8,5 +9,5 @@ import StudentField from "../../data/types/studentField.type.js";
  * @param object An object that has the fields of the Student model, like a student object or an Excel mapping.
  * @returns The fields of the Student model as an array of strings.
  */
-export const getStudentKeys = (object: any): StudentField[] =>
+export const getStudentKeys = (object: HasStudentFields): StudentField[] =>
   Object.keys(object) as StudentField[];
