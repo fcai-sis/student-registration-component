@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import StudentModel from "../../data/student.model.js";
+import StudentModel from "../../data/models/student.model.js";
 
 /**
  * Validates the `mapping` field against the Student model, ensuring that all

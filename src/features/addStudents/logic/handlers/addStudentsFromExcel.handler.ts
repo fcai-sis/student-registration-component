@@ -1,7 +1,8 @@
 import xlsx from "xlsx";
 import { Request, Response } from "express";
 
-import StudentModel, { StudentType } from "../../data/student.model.js";
+import StudentType from "../../data/types/student.type.js";
+import StudentModel from "../../data/models/student.model.js";
 
 /**
  * Uploads an excel file containing student data to the database.
