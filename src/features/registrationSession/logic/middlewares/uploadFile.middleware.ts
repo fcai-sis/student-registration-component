@@ -7,4 +7,6 @@ const fileFieldName = "file";
 /**
  * Uploads a single file to the `FILE_UPLOAD_PATH` directory specified in the environment variables.
  */
-export default multer({ dest: env.FILE_UPLOAD_PATH }).single(fileFieldName);
+const middleware = multer({ dest: env.FILE_UPLOAD_PATH }).single(fileFieldName);
+
+export default middleware;

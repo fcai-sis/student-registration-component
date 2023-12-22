@@ -1,12 +1,12 @@
 import xlsx from "xlsx";
 import { Request, Response } from "express";
 
-import ExcelRow from "../../data/types/excelRow.type.js";
-import { getStudentKeys } from "../utils/mapping.utils.js";
-import StudentType from "../../data/types/student.type.js";
-import ExcelMapping from "../../data/types/mapping.type.js";
-import StudentModel from "../../data/models/student.model.js";
-import { getStudentsWorkSheet } from "../utils/excel.utils.js";
+import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
+import ExcelRow from "../../../registrationSession/data/types/excelRow.type.js";
+import { getStudentsWorkSheet } from "../../../common/logic/utils/excel.utils.js";
+import StudentType from "../../../registrationSession/data/types/student.type.js";
+import ExcelMapping from "../../../registrationSession/data/types/mapping.type.js";
+import StudentModel from "../../../registrationSession/data/models/student.model.js";
 
 type HandlerRequest = Request<
   {},
@@ -53,7 +53,7 @@ export default async (req: HandlerRequest, res: Response) => {
         (err: any) => err.message
       );
 
-      res.status(400).json({ error: "student-validation-error", messages });
+      res.status(400).json({ code: "student-validation-error", messages });
     }
   }
 };
