@@ -4,9 +4,9 @@ import { Request, Response, NextFunction } from "express";
 import {
   getExcelColumnsHeaders,
   getStudentsWorkSheet,
-} from "../utils/excel.utils.js";
-import ExcelMapping from "../../data/types/mapping.type.js";
-import { getStudentKeys } from "../utils/mapping.utils.js";
+} from "../../../common/logic/utils/excel.utils.js";
+import ExcelMapping from "../../../registrationSession/data/types/mapping.type.js";
+import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
 
 type MiddlewareRequest = Request<
   {},
@@ -37,7 +37,7 @@ export default (req: MiddlewareRequest, res: Response, next: NextFunction) => {
   // If there are any incorrect mappings, return an error
   if (incorrectMappingKeys.length > 0) {
     res.status(400).json({
-      error: "mapping-invalid-excel-fields",
+      code: "mapping-invalid-excel-fields",
       message:
         "Please make sure all fields are mapped to the correct fields in the excel file",
       fields: incorrectMappingKeys.map((key) => mapping[key]),

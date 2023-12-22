@@ -1,17 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 
-import { getStudentKeys } from "../utils/mapping.utils.js";
+import logger from "../../../../core/logger.js";
 import ExcelMapping from "../../data/types/mapping.type.js";
 import StudentModel from "../../data/models/student.model.js";
 import HasStudentFields from "../../data/types/hasStudentFields.type.js";
+import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
 
 type MiddlewareRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 
 /**
- * Validates the `mapping` field against the Student model, ensuring that all
- * Student model fields are present in the `mapping` field.
+ * Validates the mapping against the Student model, ensuring that all
+ * Student model fields are present in the mapping.
+ *
+ * @returns `400 Bad Request` if there are missing or incorrect fields in the mapping
  */
-export default (req: MiddlewareRequest, res: Response, next: NextFunction) => {
+const middleware = (
+  req: MiddlewareRequest,
+  res: Response,
+  next: NextFunction
+) => {
   // Get the mapping keys
   const mapping = req.body.mapping;
   const mappingKeys = getStudentKeys(mapping);
@@ -33,7 +40,7 @@ export default (req: MiddlewareRequest, res: Response, next: NextFunction) => {
   // If there are missing fields, return an error
   if (missingFields.length > 0) {
     res.status(400).json({
-      error: "mapping-missing-fields",
+      code: "mapping-missing-fields",
       message: "Please provide a mapping for the fields in the Student model",
       missing: missingFields,
       incorrect: incorrectMappingFields,
@@ -44,3 +51,5 @@ export default (req: MiddlewareRequest, res: Response, next: NextFunction) => {
 
   next();
 };
+
+export default middleware;

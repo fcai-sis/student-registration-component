@@ -1,5 +1,5 @@
-import StudentField from "../../data/types/studentField.type.js";
-import HasStudentFields from "../../data/types/hasStudentFields.type.js";
+import StudentField from "../../../registrationSession/data/types/studentField.type.js";
+import HasStudentFields from "../../../registrationSession/data/types/hasStudentFields.type.js";
 
 /**
  * Gets the fields of the Student model as an array of strings.
