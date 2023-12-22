@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
 import StudentModel from "./student.model.js";
-import ExcelMapping from "../types/mapping.type.js";
 import unsetMapping from "../types/unsetMapping.type.js";
 import HasStudentFields from "../types/hasStudentFields.type.js";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
@@ -26,8 +25,8 @@ export const registrationSessionSchema = new Schema({
   mapping: {
     type: Object,
     validate: {
-      validator: function (mapping: Map<String, String>) {
-        const mappingKeys = getStudentKeys(mapping as unknown as ExcelMapping);
+      validator: function (mapping: HasStudentFields) {
+        const mappingKeys = getStudentKeys(mapping);
         const studentModelFields = getStudentKeys(
           StudentModel.schema.obj as HasStudentFields
         );
