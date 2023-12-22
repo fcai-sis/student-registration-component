@@ -7,9 +7,9 @@
   "scripts": {
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
-    "start": "NODE_ENV=production node --env-file=.env dist/index.js",
-    "preserve": "npm run build",
-    "serve": "concurrently \"npx tsc -w\" \"nodemon\""
+    "start": "cross-env NODE_ENV=production node --env-file=.env dist/index.js",
+    "predev": "npm run build",
+    "dev": "concurrently \"npx tsc -w\" \"nodemon\""
   },
   "keywords": [],
   "author": "",
@@ -34,6 +34,7 @@
     "@types/morgan": "^1.9.9",
     "@types/multer": "^1.4.11",
     "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
