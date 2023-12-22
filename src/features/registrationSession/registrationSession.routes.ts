@@ -81,4 +81,15 @@ export default (router: Router) => {
     // Cancel the active registration session
     asyncHandler(cancelSessionHandler)
   );
+  // Check if there's an active session
+  router.get(
+    "/active",
+    asyncHandler(checkActiveSessionMiddleware(true)),
+    async (req, res) => {
+      res.status(200).json({
+        code: "active-registration-session",
+        message: "An active registration session already exists",
+      });
+    }
+  );
 };
