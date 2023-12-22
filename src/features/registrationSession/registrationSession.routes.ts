@@ -4,6 +4,7 @@ import asyncHandler from "../../core/asyncHandler.js";
 import commitHandler from "./logic/handlers/commit.handler.js";
 import startSessionHandler from "./logic/handlers/startSession.handler.js";
 import updateMappingHandler from "./logic/handlers/updateMapping.handler.js";
+import cancelSessionHandler from "./logic/handlers/cancelSession.handler.js";
 import uploadFileMiddleware from "./logic/middlewares/uploadFile.middleware.js";
 import ensureFileIsExcelMiddleware from "./logic/middlewares/ensureFileIsExcel.middleware.js";
 import ensureFileUploadedMiddleware from "./logic/middlewares/ensureFileUploaded.middleware.js";
@@ -66,5 +67,18 @@ export default (router: Router) => {
 
     // Commit the staged students
     asyncHandler(commitHandler)
+  );
+
+  /**
+   * Cancels the active registration session.
+   */
+  router.post(
+    "/cancel",
+
+    // Check if there is an active registration session
+    asyncHandler(checkActiveSessionMiddleware(true)),
+
+    // Cancel the active registration session
+    asyncHandler(cancelSessionHandler)
   );
 };
