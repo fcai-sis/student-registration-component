@@ -22,7 +22,7 @@ type MiddlewareRequest = Request<
  * Reads the students from the uploaded Excel file,
  * and attaches the students and the Excel columns headers to the request object.
  */
-const middlware = async (
+const middleware = async (
   req: MiddlewareRequest,
   _: Response,
   next: NextFunction
@@ -44,4 +44,4 @@ const middlware = async (
   next();
 };
 
-export default middlware;
+export default middleware;

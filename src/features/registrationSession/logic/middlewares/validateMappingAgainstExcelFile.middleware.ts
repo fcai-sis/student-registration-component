@@ -12,7 +12,7 @@ type MiddlewareRequest = Request<{}, {}, { mapping: { [K: string]: any } }>;
  *
  * @returns `400 Bad Request` if there are any fields in the mapping that do not exist in the excel file
  */
-const middlware = async (
+const middleware = async (
   req: MiddlewareRequest,
   res: Response,
   next: NextFunction
@@ -47,4 +47,4 @@ const middlware = async (
   next();
 };
 
-export default middlware;
+export default middleware;

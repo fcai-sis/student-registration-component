@@ -11,7 +11,7 @@ type MiddlewareRequest = Request<{}, {}, {}>;
  * @param checkIfExists  Whether to check if there is an active registration session or not
  * @returns `400 Bad Request` if checking for an active registration session and there is none, or if checking for no active registration session and there is one
  */
-const middlware =
+const middleware =
   (checkIfExists: boolean) =>
   async (req: MiddlewareRequest, res: Response, next: NextFunction) => {
     logger.debug(`Checking for active registration session: ${checkIfExists}`);
@@ -50,4 +50,4 @@ const middlware =
     next();
   };
 
-export default middlware;
+export default middleware;
