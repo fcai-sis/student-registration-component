@@ -24,9 +24,15 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const students = req.body.students;
   const excelColumnsHeaders = req.body.excelColumnsHeaders;
 
+  // Generate row IDs for the staged students
+  const studentsWithIds = students.map((student, index) => ({
+    ...student,
+    EXCEL_ROW_ID: index + 1,
+  }));
+
   // Create a new registration session with the staged students, excel columns headers and an empty mapping
   const result = await RegistrationSessionModel.create({
-    stagedStudents: students,
+    stagedStudents: studentsWithIds,
     excelColumnsHeaders: excelColumnsHeaders,
 
     // If we are to have a default mapping, we can set it here instead of an empty mapping
