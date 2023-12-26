@@ -4,6 +4,9 @@ import RegistrationSessionModel from "../../data/models/registrationSession.mode
 
 type HandlerRequest = Request<{}, {}, {}>;
 
+/**
+ * Cancels the active registration session.
+ */
 const handler = async (req: HandlerRequest, res: Response) => {
   try {
     const result = await RegistrationSessionModel.findOneAndUpdate(
