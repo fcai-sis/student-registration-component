@@ -6,6 +6,7 @@ import startSessionHandler from "./logic/handlers/startSession.handler.js";
 import updateMappingHandler from "./logic/handlers/updateMapping.handler.js";
 import cancelSessionHandler from "./logic/handlers/cancelSession.handler.js";
 import uploadFileMiddleware from "./logic/middlewares/uploadFile.middleware.js";
+import readActiveSessionHandler from "./logic/handlers/readActiveSession.handler.js";
 import ensureFileIsExcelMiddleware from "./logic/middlewares/ensureFileIsExcel.middleware.js";
 import ensureFileUploadedMiddleware from "./logic/middlewares/ensureFileUploaded.middleware.js";
 import checkActiveSessionMiddleware from "./logic/middlewares/checkActiveSession.middleware.js";
@@ -81,15 +82,17 @@ export default (router: Router) => {
     // Cancel the active registration session
     asyncHandler(cancelSessionHandler)
   );
-  // Check if there's an active session
+
+  /**
+   * Checks if there is an active registration session.
+   */
   router.get(
     "/active",
+
+    // Check if there is an active registration session
     asyncHandler(checkActiveSessionMiddleware(true)),
-    async (req, res) => {
-      res.status(200).json({
-        code: "active-registration-session",
-        message: "An active registration session already exists",
-      });
-    }
+
+    // Read and return the active registration session
+    asyncHandler(readActiveSessionHandler)
   );
 };
