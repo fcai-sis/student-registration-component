@@ -47,16 +47,12 @@ export const registrationSessionSchema = new Schema({
     required: true,
     default: [],
   },
-
-  stagedStudents: {
-    type: [Object],
-    required: true,
-    default: [],
-  },
 });
 
+export const registrationSessoinModelName = "RegistrationSession";
+
 const RegistrationSessionModel = mongoose.model(
-  "RegistrationSession",
+  registrationSessoinModelName,
   registrationSessionSchema
 );
 
