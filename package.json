@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Template for NodeJS components.",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "build": "rimraf dist && npx tsc",
     "pretest": "npm run build",
