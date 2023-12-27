@@ -1,21 +1,21 @@
 import { Router } from "express";
 
-import asyncHandler from "../../core/asyncHandler.js";
-import commitHandler from "./logic/handlers/commit.handler.js";
-import startSessionHandler from "./logic/handlers/startSession.handler.js";
-import updateMappingHandler from "./logic/handlers/updateMapping.handler.js";
-import cancelSessionHandler from "./logic/handlers/cancelSession.handler.js";
-import uploadFileMiddleware from "./logic/middlewares/uploadFile.middleware.js";
-import readActiveSessionHandler from "./logic/handlers/readActiveSession.handler.js";
-import readStagedStudentsHandler from "./logic/handlers/readStagedStudents.handler.js";
-import ensureFileIsExcelMiddleware from "./logic/middlewares/ensureFileIsExcel.middleware.js";
-import ensureFileUploadedMiddleware from "./logic/middlewares/ensureFileUploaded.middleware.js";
-import checkActiveSessionMiddleware from "./logic/middlewares/checkActiveSession.middleware.js";
-import validateMappingJsonMiddleware from "./logic/middlewares/validateMappingJson.middleware.js";
-import readStudentsFromExcelMiddlerware from "./logic/middlewares/readStudentsFromExcel.middleware.js";
-import validatePaginationQueryParams from "./logic/middlewares/validatePaginationQueryParams.middleware.js";
-import validateMappingAgainstExcelFileMiddleware from "./logic/middlewares/validateMappingAgainstExcelFile.middleware.js";
-import validateMappingAgainstStudentModelMiddleware from "./logic/middlewares/validateMappingAgainstStudentModel.middleware.js";
+import asyncHandler from "../../core/asyncHandler";
+import commitHandler from "./logic/handlers/commit.handler";
+import startSessionHandler from "./logic/handlers/startSession.handler";
+import updateMappingHandler from "./logic/handlers/updateMapping.handler";
+import cancelSessionHandler from "./logic/handlers/cancelSession.handler";
+import uploadFileMiddleware from "./logic/middlewares/uploadFile.middleware";
+import readActiveSessionHandler from "./logic/handlers/readActiveSession.handler";
+import readStagedStudentsHandler from "./logic/handlers/readStagedStudents.handler";
+import ensureFileIsExcelMiddleware from "./logic/middlewares/ensureFileIsExcel.middleware";
+import ensureFileUploadedMiddleware from "./logic/middlewares/ensureFileUploaded.middleware";
+import checkActiveSessionMiddleware from "./logic/middlewares/checkActiveSession.middleware";
+import validateMappingJsonMiddleware from "./logic/middlewares/validateMappingJson.middleware";
+import readStudentsFromExcelMiddlerware from "./logic/middlewares/readStudentsFromExcel.middleware";
+import validatePaginationQueryParams from "./logic/middlewares/validatePaginationQueryParams.middleware";
+import validateMappingAgainstExcelFileMiddleware from "./logic/middlewares/validateMappingAgainstExcelFile.middleware";
+import validateMappingAgainstStudentModelMiddleware from "./logic/middlewares/validateMappingAgainstStudentModel.middleware";
 
 export default (router: Router) => {
   /**

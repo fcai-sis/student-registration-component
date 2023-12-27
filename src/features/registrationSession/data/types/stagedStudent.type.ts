@@ -1,6 +1,6 @@
 import { InferSchemaType } from "mongoose";
 
-import { stagedStudentSchema } from "../models/stagedStudents.model.js";
+import { stagedStudentSchema } from "../models/stagedStudents.model";
 
 type StagedStudentType = InferSchemaType<typeof stagedStudentSchema>;
 

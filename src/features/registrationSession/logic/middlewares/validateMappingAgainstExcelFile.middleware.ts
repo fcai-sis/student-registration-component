@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 
-import ExcelMapping from "../../data/types/mapping.type.js";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
-import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
+import ExcelMapping from "../../data/types/mapping.type";
+import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
+import RegistrationSessionModel from "../../data/models/registrationSession.model";
 
 type MiddlewareRequest = Request<{}, {}, { mapping: { [K: string]: any } }>;
 

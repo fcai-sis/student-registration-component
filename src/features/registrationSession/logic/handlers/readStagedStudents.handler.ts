@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import StagedStudentModel from "../../data/models/stagedStudents.model.js";
-import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
+import StagedStudentModel from "../../data/models/stagedStudents.model";
+import RegistrationSessionModel from "../../data/models/registrationSession.model";
 
 type HandlerRequest = Request<
   {},

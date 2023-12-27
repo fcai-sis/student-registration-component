@@ -1,4 +1,4 @@
-import StudentType from "./student.type.js";
+import StudentType from "./student.type";
 
 /**
  * A field in the Student model.

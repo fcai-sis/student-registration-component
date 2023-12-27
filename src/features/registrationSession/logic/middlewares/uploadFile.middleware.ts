@@ -1,6 +1,6 @@
 import multer from "multer";
 
-import env from "../../../../env.js";
+import env from "../../../../env";
 
 const fileFieldName = "file";
 

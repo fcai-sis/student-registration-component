@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import logger from "../../../../core/logger.js";
+import logger from "../../../../core/logger";
 
 /**
  * Ensures that there is a file uploaded in the request object.

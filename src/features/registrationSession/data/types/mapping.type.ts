@@ -1,4 +1,4 @@
-import StudentField from "./studentField.type.js";
+import StudentField from "./studentField.type";
 
 /**
  * An object that maps the fields of the Student model to the columns of the Excel file.

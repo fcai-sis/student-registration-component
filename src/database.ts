@@ -1,7 +1,7 @@
 import { Mongoose, connect } from "mongoose";
 
-import env from "./env.js";
-import logger from "./core/logger.js";
+import env from "./env";
+import logger from "./core/logger";
 
 /**
  * Connect to MongoDB

@@ -1,4 +1,4 @@
-import env, { isDev } from "../env.js";
+import env, { isDev } from "../env";
 import winston from "winston";
 
 const levels = {

@@ -1,7 +1,7 @@
-import database from "./database.js";
-import logger from "./core/logger.js";
-import env, { validateEnvironmentVariables } from "./env.js";
-import app from "./app.js";
+import app from "./app";
+import database from "./database";
+import logger from "./core/logger";
+import env, { validateEnvironmentVariables } from "./env";
 
 // Ensure that all required environment variables are present
 validateEnvironmentVariables();
@@ -9,7 +9,7 @@ validateEnvironmentVariables();
 // Connect to MongoDB
 await database();
 
-// Start Express server
-app.listen(env.PORT, () => {
-  logger.info(`Server is listening on port ${env.PORT}`);
-});
+    // Start Express server
+    app.listen(env.PORT, () => {
+      logger.info(`Server is listening on port ${env.PORT}`);
+  });

@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
-import StudentModel from "./student.model.js";
-import unsetMapping from "../types/unsetMapping.type.js";
-import HasStudentFields from "../types/hasStudentFields.type.js";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
+import StudentModel from "./student.model";
+import unsetMapping from "../types/unsetMapping.type";
+import HasStudentFields from "../types/hasStudentFields.type";
+import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 
 export const registrationSessionSchema = new Schema({
   active: {

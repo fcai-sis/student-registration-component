@@ -4,9 +4,9 @@ import helmet from "helmet";
 import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
 
-import router from "./router.js";
-import { isDev } from "./env.js";
-import logger from "./core/logger.js";
+import router from "./router";
+import { isDev } from "./env";
+import logger from "./core/logger";
 
 // Create Express server
 const app = express();

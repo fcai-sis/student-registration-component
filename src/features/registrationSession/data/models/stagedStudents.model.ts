@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { registrationSessoinModelName } from "./registrationSession.model.js";
+import { registrationSessoinModelName } from "./registrationSession.model";
 
 export const stagedStudentSchema = new Schema({
   student: {

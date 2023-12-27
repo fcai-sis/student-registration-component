@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import StudentType from "../types/student.type.js";
+import StudentType from "../types/student.type";
 
 const studentSchema: Schema = new Schema<StudentType>({
   studentId: { type: Number, required: true },

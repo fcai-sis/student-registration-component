@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-import logger from "../../../../core/logger.js";
-import ExcelMapping from "../../data/types/mapping.type.js";
-import StudentModel from "../../data/models/student.model.js";
-import HasStudentFields from "../../data/types/hasStudentFields.type.js";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
+import logger from "../../../../core/logger";
+import ExcelMapping from "../../data/types/mapping.type";
+import StudentModel from "../../data/models/student.model";
+import HasStudentFields from "../../data/types/hasStudentFields.type";
+import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 
 type MiddlewareRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 

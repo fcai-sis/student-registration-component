@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 
-import logger from "../../../../core/logger.js";
-import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
+import logger from "../../../../core/logger";
+import RegistrationSessionModel from "../../data/models/registrationSession.model";
 
 type MiddlewareRequest = Request<{}, {}, {}>;
 
