@@ -4,11 +4,11 @@ import logger from "../../../../core/logger.js";
 import StudentType from "../../data/types/student.type.js";
 import ExcelMapping from "../../data/types/mapping.type.js";
 import StudentModel from "../../data/models/student.model.js";
-import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
 import unsetMapping from "../../data/types/unsetMapping.type.js";
 import StagedStudentType from "../../data/types/stagedStudent.type.js";
 import StagedStudentsModel from "../../data/models/stagedStudents.model.js";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
+import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
 
 type HandlerRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 
