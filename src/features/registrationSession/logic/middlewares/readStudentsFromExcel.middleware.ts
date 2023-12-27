@@ -1,12 +1,12 @@
 import xlsx from "xlsx";
 import { Request, Response, NextFunction } from "express";
 
-import logger from "../../../../core/logger.js";
-import ExcelRow from "../../data/types/excelRow.type.js";
+import logger from "../../../../core/logger";
+import ExcelRow from "../../data/types/excelRow.type";
 import {
   getExcelColumnsHeaders,
   getStudentsWorkSheet,
-} from "../../../common/logic/utils/excel.utils.js";
+} from "../../../common/logic/utils/excel.utils";
 
 type MiddlewareRequest = Request<
   {},

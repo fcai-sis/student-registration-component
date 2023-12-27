@@ -1,4 +1,4 @@
-import StudentField from "./studentField.type.js";
+import StudentField from "./studentField.type";
 
 /**
  * An object that has the fields of the Student model.

@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 
-import logger from "../../../../core/logger.js";
-import ExcelRow from "../../data/types/excelRow.type.js";
-import ExcelMapping from "../../data/types/mapping.type.js";
-import StudentModel from "../../data/models/student.model.js";
-import unsetMapping from "../../data/types/unsetMapping.type.js";
-import StagedStudentType from "../../data/types/stagedStudent.type.js";
-import HasStudentFields from "../../data/types/hasStudentFields.type.js";
-import StagedStudentsModel from "../../data/models/stagedStudents.model.js";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils.js";
-import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
+import logger from "../../../../core/logger";
+import ExcelRow from "../../data/types/excelRow.type";
+import ExcelMapping from "../../data/types/mapping.type";
+import StudentModel from "../../data/models/student.model";
+import unsetMapping from "../../data/types/unsetMapping.type";
+import StagedStudentType from "../../data/types/stagedStudent.type";
+import HasStudentFields from "../../data/types/hasStudentFields.type";
+import StagedStudentModel from "../../data/models/stagedStudents.model";
+import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
+import RegistrationSessionModel from "../../data/models/registrationSession.model";
 
 type HandlerRequest = Request<
   {},
@@ -67,7 +67,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   );
 
   // Create a new staged students document with the staged students
-  const stagedStudentsCreateResult = await StagedStudentsModel.insertMany(
+  const stagedStudentsCreateResult = await StagedStudentModel.insertMany(
     studentsWithIds
   );
 

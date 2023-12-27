@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
+import RegistrationSessionModel from "../../data/models/registrationSession.model";
 
 type HandlerRequest = Request<{}, {}, {}>;
 

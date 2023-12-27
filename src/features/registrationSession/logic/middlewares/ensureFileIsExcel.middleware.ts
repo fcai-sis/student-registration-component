@@ -2,7 +2,7 @@ import fs from "fs";
 import xlsx from "xlsx";
 import { NextFunction, Request, Response } from "express";
 
-import logger from "../../../../core/logger.js";
+import logger from "../../../../core/logger";
 
 type HandlerRequest = Request<{}, {}, { workbook: xlsx.WorkBook }>;
 

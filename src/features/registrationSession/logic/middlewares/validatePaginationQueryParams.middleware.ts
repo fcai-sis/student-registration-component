@@ -1,7 +1,7 @@
 import * as validator from "express-validator";
 import { NextFunction, Request, Response } from "express";
 
-import logger from "../../../../core/logger.js";
+import logger from "../../../../core/logger";
 
 /**
  * Ensures that the request query parameters `page` and `pageSize` exists and are valid.

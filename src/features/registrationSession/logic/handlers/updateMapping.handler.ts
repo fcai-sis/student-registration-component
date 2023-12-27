@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import ExcelMapping from "../../data/types/mapping.type.js";
-import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
+import ExcelMapping from "../../data/types/mapping.type";
+import RegistrationSessionModel from "../../data/models/registrationSession.model";
 
 type HandlerRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 

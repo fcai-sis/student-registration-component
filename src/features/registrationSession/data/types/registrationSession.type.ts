@@ -1,5 +1,5 @@
 import { InferSchemaType } from "mongoose";
-import { registrationSessionSchema } from "../models/registrationSession.model.js";
+import { registrationSessionSchema } from "../models/registrationSession.model";
 
 /**
  * Represents a student registration session.

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { registrationSessoinModelName } from "./registrationSession.model.js";
+import { registrationSessoinModelName } from "./registrationSession.model";
 
 export const stagedStudentSchema = new Schema({
   student: {
@@ -13,11 +13,11 @@ export const stagedStudentSchema = new Schema({
   },
 });
 
-export const stagedStudentsModelName = "StagedStudents";
+export const stagedStudentModelName = "StagedStudents";
 
-const StagedStudentsModel = mongoose.model(
-  stagedStudentsModelName,
+const StagedStudentModel = mongoose.model(
+  stagedStudentModelName,
   stagedStudentSchema
 );
 
-export default StagedStudentsModel;
+export default StagedStudentModel;

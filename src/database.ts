@@ -1,12 +1,12 @@
 import { Mongoose, connect } from "mongoose";
 
-import env from "./env.js";
-import logger from "./core/logger.js";
+import env from "./env";
+import logger from "./core/logger";
 
 /**
  * Connect to MongoDB
  */
-async function connectMongo(): Promise<Mongoose> {
+const connectMongo = async (): Promise<Mongoose> => {
   try {
     const db = await connect(env.MONGO_URI!);
     logger.info("MongoDB connected");
@@ -16,6 +16,6 @@ async function connectMongo(): Promise<Mongoose> {
     logger.error(err);
     process.exit(1);
   }
-}
+};
 
-export default await connectMongo();
+export default connectMongo;
