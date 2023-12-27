@@ -7,9 +7,13 @@ import env, { validateEnvironmentVariables } from "./env";
 validateEnvironmentVariables();
 
 // Connect to MongoDB
-await database();
-
+database()
+  .then(() => {
     // Start Express server
     app.listen(env.PORT, () => {
       logger.info(`Server is listening on port ${env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    logger.error(err);
   });
