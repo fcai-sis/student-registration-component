@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import StagedStudentsModel from "../../data/models/stagedStudents.model.js";
+import StagedStudentModel from "../../data/models/stagedStudents.model.js";
 import RegistrationSessionModel from "../../data/models/registrationSession.model.js";
 
 type HandlerRequest = Request<
@@ -36,7 +36,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   }
 
   // Get the staged students from the current active registration session
-  const stagedStudents = await StagedStudentsModel.find({
+  const stagedStudents = await StagedStudentModel.find({
     registrationSessionId: currentActiveSession._id,
   })
     .skip((page - 1) * pageSize)
