@@ -15,7 +15,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     { active: true },
     // Exclude stagedStudents for performance reasons
     // and __v and _id for security reasons and because they are not needed
-    { stagedStudents: 0, __v: 0, _id: 0 }
+    { __v: 0, _id: 0 }
   );
 
   // If there is no active registration session, throw an error
