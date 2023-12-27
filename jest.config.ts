@@ -5,4 +5,5 @@ export default {
   testMatch: ["**/**/*.test.ts"],
   verbose: true,
   forceExit: false,
+  setupFiles: ["<rootDir>/test/setup.ts"],
 } as Config;
