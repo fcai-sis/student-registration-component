@@ -20,9 +20,9 @@ const studentSchema: Schema = new Schema<StudentType>({
     required: true,
     validate: {
       validator: function (value: string) {
-        // full name must contain only letters (a-z, A-Z, Arabic)
-        if (value.match(/^[a-zA-Z\u0600-\u06FF\s]+$/)) {
-          return true;
+        // name must contain only letters and Arabic characters
+        if (value.match(/[^a-zأ-ي]/i)) {
+          return false;
         }
       },
       message: "Full name must contain only letters (a-z, أ - ي)",
@@ -34,8 +34,8 @@ const studentSchema: Schema = new Schema<StudentType>({
     validate: {
       validator: function (value: string) {
         // address must contain only letters, numbers and Arabic characters
-        if (value.match(/^[a-zA-Z0-9\u0600-\u06FF\s]+$/)) {
-          return true;
+        if (value.match(/[^a-z0-9أ-ي]/i)) {
+          return false;
         }
       },
       message:
