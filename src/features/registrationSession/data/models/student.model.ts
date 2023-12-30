@@ -9,10 +9,13 @@ const studentSchema: Schema = new Schema<StudentType>({
     min: 20200000,
     max: 20300000,
     validate: {
-      validator: function (value: number) {
-        return value > 0; // this is probably useless but yahoo
+      validator: function (value: string) {
+        // studentId must be a number
+        if (isNaN(Number(value))) {
+          return false;
+        }
       },
-      message: "Student ID must be greater than 0",
+      message: "Student ID must be a number",
     },
   },
   fullName: {
