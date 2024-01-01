@@ -11,6 +11,12 @@ export const stagedStudentSchema = new Schema({
     ref: registrationSessoinModelName,
     required: true,
   },
+  // backup: {
+  //   any: {
+  //     type: Schema.Types.Mixed,how to reset the zoom in in visual studio
+  //     default: null,
+  //   },
+  // },
 });
 
 export const stagedStudentModelName = "StagedStudents";

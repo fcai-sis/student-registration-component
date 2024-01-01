@@ -113,4 +113,22 @@ export default (router: Router) => {
     // Read and return the staged students
     asyncHandler(readStagedStudentsHandler)
   );
+  /**
+   * An endpoint to update the staged student data
+   */
+
+  // router.patch(
+  //   "/update",
+  //   asyncHandler(checkActiveSessionMiddleware(true)),
+  //   asyncHandler(updateStagedStudentHandler)
+  // );
+
+  /**
+   * An endpoint to rest the data to the original data
+   */
+  // router.patch(
+  //   "/reset",
+  //   asyncHandler(checkActiveSessionMiddleware(true)),
+  //   asyncHandler(resetStagedStudentHandler)
+  // );
 };
