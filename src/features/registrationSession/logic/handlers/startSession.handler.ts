@@ -63,6 +63,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     (student): StagedStudentType => ({
       student: student,
       registrationSessionId: registrationSessionCreateResult._id,
+      backup: null,
     })
   );
 

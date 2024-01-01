@@ -16,6 +16,7 @@ import readStudentsFromExcelMiddlerware from "./logic/middlewares/readStudentsFr
 import validatePaginationQueryParams from "./logic/middlewares/validatePaginationQueryParams.middleware";
 import validateMappingAgainstExcelFileMiddleware from "./logic/middlewares/validateMappingAgainstExcelFile.middleware";
 import validateMappingAgainstStudentModelMiddleware from "./logic/middlewares/validateMappingAgainstStudentModel.middleware";
+import updateStagedStudentHandler from "./logic/handlers/updateStagedStudent.handler";
 
 export default (router: Router) => {
   /**
@@ -117,11 +118,11 @@ export default (router: Router) => {
    * An endpoint to update the staged student data
    */
 
-  // router.patch(
-  //   "/update",
-  //   asyncHandler(checkActiveSessionMiddleware(true)),
-  //   asyncHandler(updateStagedStudentHandler)
-  // );
+  router.patch(
+    "/update",
+    asyncHandler(checkActiveSessionMiddleware(true)),
+    asyncHandler(updateStagedStudentHandler)
+  );
 
   /**
    * An endpoint to rest the data to the original data
