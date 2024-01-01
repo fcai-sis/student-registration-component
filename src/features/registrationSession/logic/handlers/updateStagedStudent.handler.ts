@@ -9,6 +9,7 @@ type HandlerRequest = Request<
     students: HasStudentFields[];
     excelColumnsHeaders: string[];
     registrationSessionId: string;
+    // Do i need to add a Buffer type for the excel file?
   }
 >;
 
@@ -39,6 +40,8 @@ const updateStagedStudentHandler = async (
       currentStagedStudent.student = updatedData;
       await currentStagedStudent.save();
     }
+
+    //
 
     // For demonstration, we will just send a success response
     res.status(200).json({
