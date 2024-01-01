@@ -4,7 +4,7 @@ import StudentType from "../types/student.type";
 
 const studentSchema: Schema = new Schema<StudentType>({
   studentId: {
-    type: Number,
+    type: String,
     required: true,
     min: 20200000,
     max: 20300000,
@@ -24,11 +24,11 @@ const studentSchema: Schema = new Schema<StudentType>({
     validate: {
       validator: function (value: string) {
         // name must contain only letters and Arabic characters
-        if (value.match(/[^a-zأ-ي]/i)) {
+        if (value.match(/[^أ-ي]/i)) {
           return false;
         }
       },
-      message: "Full name must contain only letters (a-z, أ - ي)",
+      message: "Full name must contain only Arabic letters (أ - ي)",
     },
   },
   address: {
