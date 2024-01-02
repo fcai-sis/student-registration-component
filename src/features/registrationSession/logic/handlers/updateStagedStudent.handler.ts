@@ -1,15 +1,16 @@
-import { Request, Response } from "express";
+import { Request, Response, json } from "express";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
-import HasStudentFields from "../../data/types/hasStudentFields.type";
+import RegistrationSessionModel from "../../data/models/registrationSession.model";
+import mongoose from "mongoose";
+import logger from "../../../../core/logger";
 
 type HandlerRequest = Request<
-  {},
+  {
+    EXCEL_ROW_ID: string;
+  },
   {},
   {
-    students: HasStudentFields[];
-    excelColumnsHeaders: string[];
-    registrationSessionId: string;
-    // Do i need to add a Buffer type for the excel file?
+    UpdatedFileds: any;
   }
 >;
 
@@ -17,44 +18,68 @@ const updateStagedStudentHandler = async (
   req: HandlerRequest,
   res: Response
 ) => {
-  try {
-    const updatedData: HasStudentFields[] = req.body.students;
+  //get the active session
+  const activeSession = await RegistrationSessionModel.findOne({
+    active: true,
+  });
 
-    // Fetch the current staged student data
-    const currentStagedStudent = await StagedStudentModel.findOne({
-      registrationSessionId: req.body.registrationSessionId,
+  //If there is no active session, throw an error
+  if (!activeSession) {
+    res.status(400).json({
+      code: "no-active-session",
+      message: "No active registration session",
     });
-
-    // If there is no current staged student, create a new one
-    if (!currentStagedStudent) {
-      await StagedStudentModel.create({
-        student: updatedData,
-        registrationSessionId: req.body.registrationSessionId,
-      });
-    } else {
-      // Backup the existing data before the update
-      currentStagedStudent.backup = currentStagedStudent.student;
-      await currentStagedStudent.save();
-
-      // Update the staged student data
-      currentStagedStudent.student = updatedData;
-      await currentStagedStudent.save();
-    }
-
-    //
-
-    // For demonstration, we will just send a success response
-    res.status(200).json({
-      code: "update-success",
-      message: "Staged student data updated successfully",
-    });
-  } catch (error) {
-    console.error("Error updating staged student data:", error);
-    res.status(500).json({
-      code: "update-error",
-      message: "Internal server error while updating staged student data",
-    });
+    return;
   }
+
+  // get the student with the req.params.studentID
+
+  const stagedStudent = await StagedStudentModel.findOne({
+    registrationSessionId: activeSession._id,
+    _id: new mongoose.Types.ObjectId(req.params.EXCEL_ROW_ID),
+  });
+
+  // If there is no staged student with the given ID, throw an error
+  if (!stagedStudent) {
+    res.status(400).json({
+      code: "no-staged-student",
+      message: "No staged student with the given ID",
+    });
+    return;
+  }
+
+  // Backup the existing data before the update
+  if (!stagedStudent.backup) {
+    stagedStudent.backup = stagedStudent.student;
+    await stagedStudent.save();
+  }
+
+  // Get the updated student data from the request body
+  for (const [key, value] of Object.entries(req.body.UpdatedFileds)) {
+    if (key in stagedStudent.student) {
+      logger.debug(`Updating ${key} to ${value}`);
+      logger.debug(JSON.stringify(stagedStudent.student));
+      logger.debug(stagedStudent.student[key]);
+
+      stagedStudent.student[key] = value;
+    } else {
+      res.status(400).json({
+        code: "invalid-field",
+        message: `Invalid field ${key}`,
+      });
+      return;
+    }
+  }
+
+  logger.debug(JSON.stringify(stagedStudent));
+  stagedStudent.markModified("student"); // Mark the 'student' field as modified
+  await stagedStudent.save();
+
+  // For demonstration, we will just send a success response
+  res.status(200).json({
+    code: "update-success",
+    message: "Staged student data updated successfully",
+  });
 };
 
 export default updateStagedStudentHandler;

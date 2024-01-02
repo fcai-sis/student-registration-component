@@ -119,7 +119,7 @@ export default (router: Router) => {
    */
 
   router.patch(
-    "/update",
+    "/update/:EXCEL_ROW_ID",
     asyncHandler(checkActiveSessionMiddleware(true)),
     asyncHandler(updateStagedStudentHandler)
   );
