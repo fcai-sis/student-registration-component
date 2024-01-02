@@ -23,8 +23,8 @@ const studentSchema: Schema = new Schema<StudentType>({
     required: true,
     validate: {
       validator: function (value: string) {
-        // name must contain only letters and Arabic characters
-        if (value.match(/[^أ-ي]/i)) {
+        // name must contain only Arabic characters and allow whitespace
+        if (value.match(/[^أ-ي\s]/i)) {
           return false;
         }
       },
@@ -36,8 +36,8 @@ const studentSchema: Schema = new Schema<StudentType>({
     required: true,
     validate: {
       validator: function (value: string) {
-        // address must contain only letters, numbers and Arabic characters
-        if (value.match(/[^a-z0-9أ-ي]/i)) {
+        // address must contain only letters, numbers and Arabic characters and allow whitespace
+        if (value.match(/[^a-z0-9أ-ي\s]/i)) {
           return false;
         }
       },
