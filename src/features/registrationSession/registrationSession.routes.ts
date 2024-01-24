@@ -32,7 +32,7 @@ export default (router: Router) => {
     // Validate the uploaded excel file
     uploadFileMiddleware,
     ensureFileUploadedMiddleware,
-    ensureFileIsExcelMiddleware,
+    asyncHandler(ensureFileIsExcelMiddleware),
 
     // Read students data from the uploaded excel file
     asyncHandler(readStudentsFromExcelMiddlerware),

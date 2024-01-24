@@ -1,10 +1,11 @@
-import xlsx from "xlsx";
+import { Workbook } from "exceljs";
 import { Request, Response, NextFunction } from "express";
 
 import logger from "../../../../core/logger";
 import ExcelRow from "../../data/types/excelRow.type";
 import {
   getExcelColumnsHeaders,
+  getExcelRows,
   getStudentsWorkSheet,
 } from "../../../common/logic/utils/excel.utils";
 
@@ -12,7 +13,7 @@ type MiddlewareRequest = Request<
   {},
   {},
   {
-    workbook: xlsx.WorkBook;
+    workbook: Workbook;
     students: ExcelRow[];
     excelColumnsHeaders: string[];
   }
@@ -28,10 +29,12 @@ const middleware = async (
   next: NextFunction
 ) => {
   const workbook = req.body.workbook;
-  const workSheet = getStudentsWorkSheet(workbook);
 
-  const excelRows = xlsx.utils.sheet_to_json<ExcelRow>(workSheet);
-  const excelColumnsHeaders = getExcelColumnsHeaders(workSheet);
+  const worksheet = getStudentsWorkSheet(workbook);
+
+  const excelRows = getExcelRows(worksheet);
+
+  const excelColumnsHeaders = getExcelColumnsHeaders(worksheet);
 
   req.body.students = excelRows;
   req.body.excelColumnsHeaders = excelColumnsHeaders;

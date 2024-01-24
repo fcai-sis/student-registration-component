@@ -1,22 +1,16 @@
-import xlsx from "xlsx";
+import { Worksheet, Workbook } from "exceljs";
+import ExcelRow from "../../../registrationSession/data/types/excelRow.type";
 
-export function getExcelColumnsHeaders(worksheet: xlsx.WorkSheet) {
-  // Get the range of the worksheet
-  const range = xlsx.utils.decode_range(worksheet["!ref"]!);
-
-  // Initialize an array to hold the headers
-  const excelColumnsHeaders: string[] = [];
-
-  // Loop through all columns in the worksheet
-  for (let i = range.s.c; i <= range.e.c; ++i) {
-    const address = xlsx.utils.encode_col(i) + "1"; // Get cells in the first row (hence the "1")
-    const header = worksheet[address]; // Get the cell
-    excelColumnsHeaders.push(header.v); // Push the cell value to the headers array
-  }
-
-  return excelColumnsHeaders;
+export function getExcelColumnsHeaders(worksheet: Worksheet): string[] {
+  const headers = worksheet.getRow(1).values as (string | undefined)[];
+  return headers.splice(1) as string[]; // TODO: handle nightmare scenarios
 }
 
 // Get the first worksheet in the workbook (assuming the first sheet contains the students data)
-export const getStudentsWorkSheet = (workbook: xlsx.WorkBook): xlsx.WorkSheet =>
-  workbook.Sheets[workbook.SheetNames[0]];
+export const getStudentsWorkSheet = (workbook: Workbook): Worksheet =>
+  workbook.getWorksheet(1)!; // TODO: handle no worksheet
+
+export function getExcelRows(worksheet: Worksheet): ExcelRow[] {
+  const rows = worksheet.getRows(2, worksheet.rowCount) as ExcelRow[];
+  return rows.map((row) => row.values.splice(1) as string[]).splice(0, rows.length - 1);
+}
