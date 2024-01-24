@@ -1,6 +1,8 @@
 import { Router } from "express";
 
-import asyncHandler from "../../core/asyncHandler";
+import { asyncHandler } from "@fcai-sis/shared-utilities";
+import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
+
 import commitHandler from "./logic/handlers/commit.handler";
 import startSessionHandler from "./logic/handlers/startSession.handler";
 import updateMappingHandler from "./logic/handlers/updateMapping.handler";
@@ -13,7 +15,6 @@ import ensureFileUploadedMiddleware from "./logic/middlewares/ensureFileUploaded
 import checkActiveSessionMiddleware from "./logic/middlewares/checkActiveSession.middleware";
 import validateMappingJsonMiddleware from "./logic/middlewares/validateMappingJson.middleware";
 import readStudentsFromExcelMiddlerware from "./logic/middlewares/readStudentsFromExcel.middleware";
-import validatePaginationQueryParams from "./logic/middlewares/validatePaginationQueryParams.middleware";
 import validateMappingAgainstExcelFileMiddleware from "./logic/middlewares/validateMappingAgainstExcelFile.middleware";
 import validateMappingAgainstStudentModelMiddleware from "./logic/middlewares/validateMappingAgainstStudentModel.middleware";
 
@@ -108,7 +109,7 @@ export default (router: Router) => {
     asyncHandler(checkActiveSessionMiddleware(true)),
 
     // Validate the page and pageSize query parameters
-    validatePaginationQueryParams,
+    paginationQueryParamsMiddleware,
 
     // Read and return the staged students
     asyncHandler(readStagedStudentsHandler)
