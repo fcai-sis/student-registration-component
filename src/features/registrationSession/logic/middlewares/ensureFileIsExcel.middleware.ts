@@ -1,10 +1,10 @@
 import fs from "fs";
-import xlsx from "xlsx";
+import Excel, { Workbook } from "exceljs";
 import { NextFunction, Request, Response } from "express";
 
 import logger from "../../../../core/logger";
 
-type HandlerRequest = Request<{}, {}, { workbook: xlsx.WorkBook }>;
+type HandlerRequest = Request<{}, {}, { workbook: Workbook }>;
 
 /**
  * Checks if the file uploaded is a valid excel file.
@@ -15,7 +15,7 @@ type HandlerRequest = Request<{}, {}, { workbook: xlsx.WorkBook }>;
  *
  * @returns `400 Bad Request` if the uploaded file is not a valid excel file
  */
-const middleware = (req: HandlerRequest, res: Response, next: NextFunction) => {
+const middleware = async (req: HandlerRequest, res: Response, next: NextFunction) => {
   logger.debug(`Checking if the uploaded file is a valid excel file`);
 
   // Read the uploaded Excel file
@@ -23,7 +23,8 @@ const middleware = (req: HandlerRequest, res: Response, next: NextFunction) => {
 
   try {
     // Parse the file, if the parsing is successful, the file is a valid excel file
-    const workbook = xlsx.read(buffer, { type: "buffer" });
+    const workbook = new Excel.Workbook();
+    await workbook.xlsx.load(buffer);
 
     logger.debug(`Uploaded file is a valid excel file`);
 
@@ -44,4 +45,5 @@ const middleware = (req: HandlerRequest, res: Response, next: NextFunction) => {
   next();
 };
 
-export default middleware;
+const ensureFileIsExcelMiddleware = middleware;
+export default ensureFileIsExcelMiddleware;
