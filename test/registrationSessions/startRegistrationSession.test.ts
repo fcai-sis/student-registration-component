@@ -4,7 +4,6 @@ import { database, expectErrorResponse, expectResponse, request } from "../index
 import StagedStudentModel from "../../src/features/registrationSession/data/models/stagedStudents.model";
 import unsetMapping from "../../src/features/registrationSession/data/types/unsetMapping.type";
 import RegistrationSessionModel from "../../src/features/registrationSession/data/models/registrationSession.model";
-import StudentType from "../../src/features/registrationSession/data/types/student.type";
 
 const sampleExcelColumnHeaders = [
   'توزيع المرحلة',
