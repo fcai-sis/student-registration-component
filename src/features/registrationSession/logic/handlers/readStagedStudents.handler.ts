@@ -3,14 +3,7 @@ import { Request, Response } from "express";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 
-type HandlerRequest = Request<
-  {},
-  {},
-  {
-    page: number;
-    pageSize: number;
-  }
->;
+type HandlerRequest = Request;
 
 /**
  * Reads and returns the staged students from the active registration session.
@@ -18,8 +11,8 @@ type HandlerRequest = Request<
  * The staged students are paginated.
  */
 const handler = async (req: HandlerRequest, res: Response) => {
-  const page = req.body.page;
-  const pageSize = req.body.pageSize;
+  const page = req.context.page;
+  const pageSize = req.context.pageSize;
 
   // Get the current active registration session
   const currentActiveSession = await RegistrationSessionModel.findOne({
