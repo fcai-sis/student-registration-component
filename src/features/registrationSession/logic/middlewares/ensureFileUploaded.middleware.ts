@@ -10,9 +10,11 @@ import logger from "../../../../core/logger";
 const middleware = (req: Request, res: Response, next: NextFunction) => {
   if (!req.file) {
     logger.debug(`No file uploaded`);
+
     res.status(400).json({
-      code: "no-file-uploaded",
-      message: "No file uploaded, please upload an Excel file",
+      error: {
+        message: "File is required",
+      },
     });
     return;
   }

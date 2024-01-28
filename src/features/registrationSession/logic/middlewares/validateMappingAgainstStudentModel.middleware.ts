@@ -40,10 +40,11 @@ const middleware = (
   // If there are missing fields, return an error
   if (missingFields.length > 0) {
     res.status(400).json({
-      code: "mapping-missing-fields",
-      message: "Please provide a mapping for the fields in the Student model",
-      missing: missingFields,
-      incorrect: incorrectMappingFields,
+      error: {
+        message: "Please provide a mapping for the fields in the Student model",
+        missing: missingFields,
+        incorrect: incorrectMappingFields,
+      },
     });
 
     return;

@@ -6,12 +6,10 @@ const studentSchema: Schema = new Schema<StudentType>({
   studentId: {
     type: String,
     required: true,
-    min: 20200000,
-    max: 20300000,
     validate: {
-      validator: function (value: string) {
-        // studentId must be a number
-        if (isNaN(Number(value))) {
+      validator: function(value: string) {
+        // studentId must be a string of digits
+        if (value.match(/\D/)) {
           return false;
         }
       },
@@ -22,7 +20,7 @@ const studentSchema: Schema = new Schema<StudentType>({
     type: String,
     required: true,
     validate: {
-      validator: function (value: string) {
+      validator: function(value: string) {
         // name must contain only Arabic characters and allow whitespace
         if (value.match(/[^أ-ي\s]/i)) {
           return false;
@@ -35,7 +33,7 @@ const studentSchema: Schema = new Schema<StudentType>({
     type: String,
     required: true,
     validate: {
-      validator: function (value: string) {
+      validator: function(value: string) {
         // address must contain only letters, numbers and Arabic characters and allow whitespace
         if (value.match(/[^a-z0-9أ-ي\s]/i)) {
           return false;
@@ -51,7 +49,7 @@ const studentSchema: Schema = new Schema<StudentType>({
     enum: ["active", "pending", "inactive"],
     default: "pending",
     validate: {
-      validator: function (value: string) {
+      validator: function(value: string) {
         return ["active", "pending", "inactive"].includes(value);
       },
       message:

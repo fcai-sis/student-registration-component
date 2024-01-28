@@ -13,11 +13,11 @@ const middlewares = [
 
     // Ensure that the `mapping` field exists
     .exists()
-    .withMessage(1)
+    .withMessage("Mapping is required")
 
     // Ensure that the `mapping` field is a valid JSON
     .isObject()
-    .withMessage(2),
+    .withMessage("Mapping must be a valid JSON"),
 
   (req: Request, res: Response, next: NextFunction) => {
     logger.debug(`Validating mapping: ${JSON.stringify(req.body.mapping)}`);
@@ -29,18 +29,11 @@ const middlewares = [
       logger.debug(
         `Invalid mapping provided ${JSON.stringify(errors.mapped())}`
       );
-      res.status(400).json(
-        errors.array()[0].msg === 1
-          ? {
-              code: "mapping-missing",
-              message: "Please provide a mapping",
-            }
-          : {
-              code: "mapping-invalid",
-              message:
-                'Please provide a valid mapping in the following format: {"Field in student": "Column in Excel", ...}',
-            }
-      );
+      res.status(400).json({
+        error: {
+          message: errors.array()[0].msg,
+        },
+      });
       return;
     }
 

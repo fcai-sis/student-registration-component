@@ -49,8 +49,10 @@ const handler = async (req: HandlerRequest, res: Response) => {
   // If the creation failed, throw an error
   if (!registrationSessionCreateResult) {
     res.status(500).json({
-      code: "registration-session-creation-failed",
-      message: "Failed to create registration session, please contact support.",
+      error: {
+        message:
+          "Failed to create registration session, please contact support.",
+      }
     });
   }
 
@@ -74,8 +76,9 @@ const handler = async (req: HandlerRequest, res: Response) => {
   // If the creation failed, throw an error
   if (!stagedStudentsCreateResult) {
     res.status(500).json({
-      code: "staged-students-creation-failed",
-      message: "Failed to create staged students, please contact support.",
+      error: {
+        message: "Failed to create staged students, please contact support.",
+      }
     });
   }
 
@@ -84,7 +87,14 @@ const handler = async (req: HandlerRequest, res: Response) => {
   );
 
   res.status(201).json({
-    message: `${stagedStudentsCreateResult.length} students uploaded`,
+    message: "Registration session started",
+    registrationSession: {
+      _id: registrationSessionCreateResult._id,
+      active: registrationSessionCreateResult.active,
+      startDate: registrationSessionCreateResult.startDate,
+      mapping: registrationSessionCreateResult.mapping,
+      excelColumnsHeaders: registrationSessionCreateResult.excelColumnsHeaders,
+    },
   });
 };
 

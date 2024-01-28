@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 
 import StudentModel from "./student.model";
 import unsetMapping from "../types/unsetMapping.type";
@@ -25,7 +25,7 @@ export const registrationSessionSchema = new Schema({
   mapping: {
     type: Object,
     validate: {
-      validator: function (mapping: HasStudentFields) {
+      validator: function(mapping: HasStudentFields) {
         const mappingKeys = getStudentKeys(mapping);
         const studentModelFields = getStudentKeys(
           StudentModel.schema.obj as HasStudentFields
@@ -51,7 +51,9 @@ export const registrationSessionSchema = new Schema({
 
 export const registrationSessoinModelName = "RegistrationSession";
 
-const RegistrationSessionModel = mongoose.model(
+export type RegistrationSessionType = InferSchemaType<typeof registrationSessionSchema>;
+
+const RegistrationSessionModel = mongoose.model<RegistrationSessionType>(
   registrationSessoinModelName,
   registrationSessionSchema
 );

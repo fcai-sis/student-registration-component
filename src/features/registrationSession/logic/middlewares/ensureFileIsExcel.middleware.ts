@@ -35,8 +35,9 @@ const middleware = async (req: HandlerRequest, res: Response, next: NextFunction
 
     // If the parsing failed, the file is not a valid excel file
     res.status(400).json({
-      code: "invalid-excel-file",
-      message: "Please upload a valid Excel file",
+      error: {
+        message: "File must be an excel file",
+      },
     });
 
     return;
