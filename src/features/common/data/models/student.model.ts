@@ -5,7 +5,6 @@ import StudentType from "../types/student.type";
 const studentSchema: Schema = new Schema<StudentType>({
   studentId: {
     type: String,
-    required: true,
     validate: {
       validator: function(value: string) {
         // studentId must be a string of digits

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import logger from "../../../../core/logger";
 import ExcelMapping from "../../data/types/mapping.type";
-import StudentModel from "../../data/models/student.model";
+import StudentModel from "../../../common/data/models/student.model";
 import HasStudentFields from "../../data/types/hasStudentFields.type";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 

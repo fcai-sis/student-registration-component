@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 
 import logger from "../../../../core/logger";
-import StudentType from "../../data/types/student.type";
+import StudentType from "../../../common/data/types/student.type";
 import ExcelMapping from "../../data/types/mapping.type";
-import StudentModel from "../../data/models/student.model";
+import StudentModel from "../../../common/data/models/student.model";
 import unsetMapping from "../../data/types/unsetMapping.type";
 import StagedStudentType from "../../data/types/stagedStudent.type";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
