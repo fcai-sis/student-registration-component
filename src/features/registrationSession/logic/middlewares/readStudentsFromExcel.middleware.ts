@@ -7,6 +7,7 @@ import {
   getExcelColumnsHeaders,
   getExcelRows,
   getStudentsWorkSheet,
+  rowsToStudents,
 } from "../../../common/logic/utils/excel.utils";
 
 type MiddlewareRequest = Request<
@@ -36,7 +37,7 @@ const middleware = async (
 
   const excelColumnsHeaders = getExcelColumnsHeaders(worksheet);
 
-  req.body.students = excelRows;
+  req.body.students = rowsToStudents(excelRows, excelColumnsHeaders);
   req.body.excelColumnsHeaders = excelColumnsHeaders;
 
   logger.debug(
