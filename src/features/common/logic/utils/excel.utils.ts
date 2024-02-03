@@ -10,7 +10,7 @@ export function getExcelColumnsHeaders(worksheet: Worksheet): string[] {
 export const getStudentsWorkSheet = (workbook: Workbook): Worksheet =>
   workbook.getWorksheet(1)!; // TODO: handle no worksheet
 
-export function getExcelRows(worksheet: Worksheet): ExcelRow[] {
+export function getExcelRows(worksheet: Worksheet): any[][] {
   const rows = worksheet.getRows(2, worksheet.rowCount) as ExcelRow[];
   return rows.map((row) => row.values.splice(1) as string[]).splice(0, rows.length - 1);
 }
