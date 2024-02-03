@@ -19,6 +19,7 @@ const updateStudentHandler = async (
   const student = await StudentModel.findByIdAndUpdate(
     studentId,
     { ...req.body },
+    { new: true }
   );
 
   if (!student) {
