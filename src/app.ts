@@ -3,6 +3,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
+import bodyParser from "body-parser";
 
 import router from "./router";
 import { isDev } from "./env";
@@ -42,8 +43,8 @@ app.use(compression());
 app.use(cors());
 
 // Parse JSON and url-encoded query
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Mount API routes
 app.use("/", router());
