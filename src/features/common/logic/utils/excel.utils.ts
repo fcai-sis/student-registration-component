@@ -14,3 +14,13 @@ export function getExcelRows(worksheet: Worksheet): any[][] {
   const rows = worksheet.getRows(2, worksheet.rowCount) as ExcelRow[];
   return rows.map((row) => row.values.splice(1) as string[]).splice(0, rows.length - 1);
 }
+
+export function rowsToStudents(rows: any[][], columnsHeaders: string[]): ExcelRow[] {
+  return rows.map((row) => {
+    const student: ExcelRow = {};
+    columnsHeaders.forEach((header, index) => {
+      student[header] = row[index];
+    });
+    return student;
+  });
+}
