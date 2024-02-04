@@ -32,8 +32,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   for (const key in mapping) {
     if (mapping[key] === unsetMapping) {
       res.status(400).json({
-        code: "mapping-not-set",
-        message: "Mapping is not set",
+        message: `Mapping for ${key} is not set. Please set the mapping first.`
       });
       return;
     }
