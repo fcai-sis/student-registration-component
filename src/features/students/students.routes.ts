@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
-import validateCreateStudentRequestBodyMiddleware from "./logic/middlewares/validateCreateAccouncementRequestBody.middleware";
+import validateCreateStudentRequestBodyMiddleware from "./logic/middlewares/validateCreateStudentRequestBody.middleware";
 import createStudentHandler from "./logic/handlers/createStudent.handler";
 import readStudentsHandler from "./logic/handlers/readStudents.handler";
 import ensureStudentIdInParamsMiddleware from "./logic/middlewares/ensureStudentIdInParams.middleware";
@@ -17,7 +17,7 @@ export default (router: Router) => {
    * Create student
    **/
   router.post(
-    "/create",
+    "/student/create",
 
     // Validate request body
     validateCreateStudentRequestBodyMiddleware,
@@ -29,7 +29,7 @@ export default (router: Router) => {
    * Read paginated students
    **/
   router.get(
-    "/read",
+    "/student/read",
 
     // Validate request query params for pagination
     paginationQueryParamsMiddleware,
@@ -41,7 +41,7 @@ export default (router: Router) => {
    * Delete student
    **/
   router.delete(
-    "/delete/:studentId",
+    "/student/delete/:studentId",
 
     // Ensure student id in params
     ensureStudentIdInParamsMiddleware,
@@ -53,7 +53,7 @@ export default (router: Router) => {
    * Update student
    **/
   router.patch(
-    "/update/:studentId",
+    "/student/update/:studentId",
 
     // Ensure announcement id in params
     ensureStudentIdInParamsMiddleware,
@@ -68,7 +68,7 @@ export default (router: Router) => {
    * Find student by id
    **/
   router.get(
-    "/find/:studentId",
+    "/student/find/:studentId",
 
     // Ensure student id in params
     ensureStudentIdInParamsMiddleware,
