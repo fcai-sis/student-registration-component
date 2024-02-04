@@ -27,27 +27,21 @@ const middleware = (
     StudentModel.schema.obj as HasStudentFields
   );
 
-  // Get all student model fields that are missing from the mapping
-  const missingFields = studentModelFields.filter(
-    (field) => !mappingKeys.includes(field)
+  const fieldsInMappingThatAreNotInStudentModel = mappingKeys.filter(
+    (key) => !studentModelFields.includes(key)
   );
 
-  // Get all mapping fields that are not in the student model
-  const incorrectMappingFields = mappingKeys.filter(
-    (field) => !studentModelFields.includes(field)
-  );
-
-  // If there are missing fields, return an error
-  if (missingFields.length > 0) {
-    res.status(400).json({
-      error: {
-        message: "Please provide a mapping for the fields in the Student model",
-        missing: missingFields,
-        incorrect: incorrectMappingFields,
-      },
+  if (fieldsInMappingThatAreNotInStudentModel.length > 0) {
+    logger.error(
+      `The following fields are not present in the Student model: ${fieldsInMappingThatAreNotInStudentModel.join(
+        ", "
+      )}`
+    );
+    return res.status(400).send({
+      error: `The following fields are not present in the Student model: ${fieldsInMappingThatAreNotInStudentModel.join(
+        ", "
+      )}`,
     });
-
-    return;
   }
 
   next();

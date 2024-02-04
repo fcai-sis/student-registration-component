@@ -11,11 +11,19 @@ type HandlerRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 const handler = async (req: HandlerRequest, res: Response) => {
   const mapping = req.body.mapping;
 
-  const result = await RegistrationSessionModel.findOneAndUpdate(
-    { active: true },
-    { mapping },
-    { new: true }
-  );
+  const activeRegistrationSession = await RegistrationSessionModel.findOne({ active: true });
+
+  if (!activeRegistrationSession) {
+    return res.status(404).json({ error: "No active registration session found" });
+  }
+
+  // update only the keys that are present in the mapping
+  activeRegistrationSession.mapping = {
+    ...activeRegistrationSession.mapping,
+    ...mapping,
+  };
+
+  const result = await activeRegistrationSession.save();
 
   if (!result) {
     throw new Error("Failed to update mapping");

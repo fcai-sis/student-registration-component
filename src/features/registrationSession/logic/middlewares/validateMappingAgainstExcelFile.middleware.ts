@@ -27,21 +27,16 @@ const middleware = async (
 
   const mappingKeys = getStudentKeys(mapping as unknown as ExcelMapping);
 
-  // Get all mapping keys that do not exist in the excel file
-  const incorrectMappingKeys = mappingKeys.filter(
+  const valuesInMappingThatAreNotInExcelColumns = mappingKeys.filter(
     (key) => !excelColumnsHeaders.includes(mapping[key])
   );
 
-  // If there are any incorrect mappings, return an error
-  if (incorrectMappingKeys.length > 0) {
-    res.status(400).json({
-      code: "mapping-invalid-excel-fields",
-      message:
-        "Please make sure all fields are mapped to the correct fields in the excel file",
-      fields: incorrectMappingKeys.map((key) => mapping[key]),
-      availableFields: excelColumnsHeaders, // TODO: Remove this since it's probably HUGE and useless
+  if (valuesInMappingThatAreNotInExcelColumns.length > 0) {
+    return res.status(400).send({
+      error: `The following fields are not present in the excel file: ${valuesInMappingThatAreNotInExcelColumns.join(
+        ", "
+      )}`,
     });
-    return;
   }
 
   next();
