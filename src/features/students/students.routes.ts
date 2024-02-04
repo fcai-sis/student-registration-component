@@ -10,14 +10,15 @@ import deleteStudentHandler from "./logic/handlers/deleteStudent.handler";
 import updateStudentValidator from "./logic/middlewares/updateStudentValidator.middleware";
 import updateStudentHandler from "./logic/handlers/updateStudent.handler";
 import findStudentById from "./logic/handlers/FindStudentById.handler";
+import e from "cors";
 
 
-export default (router: Router) => {
+const studentsRoutes = (router: Router) => {
   /*
    * Create student
    **/
   router.post(
-    "/student/create",
+    "/create",
 
     // Validate request body
     validateCreateStudentRequestBodyMiddleware,
@@ -29,7 +30,7 @@ export default (router: Router) => {
    * Read paginated students
    **/
   router.get(
-    "/student/read",
+    "/read",
 
     // Validate request query params for pagination
     paginationQueryParamsMiddleware,
@@ -41,7 +42,7 @@ export default (router: Router) => {
    * Delete student
    **/
   router.delete(
-    "/student/delete/:studentId",
+    "/delete/:studentId",
 
     // Ensure student id in params
     ensureStudentIdInParamsMiddleware,
@@ -53,7 +54,7 @@ export default (router: Router) => {
    * Update student
    **/
   router.patch(
-    "/student/update/:studentId",
+    "/update/:studentId",
 
     // Ensure announcement id in params
     ensureStudentIdInParamsMiddleware,
@@ -68,12 +69,13 @@ export default (router: Router) => {
    * Find student by id
    **/
   router.get(
-    "/student/find/:studentId",
+    "/find/:studentId",
 
     // Ensure student id in params
     ensureStudentIdInParamsMiddleware,
 
     asyncHandler(findStudentById)
   );
-
 };
+
+export default studentsRoutes;
