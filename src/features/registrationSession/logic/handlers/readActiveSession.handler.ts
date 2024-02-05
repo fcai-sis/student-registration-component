@@ -9,7 +9,7 @@ type HandlerRequest = Request<{}, {}, {}>;
  *
  * The staged students are not returned because of the anticipated large size of the array.
  */
-const handler = async (req: HandlerRequest, res: Response) => {
+const handler = async (_: HandlerRequest, res: Response) => {
   // Get the active registration session
   const result = await RegistrationSessionModel.findOne(
     { active: true },
@@ -27,7 +27,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     return;
   }
 
-  res.json(result);
+  res.json({ registrationSession: result.toObject() });
 };
 
 export default handler;

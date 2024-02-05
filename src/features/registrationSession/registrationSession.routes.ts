@@ -10,6 +10,7 @@ import cancelSessionHandler from "./logic/handlers/cancelSession.handler";
 import uploadFileMiddleware from "./logic/middlewares/uploadFile.middleware";
 import readActiveSessionHandler from "./logic/handlers/readActiveSession.handler";
 import readStagedStudentsHandler from "./logic/handlers/readStagedStudents.handler";
+import readMappedStudentsHandler from "./logic/handlers/readMappedStudents.handler";
 import ensureFileIsExcelMiddleware from "./logic/middlewares/ensureFileIsExcel.middleware";
 import ensureFileUploadedMiddleware from "./logic/middlewares/ensureFileUploaded.middleware";
 import checkActiveSessionMiddleware from "./logic/middlewares/checkActiveSession.middleware";
@@ -113,5 +114,21 @@ export default (router: Router) => {
 
     // Read and return the staged students
     asyncHandler(readStagedStudentsHandler)
+  );
+
+  /**
+   * Get mapped students of the active registration session.
+   */
+  router.get(
+    "/active/mapped",
+
+    // Check if there is an active registration session
+    asyncHandler(checkActiveSessionMiddleware(true)),
+
+    // Validate the page and pageSize query parameters
+    paginationQueryParamsMiddleware,
+
+    // Read and return the mapped students
+    asyncHandler(readMappedStudentsHandler)
   );
 };
