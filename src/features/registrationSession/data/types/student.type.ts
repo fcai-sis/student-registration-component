@@ -15,6 +15,7 @@ type StudentType = {
   birthYear: number;
   birthMonth: number;
   birthDay: number;
+  birthPlace: string;
   governorateId: number;
   nationality: string;
   address: string;
