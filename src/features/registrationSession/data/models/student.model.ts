@@ -2,6 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 import StudentType from "../types/student.type";
 
+/*TODO: check whether the following fields are necessary :
+كود الادارة
+كود الشرطة
+قسم الشرطة*/
+
 const studentSchema: Schema = new Schema<StudentType>({
   studentId: {
     type: String,
@@ -11,7 +16,7 @@ const studentSchema: Schema = new Schema<StudentType>({
         // studentId must be a string of digits
         return !/\D/.test(value);
       },
-      message: "Student ID must be a number",
+      message: "Student ID must be a valid ID",
     },
   },
 
@@ -26,7 +31,7 @@ const studentSchema: Schema = new Schema<StudentType>({
       message: "Full name must contain only Arabic letters (أ - ي)",
     },
   },
-
+  // refers to علمي علوم او رياضة
   // Group code can only be 1 or 2
   groupCode: {
     type: Boolean,
@@ -151,7 +156,7 @@ const studentSchema: Schema = new Schema<StudentType>({
     //   message: "Phone number must be an 11-digit number",
     // },
     validate: {
-      // just make sure tis a number till we figure out the deal with empty fields
+      // TODO: just make sure tis a number till we figure out the deal with empty fields
       validator: function (value: string) {
         return !isNaN(Number(value));
       },
@@ -203,6 +208,17 @@ const studentSchema: Schema = new Schema<StudentType>({
       message: "Birth day must be a number between 1 and 31",
     },
   },
+  birthPlace: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value: string) {
+        // birthPlace must contain only letters and Arabic characters and allow whitespace
+        return /^[\p{Script=Arabic}\s]+$/gmu.test(value);
+      },
+      message: "Birth place must contain only letters and Arabic characters",
+    },
+  },
   governorateId: {
     type: Number,
     required: true,
@@ -222,6 +238,8 @@ const studentSchema: Schema = new Schema<StudentType>({
       // convert the string to a number if possible
       const parsedValue = parseInt(String(value), 10);
       // Map numbers to corresponding strings
+
+      // TODO: figure out nationality enums and modify this
       if (typeof parsedValue === "number") {
         switch (parsedValue) {
           case 1:
@@ -251,9 +269,11 @@ const studentSchema: Schema = new Schema<StudentType>({
         // address must contain only letters, numbers and Arabic characters and allow whitespace, and allow / and - characters
         // commented out because ALL THE ADDRESSES ARE ALL OVER THE PLACE
         // return /^[^A-Za-z]+$/gmu.test(value);
+
+        // ensure the address is not empty and not just whitespace
+        return !!value && /\S/.test(value);
       },
-      message:
-        "Address must contain only letters, numbers, and Arabic characters",
+      message: "Address cannot be empty",
     },
   },
 });
