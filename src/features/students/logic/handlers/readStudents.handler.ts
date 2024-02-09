@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import StudentModel from "../../../common/data/models/student.model";
 
-
 type HandlerRequest = Request;
 
 /*
@@ -18,10 +17,13 @@ const handler = async (req: HandlerRequest, res: Response) => {
     .skip((page - 1) * pageSize) // pagination
     .limit(pageSize);
 
+  const count = await StudentModel.countDocuments();
+
   return res.status(200).send({
-    students: students.map(student => ({
+    students: students.map((student) => ({
       ...student.toObject(),
     })),
+    count,
   });
 };
 
