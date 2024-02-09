@@ -10,8 +10,7 @@ import deleteStudentHandler from "./logic/handlers/deleteStudent.handler";
 import updateStudentValidator from "./logic/middlewares/updateStudentValidator.middleware";
 import updateStudentHandler from "./logic/handlers/updateStudent.handler";
 import findStudentById from "./logic/handlers/FindStudentById.handler";
-import e from "cors";
-
+import countStudentCollectionHandler from "./logic/handlers/countStudents.handler";
 
 const studentsRoutes = (router: Router) => {
   /*
@@ -36,6 +35,15 @@ const studentsRoutes = (router: Router) => {
     paginationQueryParamsMiddleware,
 
     asyncHandler(readStudentsHandler)
+  );
+
+  /*
+   * Count all students
+   **/
+  router.get(
+    "/count",
+
+    asyncHandler(countStudentCollectionHandler)
   );
 
   /*
