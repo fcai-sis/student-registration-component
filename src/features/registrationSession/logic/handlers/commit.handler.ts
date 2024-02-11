@@ -163,13 +163,14 @@ const handler = async (req: HandlerRequest, res: Response) => {
         insertedIds = Object.values(error.result.insertedIds);
         error.writeErrors.forEach((writeError: any) => {
           console.log(writeError);
+
+          //TODO: This is a hack, fix it
           const field = writeError.err.errmsg.split("{")[1].split("}")[0].trim();
           const duplicatedField = field.split(":")[0].trim();
           const duplicatedValue = field.split(":")[1].trim();
           errorMessages.push(`${duplicatedField} ${duplicatedValue} at row ${writeError.index + 2}`);
         }
         );
-
       }
     }
     );
@@ -184,7 +185,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     if (errorMessages.length > 0) {
       res.status(400).json({
         error: {
-          code: "duplicate-field",
+          code: "duplicate-entry",
           message: errorMessages,
         }
       });
