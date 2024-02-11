@@ -5,6 +5,7 @@ import StudentType from "../types/student.type";
 const studentSchema: Schema = new Schema<StudentType>({
   studentId: {
     type: String,
+    unique: true,
     validate: {
       validator: function(value: string) {
         // studentId must be a string of digits
@@ -17,7 +18,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   fullName: {
     type: String,
-    required: true,
+    required: [true, "Full name is required"],
     validate: {
       validator: function(value: string) {
         // name must contain only Arabic characters and allow whitespace
@@ -30,7 +31,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   address: {
     type: String,
-    required: true,
+    required: [true, "Address is required"],
     validate: {
       validator: function(value: string) {
         // address must contain only letters, numbers and Arabic characters and allow whitespace
