@@ -5,7 +5,7 @@ type StudentType = {
   studentId: string;
   fullName: string;
   groupCode: boolean;
-  gender: boolean;
+  gender: "male" | "female" | "other";
   religion: "muslim" | "christian" | "other";
   nationalId: string;
   administration: string;
