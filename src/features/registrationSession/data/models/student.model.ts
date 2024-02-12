@@ -11,6 +11,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   studentId: {
     type: String,
     required: true,
+    unique: true,
     validate: {
       validator: function (value: string) {
         // studentId must be a string of digits
@@ -57,26 +58,35 @@ const studentSchema: Schema = new Schema<StudentType>({
     },
   },
   gender: {
-    type: Boolean,
+    type: String,
+    enum: ["male", "female", "other"],
     required: true,
-    set: function (value: any) {
+    set: function (value: number | string) {
       // convert the string to a number if possible
       const parsedValue = parseInt(String(value), 10);
-      // check if the value is a number before mapping
-      if (typeof parsedValue === "number" && !isNaN(parsedValue)) {
-        // map 1 to true and 2 to false
-        return parsedValue === 1;
+
+      // Map numbers to corresponding strings
+      if (typeof parsedValue === "number") {
+        switch (parsedValue) {
+          case 1:
+            return "male";
+          case 2:
+            return "female";
+          case 3:
+            return "other";
+          default:
+            return undefined;
+        }
       } else {
-        // for now, let's default to undefined so that it's not mistaken for a boolean
-        return undefined;
+        // If the value is already a string, leave it unchanged
+        return value;
       }
     },
     validate: {
-      validator: function (value: boolean) {
-        // Validate if it's a boolean (true or false)
-        return typeof value === "boolean";
+      validator: function (value: string) {
+        return ["male", "female", "other"].includes(value);
       },
-      message: "Gender must be specified as either male (1) or female (2)",
+      message: "Gender must be one of the following: male, female, other",
     },
   },
   religion: {
