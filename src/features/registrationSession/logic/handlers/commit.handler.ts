@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 
 import logger from "../../../../core/logger";
-import StudentType from "../../data/types/student.type";
+import StudentType from "../../../common/data/types/student.type";
 import ExcelMapping from "../../data/types/mapping.type";
-import StudentModel from "../../data/models/student.model";
+import StudentModel from "../../../common/data/models/student.model";
 import unsetMapping from "../../data/types/unsetMapping.type";
 import StagedStudentType from "../../data/types/stagedStudent.type";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
+import { Error, MongooseError } from "mongoose";
 
 type HandlerRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 
@@ -56,9 +57,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
   );
 
   try {
+    let errorMessages: string[] = [];
+    let insertedIds: any[] = [];
     // Create the actual students from the staged students by applying the mapping
     const students = stagedStudents.map(
-      ({ student: stagedStudent }: StagedStudentType) => {
+      ({ student: stagedStudent }: StagedStudentType, index) => {
         const student: Partial<StudentType> = {};
 
         // Loop through all keys in the mapping
@@ -121,10 +124,10 @@ const handler = async (req: HandlerRequest, res: Response) => {
             logger.debug(
               `No value found for field "${correspondingExcelColumnHeader}" in staged student with id ${stagedStudent._id}`
             );
-            throw {
-              code: "no-value-found",
-              message: `No value found for field "${correspondingExcelColumnHeader}" in one of the staged students, please update the mapping or upload another excel file.`,
-            };
+            errorMessages.push(
+              `No value found for field "${correspondingExcelColumnHeader}" in staged student with id ${stagedStudent._id} at row ${index + 2}`
+            );
+            continue;
           }
 
           // Set the value of the current key in the student to the value of the corresponding excel column header in the staged student
@@ -139,8 +142,55 @@ const handler = async (req: HandlerRequest, res: Response) => {
       }
     );
 
+    if (errorMessages.length > 0) {
+      res.status(400).json({
+        error: {
+          code: "no-value-found",
+          message: errorMessages,
+        }
+      });
+      return;
+    }
+    logger.debug(`Mapped ${students} students successfully`);
+
     // Create the students in the database
-    const result = await StudentModel.insertMany(students);
+    const result = await StudentModel.insertMany(students, {
+      ordered: false,
+    }).then((result) => {
+      return result;
+    }).catch((error: any) => {
+      if (error.writeErrors && error.code === 11000) {
+        insertedIds = Object.values(error.result.insertedIds);
+        error.writeErrors.forEach((writeError: any) => {
+          console.log(writeError);
+
+          //TODO: This is a hack, fix it
+          const field = writeError.err.errmsg.split("{")[1].split("}")[0].trim();
+          const duplicatedField = field.split(":")[0].trim();
+          const duplicatedValue = field.split(":")[1].trim();
+          errorMessages.push(`${duplicatedField} ${duplicatedValue} at row ${writeError.index + 2}`);
+        }
+        );
+      }
+    }
+    );
+    if (insertedIds.length > 0) {
+      const result = await StudentModel.deleteMany({
+        _id: {
+          $in: insertedIds
+        }
+      });
+    }
+
+    if (errorMessages.length > 0) {
+      res.status(400).json({
+        error: {
+          code: "duplicate-entry",
+          message: errorMessages,
+        }
+      });
+      return;
+    }
 
     // If the creation failed, throw an error
     if (!result) {

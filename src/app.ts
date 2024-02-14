@@ -5,7 +5,7 @@ import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 
-import router from "./router";
+import { studentsRouter } from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
 
@@ -47,7 +47,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Mount API routes
-app.use("/", router());
+app.use("/students", studentsRouter());
 
 // TODO: Custom 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {
