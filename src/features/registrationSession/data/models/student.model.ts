@@ -10,7 +10,7 @@ import StudentType from "../types/student.type";
 const studentSchema: Schema = new Schema<StudentType>({
   studentId: {
     type: String,
-    required: true,
+    required: [true, "Student ID is required"],
     unique: true,
     validate: {
       validator: function (value: string) {
@@ -23,7 +23,7 @@ const studentSchema: Schema = new Schema<StudentType>({
 
   fullName: {
     type: String,
-    required: true,
+    required: [true, "Full name is required"],
     validate: {
       validator: function (value: string) {
         // name must contain only Arabic characters and allow whitespace
@@ -36,7 +36,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   // Group code can only be 1 or 2
   groupCode: {
     type: Boolean,
-    required: true,
+    required: [true, "Group code is required"],
     set: function (value: any) {
       // convert the string to a number if possible
       const parsedValue = parseInt(String(value), 10);
@@ -60,7 +60,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   gender: {
     type: String,
     enum: ["male", "female", "other"],
-    required: true,
+    required: [true, "Gender is required"],
     set: function (value: number | string) {
       // convert the string to a number if possible
       const parsedValue = parseInt(String(value), 10);
@@ -91,7 +91,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   religion: {
     type: String,
-    required: true,
+    required: [true, "Religion is required"],
     enum: ["muslim", "christian", "other"],
     set: function (value: number | string) {
       // convert the string to a number if possible
@@ -124,7 +124,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   nationalId: {
     type: String,
-    required: true,
+    required: [true, "National ID is required"],
     validate: {
       validator: function (value: string) {
         // nationalId must be a string of 14 digits
@@ -135,7 +135,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   administration: {
     type: String,
-    required: true,
+    required: [true, "Administration is required"],
     validate: {
       validator: function (value: string) {
         // administration must contain only letters and Arabic characters and allow whitespace
@@ -146,7 +146,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   directorate: {
     type: String,
-    required: true,
+    required: [true, "Directorate is required"],
     validate: {
       validator: function (value: string) {
         // directorate must contain only letters and Arabic characters and allow whitespace
@@ -176,7 +176,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   educationType: {
     type: String,
-    required: true,
+    required: [true, "Education type is required"],
     validate: {
       validator: function (value: string) {
         // educationType must contain only letters and Arabic characters and allow whitespace
@@ -187,7 +187,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   birthYear: {
     type: Number,
-    required: true,
+    required: [true, "Birth year is required"],
     validate: {
       validator: function (value: number) {
         // birthYear must be a number between 1900 and 2021
@@ -198,7 +198,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   birthMonth: {
     type: Number,
-    required: true,
+    required: [true, "Birth month is required"],
     validate: {
       validator: function (value: number) {
         // birthMonth must be a number between 1 and 12
@@ -209,7 +209,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   birthDay: {
     type: Number,
-    required: true,
+    required: [true, "Birth day is required"],
     validate: {
       validator: function (value: number) {
         // birthDay must be a number between 1 and 31
@@ -220,7 +220,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   birthPlace: {
     type: String,
-    required: true,
+    required: [true, "Birth place is required"],
     validate: {
       validator: function (value: string) {
         // birthPlace must contain only letters and Arabic characters and allow whitespace
@@ -231,7 +231,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   governorateId: {
     type: Number,
-    required: true,
+    required: [true, "Governorate ID is required"],
     validate: {
       validator: function (value: number) {
         // governorateId must be a number
@@ -243,7 +243,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   nationality: {
     type: String,
-    required: true,
+    required: [true, "Nationality is required"],
     set: function (value: string | number) {
       // convert the string to a number if possible
       const parsedValue = parseInt(String(value), 10);
@@ -273,7 +273,7 @@ const studentSchema: Schema = new Schema<StudentType>({
 
   address: {
     type: String,
-    required: true,
+    required: [true, "Address is required"],
     validate: {
       validator: function (value: string) {
         // address must contain only letters, numbers and Arabic characters and allow whitespace, and allow / and - characters
