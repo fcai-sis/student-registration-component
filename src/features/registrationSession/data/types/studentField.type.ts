@@ -1,4 +1,4 @@
-import StudentType from "./student.type";
+import StudentType from "../../../common/data/types/student.type";
 
 /**
  * A field in the Student model.

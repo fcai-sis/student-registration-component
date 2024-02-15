@@ -1,11 +1,10 @@
 import { Router } from "express";
+import studentsRoutes from "./features/students/students.routes";
+import registrationSessionRoutes from "./features/registrationSession/registrationSession.routes";
 
-import startRegistrationSessionRoutes from "./features/registrationSession/registrationSession.routes";
-
-const router: Router = Router();
-
-export default (): Router => {
-  startRegistrationSessionRoutes(router);
-
+export const studentsRouter = (): Router => {
+  const router = Router();
+  studentsRoutes(router);
+  registrationSessionRoutes(router);
   return router;
 };
