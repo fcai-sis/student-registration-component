@@ -1,7 +1,19 @@
 export const arabicStudentFields = {
-  studentId: "رقم الطالب",
+  studentId: "كود الطالب",
   fullName: "الاسم الكامل",
   address: "العنوان",
-  status: "الحالة",
+  groupCode: "الشعبة العلمية",
+  gender: "الجنس",
+  religion: "الديانة",
+  nationalId: "الرقم القومي",
+  administration: "الادارة",
+  directorate: "المديرية",
+  phoneNumber: "رقم الهاتف",
+  educationType: "نوع التعليم",
+  birthYear: "سنة الميلاد",
+  birthPlace: "محل الميلاد",
+  birthMonth: "شهر الميلاد",
+  birthDay: "يوم الميلاد",
+  governorateId: "رقم المحافظة",
+  nationality: "الجنسية",
 };
-
