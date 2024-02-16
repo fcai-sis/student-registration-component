@@ -12,8 +12,7 @@ import { PreinsertionStudentModel } from "../../../common/data/models/student.mo
 type HandlerRequest = Request<{}, {}, {}>;
 
 /**
- * Saves the staged students in the current active registration session to the actual students collection.
- * The active registration session is then marked as inactive.
+ * Saves the staged students in the current active registration session to the preinsertion students collection
  */
 const handler = async (_: HandlerRequest, res: Response) => {
   // Get the current action registration session
@@ -59,6 +58,7 @@ const handler = async (_: HandlerRequest, res: Response) => {
   try {
     let errorMessages: string[] = [];
     let insertedIds: any[] = [];
+
     // Create the actual students from the staged students by applying the mapping
     const students = stagedStudents.map(
       ({ student: stagedStudent }: StagedStudentType, index) => {
@@ -75,16 +75,6 @@ const handler = async (_: HandlerRequest, res: Response) => {
             `Corresponding excel column header: ${correspondingExcelColumnHeader}`
           );
 
-          // If the corresponding excel column header is <unset>, throw an error
-          if (correspondingExcelColumnHeader === unsetMapping) {
-            logger.debug(`Unset mapping for ${studentFieldInMapping}`);
-            throw {
-              code: "unset-mapping",
-              message: `Unset mapping for ${studentFieldInMapping}`,
-            };
-          }
-
-          // TODO: This might be redundant
           if (!correspondingExcelColumnHeader) {
             logger.debug(
               `No corresponding excel column header for ${studentFieldInMapping}`
@@ -92,6 +82,15 @@ const handler = async (_: HandlerRequest, res: Response) => {
             throw {
               code: "no-corresponding-excel-column-header",
               message: `No corresponding excel column header for ${studentFieldInMapping}`,
+            };
+          }
+
+          // If the corresponding excel column header is <unset>, throw an error
+          if (correspondingExcelColumnHeader === unsetMapping) {
+            logger.debug(`Unset mapping for ${studentFieldInMapping}`);
+            throw {
+              code: "unset-mapping",
+              message: `Unset mapping for ${studentFieldInMapping}`,
             };
           }
 
@@ -151,10 +150,11 @@ const handler = async (_: HandlerRequest, res: Response) => {
       });
       return;
     }
+
     logger.debug(`Mapped ${students} students successfully`);
 
     // Create the students in the database
-    const result = await PreinsertionStudentModel.insertMany(students, {
+    const preinsertionResult = await PreinsertionStudentModel.insertMany(students, {
       ordered: false,
     }).then((result) => {
       return result;
@@ -168,52 +168,40 @@ const handler = async (_: HandlerRequest, res: Response) => {
           const field = writeError.err.errmsg.split("{")[1].split("}")[0].trim();
           const duplicatedField = field.split(":")[0].trim();
           const duplicatedValue = field.split(":")[1].trim();
+
+          // for the rollback
           errorMessages.push(`${duplicatedField} ${duplicatedValue} at row ${writeError.index + 2}`);
         });
       }
     });
 
+    // If there are any errors
     if (insertedIds.length > 0) {
-      const result = await PreinsertionStudentModel.deleteMany({
-        _id: {
-          $in: insertedIds
-        }
+      await PreinsertionStudentModel.deleteMany({
+        _id: { $in: insertedIds }
       });
-    }
 
-    if (errorMessages.length > 0) {
       res.status(400).json({
         error: {
           code: "duplicate-entry",
           message: errorMessages,
         }
       });
+
       return;
     }
 
     // If the creation failed, throw an error
-    if (!result) {
+    if (!preinsertionResult) {
       throw {
         code: "failed-to-create-students",
         message: "Failed to create students",
       };
     }
 
-    // Mark the current active registration session as inactive
-    currentActiveSession.active = false;
-    currentActiveSession.endDate = new Date();
-
-    await currentActiveSession.save();
-
-    // Clear the staged students from the database
-    await StagedStudentModel.deleteMany({
-      registrationSessionId: currentActiveSession._id,
-    });
-
     logger.debug(`Marked current active registration session as inactive`);
 
-    res.status(200).json({ message: `${result.length} students created` });
-
+    res.status(200).json({ message: `${preinsertionResult.length} students created` });
   } catch (error) {
     logger.debug(`Error while mapping: ${error}`);
     res.status(400).json(error);

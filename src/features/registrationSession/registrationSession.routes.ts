@@ -4,6 +4,7 @@ import { asyncHandler } from "@fcai-sis/shared-utilities";
 import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
 
 import commitHandler from "./logic/handlers/commit.handler";
+import precommitHandler from "./logic/handlers/precommit.handler";
 import startSessionHandler from "./logic/handlers/startSession.handler";
 import updateMappingHandler from "./logic/handlers/updateMapping.handler";
 import cancelSessionHandler from "./logic/handlers/cancelSession.handler";
@@ -59,6 +60,19 @@ export default (router: Router) => {
 
     // Update the mapping
     asyncHandler(updateMappingHandler)
+  );
+
+  /**
+   * Commits the staged students to the actual students collection.
+   */
+  router.post(
+    "/precommit",
+
+    // Check if there is an active registration session
+    asyncHandler(checkActiveSessionMiddleware(true)),
+
+    // Commit the staged students
+    asyncHandler(precommitHandler)
   );
 
   /**
