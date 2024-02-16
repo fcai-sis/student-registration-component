@@ -9,7 +9,6 @@ import StagedStudentType from "../../data/types/stagedStudent.type";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
-import { Error, MongooseError } from "mongoose";
 
 type HandlerRequest = Request<{}, {}, { mapping: ExcelMapping }>;
 
@@ -17,11 +16,13 @@ type HandlerRequest = Request<{}, {}, { mapping: ExcelMapping }>;
  * Saves the staged students in the current active registration session to the actual students collection.
  * The active registration session is then marked as inactive.
  */
-const handler = async (req: HandlerRequest, res: Response) => {
+const handler = async (_: HandlerRequest, res: Response) => {
+  // Get the current action registration session
   const currentActiveSession = await RegistrationSessionModel.findOne({
     active: true,
   });
 
+  // If none exists, throw an error
   if (!currentActiveSession) {
     logger.debug(`No active registration session found`);
     res.status(400).json({
@@ -37,7 +38,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const excelColumnsHeaders = currentActiveSession.excelColumnsHeaders;
   const mapping = currentActiveSession.mapping;
 
-  // Get the staged students from the current active registration session
+  // Get the staged students for the current active registration session
   const stagedStudents = await StagedStudentModel.find({
     registrationSessionId: currentActiveSession._id,
   });
