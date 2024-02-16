@@ -59,5 +59,6 @@ const studentSchema: Schema = new Schema<StudentType>({
 });
 
 const StudentModel = mongoose.model<StudentType>("Student", studentSchema);
+export const PreinsertionStudentModel = mongoose.model<StudentType>("PreinsertionStudent", studentSchema);
 
 export default StudentModel;

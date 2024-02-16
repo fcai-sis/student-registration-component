@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
 
 import logger from "../../../../core/logger";
-import StudentType from "../../../common/data/types/student.type";
-import ExcelMapping from "../../data/types/mapping.type";
-import StudentModel from "../../../common/data/models/student.model";
 import unsetMapping from "../../data/types/unsetMapping.type";
+import StudentType from "../../../common/data/types/student.type";
 import StagedStudentType from "../../data/types/stagedStudent.type";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
+import { PreinsertionStudentModel } from "../../../common/data/models/student.model";
 
-type HandlerRequest = Request<{}, {}, { mapping: ExcelMapping }>;
+type HandlerRequest = Request<{}, {}, {}>;
 
 /**
  * Saves the staged students in the current active registration session to the actual students collection.
@@ -155,7 +154,7 @@ const handler = async (_: HandlerRequest, res: Response) => {
     logger.debug(`Mapped ${students} students successfully`);
 
     // Create the students in the database
-    const result = await StudentModel.insertMany(students, {
+    const result = await PreinsertionStudentModel.insertMany(students, {
       ordered: false,
     }).then((result) => {
       return result;
@@ -170,13 +169,12 @@ const handler = async (_: HandlerRequest, res: Response) => {
           const duplicatedField = field.split(":")[0].trim();
           const duplicatedValue = field.split(":")[1].trim();
           errorMessages.push(`${duplicatedField} ${duplicatedValue} at row ${writeError.index + 2}`);
-        }
-        );
+        });
       }
-    }
-    );
+    });
+
     if (insertedIds.length > 0) {
-      const result = await StudentModel.deleteMany({
+      const result = await PreinsertionStudentModel.deleteMany({
         _id: {
           $in: insertedIds
         }
@@ -215,6 +213,7 @@ const handler = async (_: HandlerRequest, res: Response) => {
     logger.debug(`Marked current active registration session as inactive`);
 
     res.status(200).json({ message: `${result.length} students created` });
+
   } catch (error) {
     logger.debug(`Error while mapping: ${error}`);
     res.status(400).json(error);
