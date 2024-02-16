@@ -5,6 +5,11 @@ import registrationSessionRoutes from "./features/registrationSession/registrati
 export const studentsRouter = (): Router => {
   const router = Router();
   studentsRoutes(router);
-  registrationSessionRoutes(router);
   return router;
 };
+
+export const sessionRouter = (): Router => {
+  const router = Router();
+  registrationSessionRoutes(router);
+  return router;
+}
