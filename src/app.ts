@@ -3,9 +3,8 @@ import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
-import bodyParser from "body-parser";
 
-import router from "./router";
+import { sessionRouter, studentsRouter } from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
 
@@ -43,11 +42,12 @@ app.use(compression());
 app.use(cors());
 
 // Parse JSON and url-encoded query
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Mount API routes
-app.use("/", router());
+app.use("/students", studentsRouter());
+app.use("/session", sessionRouter());
 
 // TODO: Custom 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {

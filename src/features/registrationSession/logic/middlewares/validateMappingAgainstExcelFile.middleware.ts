@@ -33,9 +33,10 @@ const middleware = async (
 
   if (valuesInMappingThatAreNotInExcelColumns.length > 0) {
     return res.status(400).send({
-      error: `The following fields are not present in the excel file: ${valuesInMappingThatAreNotInExcelColumns.join(
-        ", "
-      )}`,
+      error: {
+        message: "Some field values are not present in the excel file",
+        fields: valuesInMappingThatAreNotInExcelColumns
+      },
     });
   }
 
