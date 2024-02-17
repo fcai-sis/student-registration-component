@@ -2,7 +2,7 @@ import logger from "../../../../core/logger";
 import ExcelRow from "../../../registrationSession/data/types/excelRow.type";
 import StudentField from "../../../registrationSession/data/types/studentField.type";
 import HasStudentFields from "../../../registrationSession/data/types/hasStudentFields.type";
-import StudentType from "features/common/data/types/student.type";
+import StudentType from "../../../common/data/types/student.type";
 
 /**
  * Gets the fields of the Student model as an array of strings.

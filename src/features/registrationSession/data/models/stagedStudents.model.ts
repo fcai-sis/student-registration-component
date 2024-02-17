@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { registrationSessoinModelName } from "./registrationSession.model";
+import { registrationSessionModelName } from "./registrationSession.model";
 
 export const stagedStudentSchema = new Schema({
   student: {
@@ -8,7 +8,7 @@ export const stagedStudentSchema = new Schema({
   },
   registrationSessionId: {
     type: Schema.Types.ObjectId,
-    ref: registrationSessoinModelName,
+    ref: registrationSessionModelName,
     required: true,
   },
 });

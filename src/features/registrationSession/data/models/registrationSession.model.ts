@@ -49,12 +49,12 @@ export const registrationSessionSchema = new Schema({
   },
 });
 
-export const registrationSessoinModelName = "RegistrationSession";
+export const registrationSessionModelName = "RegistrationSession";
 
 export type RegistrationSessionType = InferSchemaType<typeof registrationSessionSchema>;
 
 const RegistrationSessionModel = mongoose.model<RegistrationSessionType>(
-  registrationSessoinModelName,
+  registrationSessionModelName,
   registrationSessionSchema
 );
 

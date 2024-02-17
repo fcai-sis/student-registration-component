@@ -169,11 +169,9 @@ const handler = async (req: HandlerRequest, res: Response) => {
           const duplicatedField = field.split(":")[0].trim();
           const duplicatedValue = field.split(":")[1].trim();
           errorMessages.push(`${duplicatedField} ${duplicatedValue} at row ${writeError.index + 2}`);
-        }
-        );
+        });
       }
-    }
-    );
+    });
     if (insertedIds.length > 0) {
       const result = await StudentModel.deleteMany({
         _id: {
