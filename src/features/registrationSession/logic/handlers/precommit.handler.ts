@@ -34,15 +34,13 @@ const handler = async (_: HandlerRequest, res: Response) => {
   logger.debug(`Found active registration session: ${currentActiveSession}`);
 
   // check if there already are mapped students from previous precommit
-  const existingMappedStudents = await MappedStudentModel.find({
-    registrationSessionId: currentActiveSession._id,
-  });
+  const existingMappedStudents = await MappedStudentModel.find();
 
   if (existingMappedStudents.length > 0) {
     logger.debug(
       `There are already ${existingMappedStudents.length} mapped students in the current active registration session`
     );
-    res.status(400).json({
+    res.status(200).json({
       code: "mapped-students-exist",
       message: "There are already mapped students in the current active registration session",
     });
@@ -72,7 +70,7 @@ const handler = async (_: HandlerRequest, res: Response) => {
   // Get the staged students for the current active registration session
   const stagedStudents = await StagedStudentModel.find({
     registrationSessionId: currentActiveSession._id,
-  }).limit(10);
+  });
 
   // If there are no staged students, throw an error
   if (!stagedStudents) {

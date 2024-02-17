@@ -7,7 +7,7 @@ type UpdateHandlerRequest = Request<
     studentId: string;
   },
   {},
-  { fullName?: string; address?: string; status?: string }
+  { fullName?: string; address?: string }
 >;
 
 const updateStudentHandler = async (
@@ -35,7 +35,6 @@ const updateStudentHandler = async (
       _id: student._id,
       fullName: student.fullName,
       address: student.address,
-      status: student.status,
     },
   };
 
