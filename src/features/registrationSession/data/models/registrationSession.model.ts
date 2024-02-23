@@ -4,6 +4,7 @@ import StudentModel from "../../../common/data/models/student.model";
 import unsetMapping from "../types/unsetMapping.type";
 import HasStudentFields from "../types/hasStudentFields.type";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
+import mappableFields from "./constants/mappableFields";
 
 export const registrationSessionSchema = new Schema({
   active: {
@@ -25,20 +26,15 @@ export const registrationSessionSchema = new Schema({
   mapping: {
     type: Object,
     validate: {
-      validator: function(mapping: HasStudentFields) {
+      validator: function (mapping: HasStudentFields) {
         const mappingKeys = getStudentKeys(mapping);
-        const studentModelFields = getStudentKeys(
-          StudentModel.schema.obj as HasStudentFields
-        );
+        const studentModelFields = mappableFields;
 
-        return studentModelFields.every((field) => mappingKeys.includes(field));
+        return mappingKeys.every((key) => studentModelFields.includes(key));
       },
     },
     default: Object.fromEntries(
-      getStudentKeys(StudentModel.schema.obj as HasStudentFields).map((key) => [
-        key,
-        unsetMapping,
-      ])
+      mappableFields.map((key) => [key, unsetMapping])
     ),
   },
 
@@ -51,7 +47,9 @@ export const registrationSessionSchema = new Schema({
 
 export const registrationSessionModelName = "RegistrationSession";
 
-export type RegistrationSessionType = InferSchemaType<typeof registrationSessionSchema>;
+export type RegistrationSessionType = InferSchemaType<
+  typeof registrationSessionSchema
+>;
 
 const RegistrationSessionModel = mongoose.model<RegistrationSessionType>(
   registrationSessionModelName,
