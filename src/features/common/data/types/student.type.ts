@@ -19,7 +19,6 @@ type StudentType = {
   governorateId: number;
   nationality: string;
   address: string;
-  profile: Object;
 };
 
 export default StudentType;

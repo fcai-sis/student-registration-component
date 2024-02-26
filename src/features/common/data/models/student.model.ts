@@ -286,23 +286,6 @@ const studentSchema: Schema = new Schema<StudentType>({
       message: "Address cannot be empty",
     },
   },
-  profile: {
-    type: {
-      email: {
-        type: String,
-        default: "",
-      },
-      phoneNumber: {
-        type: String,
-        default: "",
-      },
-      address: {
-        type: String,
-        default: "",
-      },
-    },
-    default: {},
-  },
 });
 
 export const MappedStudentModel = mongoose.model<StudentType>(
