@@ -37,18 +37,6 @@ const studentSchema: Schema = new Schema<StudentType>({
   groupCode: {
     type: Boolean,
     required: [true, "Group code is required"],
-    set: function (value: any) {
-      // convert the string to a number if possible
-      const parsedValue = parseInt(String(value), 10);
-      // check if the value is a number before mapping
-      if (typeof parsedValue === "number" && !isNaN(parsedValue)) {
-        // map 1 to true and 2 to false
-        return parsedValue === 1;
-      } else {
-        // for now, let's default to undefined so that it's not mistaken for a boolean
-        return undefined;
-      }
-    },
     validate: {
       validator: function (value: boolean) {
         // Validate if it's a boolean (true or false)
@@ -61,27 +49,6 @@ const studentSchema: Schema = new Schema<StudentType>({
     type: String,
     enum: ["male", "female", "other"],
     required: [true, "Gender is required"],
-    set: function (value: number | string) {
-      // convert the string to a number if possible
-      const parsedValue = parseInt(String(value), 10);
-
-      // Map numbers to corresponding strings
-      if (typeof parsedValue === "number") {
-        switch (parsedValue) {
-          case 1:
-            return "male";
-          case 2:
-            return "female";
-          case 3:
-            return "other";
-          default:
-            return undefined;
-        }
-      } else {
-        // If the value is already a string, leave it unchanged
-        return value;
-      }
-    },
     validate: {
       validator: function (value: string) {
         return ["male", "female", "other"].includes(value);
@@ -93,27 +60,6 @@ const studentSchema: Schema = new Schema<StudentType>({
     type: String,
     required: [true, "Religion is required"],
     enum: ["muslim", "christian", "other"],
-    set: function (value: number | string) {
-      // convert the string to a number if possible
-      const parsedValue = parseInt(String(value), 10);
-
-      // Map numbers to corresponding strings
-      if (typeof parsedValue === "number") {
-        switch (parsedValue) {
-          case 1:
-            return "muslim";
-          case 2:
-            return "christian";
-          case 3:
-            return "other";
-          default:
-            return undefined;
-        }
-      } else {
-        // If the value is already a string, leave it unchanged
-        return value;
-      }
-    },
     validate: {
       validator: function (value: string) {
         return ["muslim", "christian", "other"].includes(value);
@@ -244,25 +190,6 @@ const studentSchema: Schema = new Schema<StudentType>({
   nationality: {
     type: String,
     required: [true, "Nationality is required"],
-    set: function (value: string | number) {
-      // convert the string to a number if possible
-      const parsedValue = parseInt(String(value), 10);
-      // Map numbers to corresponding strings
-
-      // TODO: figure out nationality enums and modify this
-      if (typeof parsedValue === "number") {
-        switch (parsedValue) {
-          case 1:
-            return "egyptian";
-
-          default:
-            return "foreigner";
-        }
-      } else {
-        // If the value is already a string, leave it unchanged
-        return parsedValue;
-      }
-    },
     validate: {
       validator: function (value: string) {
         return ["egyptian", "foreigner"].includes(value);
@@ -288,10 +215,6 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
 });
 
-export const MappedStudentModel = mongoose.model<StudentType>(
-  "MappedStudent",
-  studentSchema
-);
 const StudentModel = mongoose.model<StudentType>("Student", studentSchema);
 
 export default StudentModel;
