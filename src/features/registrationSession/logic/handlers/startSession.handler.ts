@@ -3,12 +3,9 @@ import { Request, Response } from "express";
 import logger from "../../../../core/logger";
 import ExcelRow from "../../data/types/excelRow.type";
 import ExcelMapping from "../../data/types/mapping.type";
-import StudentModel from "../../../common/data/models/student.model";
 import unsetMapping from "../../data/types/unsetMapping.type";
 import StagedStudentType from "../../data/types/stagedStudent.type";
-import HasStudentFields from "../../data/types/hasStudentFields.type";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 import mappableFields from "../../data/models/constants/mappableFields";
 
