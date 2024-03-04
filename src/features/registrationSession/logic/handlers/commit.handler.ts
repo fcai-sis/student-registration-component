@@ -27,6 +27,17 @@ const handler = async (req: HandlerRequest, res: Response) => {
   }
 
   const mappedStudents = await MappedStudentModel.find();
+
+  // if there are 0 mapped students, then there's nothing to commit
+  if (mappedStudents.length === 0) {
+    logger.debug(`No mapped students found`);
+    res.status(400).json({
+      code: "no-mapped-students",
+      message: "There are no mapped students to commit",
+    });
+    return;
+  }
+
   const insertResult = await StudentModel.insertMany(mappedStudents);
 
   if (!insertResult) {
