@@ -3,10 +3,8 @@ import { Request, Response } from "express";
 import logger from "../../../../core/logger";
 import unsetMapping from "../../data/types/unsetMapping.type";
 import StudentType from "../../../common/data/types/student.type";
-import StagedStudentType from "../../data/types/stagedStudent.type";
-import StudentModel, { MappedStudentModel } from "../../../common/data/models/student.model";
+import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 import ExcelMapping from "../../data/types/mapping.type";
 
@@ -42,7 +40,8 @@ const handler = async (_: HandlerRequest, res: Response) => {
     );
     res.status(200).json({
       code: "mapped-students-exist",
-      message: "There are already mapped students in the current active registration session",
+      message:
+        "There are already mapped students in the current active registration session",
     });
     return;
   }
@@ -53,9 +52,9 @@ const handler = async (_: HandlerRequest, res: Response) => {
 
   // TODO: extract mapping validation to a separate middleware
   // If any of the fields in the mapping are not set, throw an error
-  const unsetFields = Object.entries(mapping).filter(
-    ([_, value]) => value === unsetMapping
-  ).map(([key, _]) => key);
+  const unsetFields = Object.entries(mapping)
+    .filter(([_, value]) => value === unsetMapping)
+    .map(([key, _]) => key);
 
   if (unsetFields.length > 0) {
     logger.debug(`Unset fields found in the mapping: ${unsetFields}`);
@@ -92,7 +91,9 @@ const handler = async (_: HandlerRequest, res: Response) => {
   const errors: any[] = [];
 
   for (const stagedStudent of stagedStudents) {
-    logger.debug(`Mapping the staged student: ${JSON.stringify(stagedStudent)}`);
+    logger.debug(
+      `Mapping the staged student: ${JSON.stringify(stagedStudent)}`
+    );
     try {
       const mappedStudent = mapStagedStudent(stagedStudent.student, mapping);
       mappedStudents.push(mappedStudent);
@@ -119,13 +120,12 @@ const handler = async (_: HandlerRequest, res: Response) => {
     try {
       await MappedStudentModel.create(mappedStudent);
     } catch (error: any) {
-
       // Get the row that caused the error, and a human readable error message describing the error, and add it to the errors array
       const index = mappedStudents.indexOf(mappedStudent);
 
       const e = {
         row: index + 1,
-        errors: Object.values(error.errors).map((e: any) => e.message) // TODO: Map error messages to localized human readable messages
+        errors: Object.values(error.errors).map((e: any) => e.message), // TODO: Map error messages to localized human readable messages
       };
 
       logger.debug(JSON.stringify(e, null, 2));
@@ -158,7 +158,7 @@ const handler = async (_: HandlerRequest, res: Response) => {
  */
 const mapStagedStudent = (
   stagedStudent: any,
-  mapping: ExcelMapping,
+  mapping: ExcelMapping
 ): StudentType => {
   const mappedStudent: Partial<StudentType> = {};
 
@@ -173,6 +173,6 @@ const mapStagedStudent = (
   }
 
   return mappedStudent as StudentType;
-}
+};
 
 export default handler;

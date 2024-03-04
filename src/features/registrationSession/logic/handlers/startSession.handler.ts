@@ -3,13 +3,11 @@ import { Request, Response } from "express";
 import logger from "../../../../core/logger";
 import ExcelRow from "../../data/types/excelRow.type";
 import ExcelMapping from "../../data/types/mapping.type";
-import StudentModel from "../../../common/data/models/student.model";
 import unsetMapping from "../../data/types/unsetMapping.type";
 import StagedStudentType from "../../data/types/stagedStudent.type";
-import HasStudentFields from "../../data/types/hasStudentFields.type";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
+import mappableFields from "../../data/models/constants/mappableFields";
 
 type HandlerRequest = Request<
   {},
@@ -32,12 +30,10 @@ const handler = async (req: HandlerRequest, res: Response) => {
       excelColumnsHeaders: excelColumnsHeaders,
 
       // If we are to have a default mapping, we can set it here instead of an empty mapping
-      mapping: getStudentKeys(
-        StudentModel.schema.obj as HasStudentFields
-      ).reduce(
+      mapping: mappableFields.reduce(
         // Loop through all keys in the mapping
         (mapping, key) => {
-          mapping[key] = unsetMapping; // For each field in the Student model, set the mapping value to "<unset>"
+          mapping[key as keyof ExcelMapping] = unsetMapping; // TODO: type assertion, idk what that is, typescript shenanigans
 
           return mapping; // Return the mapping object with the new field for the next iteration
         },
@@ -52,7 +48,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
       error: {
         message:
           "Failed to create registration session, please contact support.",
-      }
+      },
     });
   }
 
@@ -78,7 +74,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     res.status(500).json({
       error: {
         message: "Failed to create staged students, please contact support.",
-      }
+      },
     });
   }
 
