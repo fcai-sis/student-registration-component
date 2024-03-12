@@ -140,6 +140,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
   }
 
   if (errors.length > 0) {
+    await MappedStudentModel.deleteMany();
     res.status(400).json({
       code: "error-saving-mapped-students",
       message: "There was an error saving the mapped students",
