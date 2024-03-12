@@ -103,7 +103,7 @@ const studentSchema: Schema = new Schema<StudentType>({
   },
   phoneNumber: {
     type: String,
-    required: false,
+    required: [true, "Phone number is required"],
     validate: {
       validator: function(value: string) {
         // phoneNumber must be a string of 11 digits
@@ -111,14 +111,6 @@ const studentSchema: Schema = new Schema<StudentType>({
       },
       message: "Phone number must be an 11-digit number",
     },
-    // validate: {
-    //   // TODO: just make sure tis a number till we figure out the deal with empty fields
-    //   validator: function (value: string) {
-    //     return !isNaN(Number(value));
-    //   },
-    //   message: "Phone number must be numeric",
-    // },
-    // default: undefined,
   },
   educationType: {
     type: String,
