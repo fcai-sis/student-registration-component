@@ -6,14 +6,14 @@ import StudentType from "../../../common/data/types/student.type";
 import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
-import ExcelMapping from "../../data/types/mapping.type";
+import { mapStagedStudent } from "../utils";
 
 type HandlerRequest = Request<{}, {}, {}>;
 
 /**
  * Saves the staged students in the current active registration session to the mapped students collection
  */
-const handler = async (_: HandlerRequest, res: Response) => {
+const precommitHandler = async (_: HandlerRequest, res: Response) => {
   // Get the current action registration session
   const currentActiveSession = await RegistrationSessionModel.findOne({
     active: true,
@@ -31,9 +31,10 @@ const handler = async (_: HandlerRequest, res: Response) => {
 
   logger.debug(`Found active registration session: ${currentActiveSession}`);
 
-  // check if there already are mapped students from previous precommit
+  // Check if there already are mapped students from previous precommit
   const existingMappedStudents = await MappedStudentModel.find();
 
+  // If there are already mapped students, throw an error
   if (existingMappedStudents.length > 0) {
     logger.debug(
       `There are already ${existingMappedStudents.length} mapped students in the current active registration session`
@@ -46,8 +47,6 @@ const handler = async (_: HandlerRequest, res: Response) => {
     return;
   }
 
-  // Get the excel columns headers and mapping from the current active registration session
-  const excelColumnsHeaders = currentActiveSession.excelColumnsHeaders;
   const mapping = currentActiveSession.mapping;
 
   // TODO: extract mapping validation to a separate middleware
@@ -88,8 +87,10 @@ const handler = async (_: HandlerRequest, res: Response) => {
   // Loop over the staged students and save them to the mapped students collection after mapping the fields using the mapping object and the excel columns headers
   const mappedStudents: StudentType[] = [];
 
+  // TODO: Type the errors array properly
   const errors: any[] = [];
 
+  // For each staged student, map the fields using the mapping object
   for (const stagedStudent of stagedStudents) {
     logger.debug(
       `Mapping the staged student: ${JSON.stringify(stagedStudent)}`
@@ -117,6 +118,8 @@ const handler = async (_: HandlerRequest, res: Response) => {
 
   // Save the mapped students to the mapped students collection
   for (const mappedStudent of mappedStudents) {
+    // Try to save the mapped student to the mapped students collection
+    // If there is an error, catch it and add it to the errors array, which is guaranteed to be empty
     try {
       await MappedStudentModel.create(mappedStudent);
     } catch (error: any) {
@@ -150,29 +153,4 @@ const handler = async (_: HandlerRequest, res: Response) => {
   });
 };
 
-/**
- * Maps the fields of the staged student to the fields of the student using the mapping object and the excel columns headers
- * @param stagedStudent The staged student to map
- * @param mapping The mapping object
- * @param excelColumnsHeaders The excel columns headers
- */
-const mapStagedStudent = (
-  stagedStudent: any,
-  mapping: ExcelMapping
-): StudentType => {
-  const mappedStudent: Partial<StudentType> = {};
-
-  // for each value in the mapping object, map the value from the staged student to the mapped student
-  // stagedStudent example: { excelColumn1: "value1", excelColumn2: "value2" }
-  // mapping example: { studentId: "excelColumn1", fullName: "excelColumn2" }
-  // mappedStudent example: { studentId: "value1", fullName: "value2" }
-  for (const [key, value] of Object.entries(mapping)) {
-    if (stagedStudent[value]) {
-      mappedStudent[key as keyof ExcelMapping] = stagedStudent[value];
-    }
-  }
-
-  return mappedStudent as StudentType;
-};
-
-export default handler;
+export default precommitHandler;

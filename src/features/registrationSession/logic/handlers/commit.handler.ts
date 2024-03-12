@@ -12,11 +12,13 @@ type HandlerRequest = Request<{}, {}, {}>;
  * Saves the staged students in the current active registration session to the actual students collection.
  * The active registration session is then marked as inactive.
  */
-const handler = async (req: HandlerRequest, res: Response) => {
+const handler = async (_: HandlerRequest, res: Response) => {
+  // Find the current active registration session
   const currentActiveSession = await RegistrationSessionModel.findOne({
     active: true,
   });
 
+  // If there is no active registration session, return an error
   if (!currentActiveSession) {
     logger.debug(`No active registration session found`);
     res.status(400).json({
@@ -26,6 +28,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     return;
   }
 
+  // Get all the mapped students
   const mappedStudents = await MappedStudentModel.find();
 
   // if there are 0 mapped students, then there's nothing to commit
@@ -38,8 +41,10 @@ const handler = async (req: HandlerRequest, res: Response) => {
     return;
   }
 
+  // Copy the mapped students to the students collection
   const insertResult = await StudentModel.insertMany(mappedStudents);
 
+  // If the insert failed, return an error
   if (!insertResult) {
     logger.error(
       `Failed to insert mapped students into the students collection`
@@ -55,18 +60,18 @@ const handler = async (req: HandlerRequest, res: Response) => {
     `Inserted ${insertResult.length} mapped students into the students collection`
   );
 
+  // End the current active registration session
   currentActiveSession.active = false;
   currentActiveSession.endDate = new Date();
 
   await currentActiveSession.save();
 
+  // Clear the staged students and mapped students for the next registration session
   await MappedStudentModel.deleteMany();
   await StagedStudentModel.deleteMany();
 
   res.status(200).json({
-    code: "success",
-    message:
-      "Successfully committed the staged students to the students collection",
+    message: "Successfully committed the staged students to the students collection",
   });
 };
 
