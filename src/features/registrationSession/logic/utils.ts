@@ -1,5 +1,5 @@
-import StudentType from "features/common/data/types/student.type";
 import ExcelMapping from "../data/types/mapping.type";
+import StudentType from "../../common/data/types/student.type";
 
 /**
  * Maps the fields of the staged student to the fields of the student using the mapping object and the excel columns headers
