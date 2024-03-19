@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
+import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
+import StagedStudentModel from "../../data/models/stagedStudents.model";
 
 type HandlerRequest = Request<{}, {}, {}>;
 
@@ -9,6 +11,8 @@ type HandlerRequest = Request<{}, {}, {}>;
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   try {
+    await MappedStudentModel.deleteMany();
+    await StagedStudentModel.deleteMany();
     const result = await RegistrationSessionModel.findOneAndUpdate(
       { active: true },
       { active: false, endDate: new Date() },
