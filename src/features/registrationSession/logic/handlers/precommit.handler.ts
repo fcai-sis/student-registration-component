@@ -31,21 +31,8 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
 
   logger.debug(`Found active registration session: ${currentActiveSession}`);
 
-  // Check if there already are mapped students from previous precommit
-  const existingMappedStudents = await MappedStudentModel.find();
-
-  // If there are already mapped students, throw an error
-  if (existingMappedStudents.length > 0) {
-    logger.debug(
-      `There are already ${existingMappedStudents.length} mapped students in the current active registration session`
-    );
-    res.status(200).json({
-      code: "mapped-students-exist",
-      message:
-        "There are already mapped students in the current active registration session",
-    });
-    return;
-  }
+  // Check if there already are mapped students from previous precommit and delete them
+  await MappedStudentModel.deleteMany();
 
   const mapping = currentActiveSession.mapping;
 
