@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 import StudentType from "../types/student.type";
+import { userModelName } from "@fcai-sis/shared-models";
 
 const mappedStudentSchema: Schema = new Schema<StudentType>({
   studentId: {
@@ -270,6 +271,11 @@ const mappedStudentSchema: Schema = new Schema<StudentType>({
       },
       message: "Address cannot be empty",
     },
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: userModelName,
+    required: true,
   },
 });
 
