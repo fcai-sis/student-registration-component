@@ -7,6 +7,7 @@ import MappedStudentModel from "../../../common/data/models/mappedStudent.model"
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 import { mapStagedStudent } from "../utils";
+import { UserModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{}, {}, {}>;
 
@@ -108,7 +109,15 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
     // Try to save the mapped student to the mapped students collection
     // If there is an error, catch it and add it to the errors array, which is guaranteed to be empty
     try {
-      await MappedStudentModel.create(mappedStudent);
+      // Create a user for each mapped student
+      const user = await UserModel.create({
+        // Default password is the student ID
+        password: mappedStudent.studentId,
+      });
+      await MappedStudentModel.create({
+        mappedStudent,
+        userId: user._id,
+      });
     } catch (error: any) {
       // Get the row that caused the error, and a human readable error message describing the error, and add it to the errors array
       const index = mappedStudents.indexOf(mappedStudent);
