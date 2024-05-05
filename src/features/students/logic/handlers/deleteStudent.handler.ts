@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import StudentModel from "../../../common/data/models/student.model";
-
+import { StudentModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{ studentId: string }>;
 
@@ -10,9 +9,7 @@ type HandlerRequest = Request<{ studentId: string }>;
 const handler = async (req: HandlerRequest, res: Response) => {
   const student = req.params.studentId;
 
-  const deletedStudent = await StudentModel.findByIdAndDelete(
-    student
-  );
+  const deletedStudent = await StudentModel.findByIdAndDelete(student);
 
   if (!deletedStudent) {
     return res.status(404).send({

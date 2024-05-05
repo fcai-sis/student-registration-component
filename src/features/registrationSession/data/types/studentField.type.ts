@@ -1,4 +1,4 @@
-import StudentType from "../../../common/data/types/student.type";
+import { StudentType } from "@fcai-sis/shared-models";
 
 /**
  * A field in the Student model.

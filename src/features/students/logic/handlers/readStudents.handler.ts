@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import StudentModel from "../../../common/data/models/student.model";
+import { StudentModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request;
 

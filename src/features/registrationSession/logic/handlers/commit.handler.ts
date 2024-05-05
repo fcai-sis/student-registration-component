@@ -4,7 +4,7 @@ import logger from "../../../../core/logger";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
-import StudentModel from "../../../common/data/models/student.model";
+import { StudentModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{}, {}, {}>;
 
@@ -71,7 +71,8 @@ const handler = async (_: HandlerRequest, res: Response) => {
   await StagedStudentModel.deleteMany();
 
   res.status(200).json({
-    message: "Successfully committed the staged students to the students collection",
+    message:
+      "Successfully committed the staged students to the students collection",
   });
 };
 

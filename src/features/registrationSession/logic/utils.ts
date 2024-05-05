@@ -1,5 +1,5 @@
 import ExcelMapping from "../data/types/mapping.type";
-import StudentType from "../../common/data/types/student.type";
+import { StudentType } from "@fcai-sis/shared-models";
 
 /**
  * Maps the fields of the staged student to the fields of the student using the mapping object and the excel columns headers

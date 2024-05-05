@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
-import StudentType from "../types/student.type";
+import { StudentType } from "@fcai-sis/shared-models";
+import { userModelName } from "@fcai-sis/shared-models";
 
 const mappedStudentSchema: Schema = new Schema<StudentType>({
   studentId: {
@@ -9,8 +10,8 @@ const mappedStudentSchema: Schema = new Schema<StudentType>({
     unique: true,
     validate: {
       validator: function (value: string) {
-        // pattern : string must start with current year and contain only digits
-        return new RegExp(`^${new Date().getFullYear()}\\d{4}$`).test(value);
+        // ID must be digits
+        return /^\d+$/.test(value);
       },
       message: "Student ID must be a valid ID",
     },
@@ -270,6 +271,11 @@ const mappedStudentSchema: Schema = new Schema<StudentType>({
       },
       message: "Address cannot be empty",
     },
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: userModelName,
+    required: true,
   },
 });
 
