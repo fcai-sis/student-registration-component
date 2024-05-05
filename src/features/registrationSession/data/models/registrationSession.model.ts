@@ -1,6 +1,4 @@
 import mongoose, { InferSchemaType, Schema } from "mongoose";
-
-import StudentModel from "../../../common/data/models/student.model";
 import unsetMapping from "../types/unsetMapping.type";
 import HasStudentFields from "../types/hasStudentFields.type";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";

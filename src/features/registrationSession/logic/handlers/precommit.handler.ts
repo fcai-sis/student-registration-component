@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import logger from "../../../../core/logger";
 import unsetMapping from "../../data/types/unsetMapping.type";
-import StudentType from "../../../common/data/types/student.type";
+import { StudentType } from "@fcai-sis/shared-models";
 import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
@@ -115,7 +115,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
         password: mappedStudent.studentId,
       });
       await MappedStudentModel.create({
-        mappedStudent,
+        ...mappedStudent,
         userId: user._id,
       });
     } catch (error: any) {

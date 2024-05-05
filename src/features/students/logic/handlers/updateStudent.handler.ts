@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import StudentModel from "../../../common/data/models/student.model";
+import { StudentModel } from "@fcai-sis/shared-models";
 
 //TODO: Create middleware to check for if user authorized to update student
 type UpdateHandlerRequest = Request<

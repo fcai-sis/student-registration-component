@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import StudentModel from "../../../common/data/models/student.model";
-
+import { StudentModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {},
@@ -17,7 +16,6 @@ type HandlerRequest = Request<
 const handler = async (req: HandlerRequest, res: Response) => {
   const { fullName, address } = req.body;
 
-
   const student = new StudentModel({
     fullName,
     address,
@@ -30,11 +28,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
       _id: student._id,
       fullName: student.fullName,
       address: student.address,
-    }
-  }
+    },
+  };
 
   return res.status(201).json(response);
-}
+};
 
 const createStudentHandler = handler;
 export default createStudentHandler;
