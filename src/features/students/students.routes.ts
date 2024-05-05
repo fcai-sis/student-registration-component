@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { asyncHandler } from "@fcai-sis/shared-utilities";
-import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
+import { Role, checkRole, paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
 import validateCreateStudentRequestBodyMiddleware from "./logic/middlewares/validateCreateStudentRequestBody.middleware";
 import createStudentHandler from "./logic/handlers/createStudent.handler";
 import readStudentsHandler from "./logic/handlers/readStudents.handler";
@@ -11,6 +11,7 @@ import updateStudentValidator from "./logic/middlewares/updateStudentValidator.m
 import updateStudentHandler from "./logic/handlers/updateStudent.handler";
 import findStudentById from "./logic/handlers/FindStudentById.handler";
 import countStudentCollectionHandler from "./logic/handlers/countStudents.handler";
+import meHandler from "./logic/handlers/me.handler";
 
 const studentsRoutes = (router: Router) => {
   /*
@@ -80,9 +81,20 @@ const studentsRoutes = (router: Router) => {
     "/find/:studentId",
 
     // Ensure student id in params
+    CheckRole([Role.ADMIN]),
     ensureStudentIdInParamsMiddleware,
 
+
     asyncHandler(findStudentById)
+  );
+
+  router.get(
+    "/me",
+
+    checkRole([Role.STUDENT]),
+
+
+    asyncHandler(meHandler)
   );
 };
 
