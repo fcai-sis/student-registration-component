@@ -81,7 +81,7 @@ const studentsRoutes = (router: Router) => {
     "/find/:studentId",
 
     // Ensure student id in params
-    CheckRole([Role.ADMIN]),
+    checkRole([Role.ADMIN]),
     ensureStudentIdInParamsMiddleware,
 
 
