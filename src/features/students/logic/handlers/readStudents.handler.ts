@@ -12,17 +12,20 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const pageSize = req.context.pageSize;
 
   // read the students from the db
-  const students = await StudentModel.find()
-    .sort({ createdAt: -1 }) // sorts so that latest Students show up first
+  const students = await StudentModel.find(
+    {},
+    {
+      __v: 0,
+      userId: 0,
+    }
+  )
     .skip((page - 1) * pageSize) // pagination
     .limit(pageSize);
 
   const count = await StudentModel.countDocuments();
 
   return res.status(200).send({
-    students: students.map((student) => ({
-      ...student.toObject(),
-    })),
+    students,
     count,
   });
 };

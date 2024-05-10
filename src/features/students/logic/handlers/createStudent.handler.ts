@@ -1,11 +1,26 @@
 import { Request, Response } from "express";
-import { StudentModel } from "@fcai-sis/shared-models";
+import { StudentModel, UserModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {},
   {},
   {
+    studentId: string;
     fullName: string;
+    groupCode: boolean;
+    gender: "male" | "female" | "other";
+    religion: "christian" | "muslim" | "other";
+    nationalId: string;
+    administration: string;
+    directorate: string;
+    phoneNumber: string;
+    educationType: string;
+    birthYear: number;
+    birthMonth: number;
+    birthDay: number;
+    birthPlace: string;
+    governorateId: string;
+    nationality: "egyptian" | "foreigner";
     address: string;
   }
 >;
@@ -14,24 +29,59 @@ type HandlerRequest = Request<
  * Creates a new student
  * */
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { fullName, address } = req.body;
-
-  const student = new StudentModel({
+  const {
+    studentId,
     fullName,
+    groupCode,
+    gender,
+    religion,
+    nationalId,
+    administration,
+    directorate,
+    phoneNumber,
+    educationType,
+    birthYear,
+    birthMonth,
+    birthDay,
+    birthPlace,
+    governorateId,
+    nationality,
     address,
+  } = req.body;
+  // create a new user for the student
+  const user = await UserModel.create({ password: studentId });
+
+  // create a new student
+  const student = new StudentModel({
+    studentId,
+    fullName,
+    groupCode,
+    gender,
+    religion,
+    nationalId,
+    administration,
+    directorate,
+    phoneNumber,
+    educationType,
+    birthYear,
+    birthMonth,
+    birthDay,
+    birthPlace,
+    governorateId,
+    nationality,
+    address,
+    userId: user._id,
   });
 
   await student.save();
 
   const response = {
     student: {
-      _id: student._id,
-      fullName: student.fullName,
-      address: student.address,
+      ...student.toObject(),
     },
   };
 
-  return res.status(201).json(response);
+  return res.status(201).send(response);
 };
 
 const createStudentHandler = handler;
