@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 import {
   Role,
@@ -11,7 +10,7 @@ import createStudentHandler from "./logic/handlers/createStudent.handler";
 import readStudentsHandler from "./logic/handlers/readStudents.handler";
 import ensureStudentIdInParamsMiddleware from "./logic/middlewares/ensureStudentIdInParams.middleware";
 import deleteStudentHandler from "./logic/handlers/deleteStudent.handler";
-import updateStudentValidator from "./logic/middlewares/updateStudentValidator.middleware";
+import updateStudentValidatorMiddleware from "./logic/middlewares/updateStudentValidator.middleware";
 import findStudentByIdHandler from "./logic/handlers/findStudentById.handler";
 import countStudentCollectionHandler from "./logic/handlers/countStudents.handler";
 import meHandler from "./logic/handlers/me.handler";
@@ -24,8 +23,9 @@ const studentsRoutes = (router: Router) => {
   router.post(
     "/create",
 
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Validate request body
-    // validateCreateStudentRequestBodyMiddleware,
+    validateCreateStudentRequestBodyMiddleware,
 
     asyncHandler(createStudentHandler)
   );
@@ -35,7 +35,7 @@ const studentsRoutes = (router: Router) => {
    **/
   router.get(
     "/read",
-
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Validate request query params for pagination
     paginationQueryParamsMiddleware,
 
@@ -47,7 +47,7 @@ const studentsRoutes = (router: Router) => {
    **/
   router.get(
     "/count",
-
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     asyncHandler(countStudentCollectionHandler)
   );
 
@@ -56,7 +56,7 @@ const studentsRoutes = (router: Router) => {
    **/
   router.delete(
     "/delete/:studentId",
-
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Ensure student id in params
     ensureStudentIdInParamsMiddleware,
 
@@ -69,11 +69,12 @@ const studentsRoutes = (router: Router) => {
   router.patch(
     "/update/:studentId",
 
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Ensure announcement id in params
     ensureStudentIdInParamsMiddleware,
 
     // Validate request body
-    // updateStudentValidator,
+    updateStudentValidatorMiddleware,
 
     asyncHandler(updateStudentHandler)
   );
@@ -85,7 +86,7 @@ const studentsRoutes = (router: Router) => {
     "/find/:studentId",
 
     // Ensure student id in params
-    // checkRole([Role.ADMIN]),
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     ensureStudentIdInParamsMiddleware,
 
     asyncHandler(findStudentByIdHandler)
