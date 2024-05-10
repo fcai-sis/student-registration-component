@@ -1,17 +1,21 @@
 import { Router } from "express";
 
 import { asyncHandler } from "@fcai-sis/shared-utilities";
-import { Role, checkRole, paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
+import {
+  Role,
+  checkRole,
+  paginationQueryParamsMiddleware,
+} from "@fcai-sis/shared-middlewares";
 import validateCreateStudentRequestBodyMiddleware from "./logic/middlewares/validateCreateStudentRequestBody.middleware";
 import createStudentHandler from "./logic/handlers/createStudent.handler";
 import readStudentsHandler from "./logic/handlers/readStudents.handler";
 import ensureStudentIdInParamsMiddleware from "./logic/middlewares/ensureStudentIdInParams.middleware";
 import deleteStudentHandler from "./logic/handlers/deleteStudent.handler";
 import updateStudentValidator from "./logic/middlewares/updateStudentValidator.middleware";
-import updateStudentHandler from "./logic/handlers/updateStudent.handler";
-import findStudentById from "./logic/handlers/FindStudentById.handler";
+import findStudentByIdHandler from "./logic/handlers/findStudentById.handler";
 import countStudentCollectionHandler from "./logic/handlers/countStudents.handler";
 import meHandler from "./logic/handlers/me.handler";
+import updateStudentHandler from "./logic/handlers/updateStudent.handler";
 
 const studentsRoutes = (router: Router) => {
   /*
@@ -21,7 +25,7 @@ const studentsRoutes = (router: Router) => {
     "/create",
 
     // Validate request body
-    validateCreateStudentRequestBodyMiddleware,
+    // validateCreateStudentRequestBodyMiddleware,
 
     asyncHandler(createStudentHandler)
   );
@@ -69,7 +73,7 @@ const studentsRoutes = (router: Router) => {
     ensureStudentIdInParamsMiddleware,
 
     // Validate request body
-    updateStudentValidator,
+    // updateStudentValidator,
 
     asyncHandler(updateStudentHandler)
   );
@@ -81,18 +85,16 @@ const studentsRoutes = (router: Router) => {
     "/find/:studentId",
 
     // Ensure student id in params
-    checkRole([Role.ADMIN]),
+    // checkRole([Role.ADMIN]),
     ensureStudentIdInParamsMiddleware,
 
-
-    asyncHandler(findStudentById)
+    asyncHandler(findStudentByIdHandler)
   );
 
   router.get(
     "/me",
 
     checkRole([Role.STUDENT]),
-
 
     asyncHandler(meHandler)
   );
