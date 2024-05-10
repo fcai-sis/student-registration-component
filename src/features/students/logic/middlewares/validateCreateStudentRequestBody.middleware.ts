@@ -167,11 +167,16 @@ const middlewares = [
     .isNumeric()
     .withMessage("birthMonth must be a number")
     .custom((value) => {
-      // birthMonth must be 2 digits and between 1 and 12
+      // birthMonth must be at most 2 digits and between 1 and 12
       const isValid =
-        /^\d{2}$/.test(value) && parseInt(value) >= 1 && parseInt(value) <= 12;
+        /^\d{1,2}$/.test(value) &&
+        parseInt(value) >= 1 &&
+        parseInt(value) <= 12;
+
       if (!isValid) {
-        throw new Error("birthMonth must be 2 digits");
+        throw new Error(
+          "birthMonth must be at most 2 digits, between 1 and 12"
+        );
       }
       return true;
     }),
@@ -183,11 +188,13 @@ const middlewares = [
     .isNumeric()
     .withMessage("birthDay must be a number")
     .custom((value) => {
-      // birthDay must be 2 digits and between 1 and 31
+      // birthDay must be at most 2 digits and between 1 and 31
       const isValid =
-        /^\d{2}$/.test(value) && parseInt(value) >= 1 && parseInt(value) <= 31;
+        /^\d{1,2}$/.test(value) &&
+        parseInt(value) >= 1 &&
+        parseInt(value) <= 31;
       if (!isValid) {
-        throw new Error("birthDay must be 2 digits");
+        throw new Error("birthDay must be at most 2 digits, between 1 and 31");
       }
       return true;
     }),
