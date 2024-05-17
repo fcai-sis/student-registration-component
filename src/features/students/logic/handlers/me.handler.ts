@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { StudentModel } from "@fcai-sis/shared-models";
+import { TokenPayload } from "@fcai-sis/shared-middlewares";
 
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    userId: string;
+    user: TokenPayload
   }
 >;
 
@@ -14,23 +15,26 @@ type HandlerRequest = Request<
  * Find student by Id
  * */
 const meHandler = async (req: HandlerRequest, res: Response) => {
-    const userId = req.body.userId;
-    // read the student from the db
-    const student = await StudentModel.findOne({ userId });
-    
-    if (!student) {
-        return res.status(404).json({
-        error: {
-            message: "Student not found",
-        },
-        });
-    }
-    
-    return res.status(200).json({
-      student: {
-        ...student.toObject(),
-        },
+
+  const { userId } = req.body.user;
+
+  // read the student from the db
+  const student = await StudentModel.findOne({ userId });
+
+  if (!student) {
+    return res.status(404).json({
+      error: {
+        message: "Student not found",
+      },
+
     });
-    }
-    export default meHandler;
-    
+  }
+
+  return res.status(200).send({
+    student: {
+      ...student.toObject(),
+    },
+  });
+}
+
+export default meHandler;

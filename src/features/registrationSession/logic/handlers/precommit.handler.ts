@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 
 import logger from "../../../../core/logger";
@@ -109,11 +110,14 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
     // Try to save the mapped student to the mapped students collection
     // If there is an error, catch it and add it to the errors array, which is guaranteed to be empty
     try {
+      const studentPassword = mappedStudent.studentId;
+      const hashedPassword = await bcrypt.hash(studentPassword, 10);
       // Create a user for each mapped student
       const user = await UserModel.create({
         // Default password is the student ID
-        password: mappedStudent.studentId,
+        password: hashedPassword,
       });
+
       await MappedStudentModel.create({
         ...mappedStudent,
         userId: user._id,

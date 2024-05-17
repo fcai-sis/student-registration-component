@@ -95,6 +95,13 @@ const studentsRoutes = (router: Router) => {
   router.get(
     "/me",
 
+    (req, res, next) => {
+      console.log(`COOKIES: ${JSON.stringify(req.cookies)}`);
+      console.log(`SIGNED COOKIES: ${JSON.stringify(req.signedCookies)}`);
+      next();
+    },
+
+
     checkRole([Role.STUDENT]),
 
     asyncHandler(meHandler)
