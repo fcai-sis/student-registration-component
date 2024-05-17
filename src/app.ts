@@ -8,6 +8,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { sessionRouter, studentsRouter } from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
+import cookieParser from "cookie-parser";
 
 // Create Express server
 const app = express();
@@ -17,6 +18,9 @@ app.use((req: Request, _: Response, next: NextFunction) => {
   req.context = {};
   next();
 });
+
+// Parse cookies
+app.use(cookieParser());
 
 // Configure HTTP request logger middleware
 app.use(

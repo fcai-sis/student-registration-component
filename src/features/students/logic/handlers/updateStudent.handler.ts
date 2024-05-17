@@ -7,18 +7,67 @@ type UpdateHandlerRequest = Request<
     studentId: string;
   },
   {},
-  { fullName?: string; address?: string }
+  {
+    fullName?: string;
+    groupCode?: boolean;
+    gender?: "male" | "female" | "other";
+    religion?: "christian" | "muslim" | "other";
+    nationalId?: string;
+    administration?: string;
+    directorate?: string;
+    phoneNumber?: string;
+    educationType?: string;
+    birthYear?: number;
+    birthMonth?: number;
+    birthDay?: number;
+    birthPlace?: string;
+    governorateId?: string;
+    nationality?: "egyptian" | "foreigner";
+    address?: string;
+  }
 >;
 
-const updateStudentHandler = async (
-  req: UpdateHandlerRequest,
-  res: Response
-) => {
+const handler = async (req: UpdateHandlerRequest, res: Response) => {
   const studentId = req.params.studentId;
+  const {
+    fullName,
+    groupCode,
+    gender,
+    religion,
+    nationalId,
+    administration,
+    directorate,
+    phoneNumber,
+    educationType,
+    birthYear,
+    birthMonth,
+    birthDay,
+    birthPlace,
+    governorateId,
+    nationality,
+    address,
+  } = req.body;
   // Check if the student exists
   const student = await StudentModel.findByIdAndUpdate(
     studentId,
-    { ...req.body },
+    {
+      ...(fullName && { fullName }),
+      ...(groupCode && { groupCode }),
+      ...(gender && { gender }),
+      ...(religion && { religion }),
+      ...(nationalId && { nationalId }),
+      ...(administration && { administration }),
+      ...(directorate && { directorate }),
+      ...(phoneNumber && { phoneNumber }),
+      ...(educationType && { educationType }),
+      ...(birthYear && { birthYear }),
+      ...(birthMonth && { birthMonth }),
+      ...(birthDay && { birthDay }),
+      ...(birthPlace && { birthPlace }),
+      ...(governorateId && { governorateId }),
+      ...(nationality && { nationality }),
+      ...(address && { address }),
+    },
     { new: true }
   );
 
@@ -32,13 +81,12 @@ const updateStudentHandler = async (
 
   const response = {
     student: {
-      _id: student._id,
-      fullName: student.fullName,
-      address: student.address,
+      ...student.toObject(),
     },
   };
 
   return res.status(200).json(response);
 };
 
+const updateStudentHandler = handler;
 export default updateStudentHandler;

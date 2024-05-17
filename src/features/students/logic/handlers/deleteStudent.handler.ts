@@ -12,14 +12,14 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const deletedStudent = await StudentModel.findByIdAndDelete(student);
 
   if (!deletedStudent) {
-    return res.status(404).send({
+    return res.status(404).json({
       error: {
         message: "Student not found",
       },
     });
   }
 
-  return res.status(200).send({
+  return res.status(200).json({
     data: deletedStudent,
     message: "Student deleted successfully",
   });

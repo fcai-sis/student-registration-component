@@ -15,6 +15,7 @@ type HandlerRequest = Request<
  * Find student by Id
  * */
 const meHandler = async (req: HandlerRequest, res: Response) => {
+
   const { userId } = req.body.user;
 
   // read the student from the db
@@ -25,6 +26,7 @@ const meHandler = async (req: HandlerRequest, res: Response) => {
       error: {
         message: "Student not found",
       },
+
     });
   }
 
