@@ -26,7 +26,7 @@ const meHandler = async (req: HandlerRequest, res: Response) => {
         });
     }
     
-    return res.status(200).send({
+    return res.status(200).json({
       student: {
         ...student.toObject(),
         },

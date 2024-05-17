@@ -8,7 +8,7 @@ type HandlerRequest = Request;
  * */
 const handler = async (req: HandlerRequest, res: Response) => {
   const count = await StudentModel.countDocuments();
-  return res.status(200).send({ count });
+  return res.status(200).json({ count });
 };
 
 const countStudentCollectionHandler = handler;

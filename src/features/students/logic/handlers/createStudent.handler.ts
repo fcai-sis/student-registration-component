@@ -81,7 +81,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     },
   };
 
-  return res.status(201).send(response);
+  return res.status(201).json(response);
 };
 
 const createStudentHandler = handler;

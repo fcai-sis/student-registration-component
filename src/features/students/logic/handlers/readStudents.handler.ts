@@ -24,7 +24,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   const count = await StudentModel.countDocuments();
 
-  return res.status(200).send({
+  return res.status(200).json({
     students,
     count,
   });
