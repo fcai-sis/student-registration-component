@@ -267,7 +267,7 @@ const updateStudentValidatorMiddleware = [
 
     if (req.body.fullName) req.body.fullName = req.body.fullName.trim();
     if (req.body.groupCode) req.body.groupCode = req.body.groupCode;
-    if (req.body.gender) req.body.groupCode = req.body.gender.trim();
+    if (req.body.gender) req.body.gender = req.body.gender.trim();
     if (req.body.religion) req.body.religion = req.body.religion.trim();
     if (req.body.nationalId) req.body.nationalId = req.body.nationalId.trim();
     if (req.body.administration)
