@@ -11,10 +11,10 @@ import readStudentsHandler from "./logic/handlers/readStudents.handler";
 import ensureStudentIdInParamsMiddleware from "./logic/middlewares/ensureStudentIdInParams.middleware";
 import deleteStudentHandler from "./logic/handlers/deleteStudent.handler";
 import updateStudentValidatorMiddleware from "./logic/middlewares/updateStudentValidator.middleware";
-import findStudentByIdHandler from "./logic/handlers/findStudentById.handler";
 import countStudentCollectionHandler from "./logic/handlers/countStudents.handler";
 import meHandler from "./logic/handlers/me.handler";
 import updateStudentHandler from "./logic/handlers/updateStudent.handler";
+import findStudentByStudentIdHandler from "./logic/handlers/findStudentByStudentId.handler";
 
 const studentsRoutes = (router: Router) => {
   /*
@@ -89,7 +89,7 @@ const studentsRoutes = (router: Router) => {
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
     ensureStudentIdInParamsMiddleware,
 
-    asyncHandler(findStudentByIdHandler)
+    asyncHandler(findStudentByStudentIdHandler)
   );
 
   router.get(
@@ -100,7 +100,6 @@ const studentsRoutes = (router: Router) => {
       console.log(`SIGNED COOKIES: ${JSON.stringify(req.signedCookies)}`);
       next();
     },
-
 
     checkRole([Role.STUDENT]),
 
