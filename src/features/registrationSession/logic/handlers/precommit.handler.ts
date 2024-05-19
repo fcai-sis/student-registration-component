@@ -128,7 +128,8 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
 
       const e = {
         row: index + 1,
-        errors: Object.values(error.errors).map((e: any) => e.message), // TODO: Map error messages to localized human readable messages
+        // errors: Object.values(error.errors).map((e: any) => e.message), // TODO: Map error messages to localized human readable messages
+        errors: {},
       };
 
       logger.debug(JSON.stringify(e, null, 2));
