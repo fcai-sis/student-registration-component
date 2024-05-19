@@ -5,8 +5,13 @@ import ExcelMapping from "../../data/types/mapping.type";
 import { StudentModel } from "@fcai-sis/shared-models";
 import HasStudentFields from "../../data/types/hasStudentFields.type";
 import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
+import { TokenPayload } from "@fcai-sis/shared-middlewares";
 
-type MiddlewareRequest = Request<{}, {}, { mapping: ExcelMapping }>;
+type MiddlewareRequest = Request<
+  {},
+  {},
+  { mapping: ExcelMapping; user: TokenPayload }
+>;
 
 /**
  * Validates the mapping against the Student model, ensuring that all

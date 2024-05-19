@@ -1,7 +1,11 @@
 import { Router } from "express";
 
 import { asyncHandler } from "@fcai-sis/shared-utilities";
-import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
+import {
+  Role,
+  checkRole,
+  paginationQueryParamsMiddleware,
+} from "@fcai-sis/shared-middlewares";
 
 import commitHandler from "./logic/handlers/commit.handler";
 import precommitHandler from "./logic/handlers/precommit.handler";
@@ -27,7 +31,8 @@ export default (router: Router) => {
    */
   router.post(
     "/start",
-
+    // Ensure user is authorized
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Ensure there is no active registration session
     asyncHandler(checkActiveSessionMiddleware(false)),
 
@@ -49,7 +54,8 @@ export default (router: Router) => {
    */
   router.patch(
     "/mapping",
-
+    // Ensure user is authorized
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Check if there is an active registration session
     asyncHandler(checkActiveSessionMiddleware(true)),
 
@@ -68,6 +74,9 @@ export default (router: Router) => {
   router.post(
     "/commit",
 
+    // Ensure user is authorized
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
+
     // Check if there is an active registration session
     asyncHandler(checkActiveSessionMiddleware(true)),
 
@@ -75,13 +84,14 @@ export default (router: Router) => {
     asyncHandler(commitHandler)
   );
 
-
   /**
    * Commits the staged students to the actual students collection.
    */
   router.post(
     "/precommit",
 
+    // Ensure user is authorized
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Check if there is an active registration session
     asyncHandler(checkActiveSessionMiddleware(true)),
 
@@ -95,6 +105,8 @@ export default (router: Router) => {
   router.post(
     "/cancel",
 
+    // Ensure user is authorized
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Check if there is an active registration session
     asyncHandler(checkActiveSessionMiddleware(true)),
 
@@ -108,6 +120,8 @@ export default (router: Router) => {
   router.get(
     "/active",
 
+    // Ensure user is authorized
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Check if there is an active registration session
     asyncHandler(checkActiveSessionMiddleware(true)),
 
@@ -120,7 +134,8 @@ export default (router: Router) => {
    */
   router.get(
     "/active/staged",
-
+    // Ensure user is authorized
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Check if there is an active registration session
     asyncHandler(checkActiveSessionMiddleware(true)),
 
@@ -136,7 +151,8 @@ export default (router: Router) => {
    */
   router.get(
     "/active/mapped",
-
+    // Ensure user is authorized
+    checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Check if there is an active registration session
     asyncHandler(checkActiveSessionMiddleware(true)),
 
