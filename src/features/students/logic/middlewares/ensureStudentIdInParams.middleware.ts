@@ -8,8 +8,8 @@ const middlewares = [
     .exists()
     .withMessage("Student ID is required")
 
-    .isMongoId()
-    .withMessage("Student ID must be a valid Mongo ID"),
+    .isNumeric()
+    .withMessage("Student ID must be a number"),
 
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validator.validationResult(req);

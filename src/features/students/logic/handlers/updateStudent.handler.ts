@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { StudentModel } from "@fcai-sis/shared-models";
 
-//TODO: Create middleware to check for if user authorized to update student
 type UpdateHandlerRequest = Request<
   {
     studentId: string;
@@ -48,8 +47,8 @@ const handler = async (req: UpdateHandlerRequest, res: Response) => {
     address,
   } = req.body;
   // Check if the student exists
-  const student = await StudentModel.findByIdAndUpdate(
-    studentId,
+  const student = await StudentModel.findOneAndUpdate(
+    { studentId },
     {
       ...(fullName && { fullName }),
       ...(groupCode && { groupCode }),
