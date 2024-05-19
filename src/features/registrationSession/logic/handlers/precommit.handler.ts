@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import logger from "../../../../core/logger";
 import unsetMapping from "../../data/types/unsetMapping.type";
-import { StudentType } from "@fcai-sis/shared-models";
+import { DBLock, IStudent } from "@fcai-sis/shared-models";
 import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
@@ -16,6 +16,7 @@ type HandlerRequest = Request<{}, {}, {}>;
  * Saves the staged students in the current active registration session to the mapped students collection
  */
 const precommitHandler = async (_: HandlerRequest, res: Response) => {
+
   // Get the current action registration session
   const currentActiveSession = await RegistrationSessionModel.findOne({
     active: true,
@@ -24,6 +25,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
   // If none exists, throw an error
   if (!currentActiveSession) {
     logger.debug(`No active registration session found`);
+    await DBLock.deleteOne({ lockName: "precommit" });
     res.status(400).json({
       code: "no-active-registration-session",
       message: "There is no active registration session",
@@ -46,6 +48,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
 
   if (unsetFields.length > 0) {
     logger.debug(`Unset fields found in the mapping: ${unsetFields}`);
+    await DBLock.deleteOne({ lockName: "precommit" });
     res.status(400).json({
       code: "unset-fields-in-mapping",
       message: "There are unset fields in the mapping",
@@ -62,6 +65,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
   // If there are no staged students, throw an error
   if (!stagedStudents) {
     logger.debug(`No staged students found`);
+    await DBLock.deleteOne({ lockName: "precommit" });
     res.status(400).json({
       code: "no-staged-students",
       message: "There are no staged students",
@@ -74,7 +78,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
   );
 
   // Loop over the staged students and save them to the mapped students collection after mapping the fields using the mapping object and the excel columns headers
-  const mappedStudents: StudentType[] = [];
+  const mappedStudents: IStudent[] = [];
 
   // TODO: Type the errors array properly
   const errors: any[] = [];
@@ -95,6 +99,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
   }
 
   if (errors.length > 0) {
+    await DBLock.deleteOne({ lockName: "precommit" });
     res.status(400).json({
       code: "error-mapping-staged-students",
       message: "There was an error mapping the staged students",
@@ -126,10 +131,12 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
       // Get the row that caused the error, and a human readable error message describing the error, and add it to the errors array
       const index = mappedStudents.indexOf(mappedStudent);
 
+      console.log("THE FUCKING ERROR", JSON.stringify(error));
+
       const e = {
         row: index + 1,
-        // errors: Object.values(error.errors).map((e: any) => e.message), // TODO: Map error messages to localized human readable messages
-        errors: {},
+        errors: Object.values(error).map((e: any) => e.message), // TODO: Map error messages to localized human readable messages
+        // errors: [],
       };
 
       logger.debug(JSON.stringify(e, null, 2));
@@ -142,6 +149,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
 
   if (errors.length > 0) {
     await MappedStudentModel.deleteMany();
+    await DBLock.deleteOne({ lockName: "precommit" });
     res.status(400).json({
       code: "error-saving-mapped-students",
       message: "There was an error saving the mapped students",
@@ -150,6 +158,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
     return;
   }
 
+  await DBLock.deleteOne({ lockName: "precommit" });
   res.status(200).json({
     message: "Successfully saved the mapped students",
   });

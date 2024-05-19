@@ -1,5 +1,5 @@
 import ExcelMapping from "../data/types/mapping.type";
-import { StudentType } from "@fcai-sis/shared-models";
+import { IStudent } from "@fcai-sis/shared-models";
 
 /**
  * Maps the fields of the staged student to the fields of the student using the mapping object and the excel columns headers
@@ -10,8 +10,8 @@ import { StudentType } from "@fcai-sis/shared-models";
 export const mapStagedStudent = (
   stagedStudent: any,
   mapping: ExcelMapping,
-): StudentType => {
-  const mappedStudent: Partial<StudentType> = {};
+): IStudent => {
+  const mappedStudent: Partial<IStudent> = {};
 
   // for each value in the mapping object, map the value from the staged student to the mapped student
   // stagedStudent example: { excelColumn1: "value1", excelColumn2: "value2" }
@@ -23,5 +23,5 @@ export const mapStagedStudent = (
     }
   }
 
-  return mappedStudent as StudentType;
+  return mappedStudent as IStudent;
 }

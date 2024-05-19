@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
 
-import logger from '../../../../core/logger';
-import unsetMapping from '../../data/types/unsetMapping.type';
-import StagedStudentModel from "../../data/models/stagedStudents.model";
-import { rowToStudent } from '../../../common/logic/utils/mapping.utils';
 import RegistrationSessionModel from '../../data/models/registrationSession.model';
+import MappedStudentModel from '../../../common/data/models/mappedStudent.model';
 
 type HandlerRequest = Request;
 
@@ -26,30 +23,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
     return;
   }
 
-  const mapping = currentActiveSession.mapping;
-
-  // if any of the mapping is unsetMapping, throw an error
-  for (const key in mapping) {
-    if (mapping[key] === unsetMapping) {
-      res.status(400).json({
-        message: `Mapping for ${key} is not set. Please set the mapping first.`
-      });
-      return;
-    }
-  }
-
-  const stagedStudents = await StagedStudentModel.find({
-    registrationSessionId: currentActiveSession._id,
-  })
+  const mappedStudents = await MappedStudentModel.find({})
     .skip((page - 1) * pageSize)
     .limit(pageSize);
 
-  const students = stagedStudents.map(({ student }) => {
-    logger.debug(`Student ${JSON.stringify(student)}`);
-    return rowToStudent(student, mapping);
-  });
-
-  res.json({ students });
+  res.json({ mappedStudents });
 };
 
 const readMappedStudentsHandler = handler;

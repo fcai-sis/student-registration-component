@@ -23,6 +23,7 @@ import validateMappingJsonMiddleware from "./logic/middlewares/validateMappingJs
 import readStudentsFromExcelMiddlerware from "./logic/middlewares/readStudentsFromExcel.middleware";
 import validateMappingAgainstExcelFileMiddleware from "./logic/middlewares/validateMappingAgainstExcelFile.middleware";
 import validateMappingAgainstStudentModelMiddleware from "./logic/middlewares/validateMappingAgainstStudentModel.middleware";
+import databaseLockMiddleware from "./logic/middlewares/databaseLock.middleware";
 
 export default (router: Router) => {
   /**
@@ -89,6 +90,8 @@ export default (router: Router) => {
    */
   router.post(
     "/precommit",
+
+    databaseLockMiddleware("precommit"),
 
     // Ensure user is authorized
     checkRole([Role.EMPLOYEE, Role.ADMIN]),

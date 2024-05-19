@@ -2,7 +2,7 @@ import logger from "../../../../core/logger";
 import ExcelRow from "../../../registrationSession/data/types/excelRow.type";
 import StudentField from "../../../registrationSession/data/types/studentField.type";
 import HasStudentFields from "../../../registrationSession/data/types/hasStudentFields.type";
-import { StudentType } from "@fcai-sis/shared-models";
+import { IStudent } from "@fcai-sis/shared-models";
 
 /**
  * Gets the fields of the Student model as an array of strings.
@@ -25,14 +25,14 @@ export const getStudentKeys = (object: HasStudentFields): StudentField[] =>
 export const rowToStudent = (
   row: ExcelRow,
   mapping: Record<StudentField, string>
-): StudentType => {
+): IStudent => {
   logger.debug(`Row ${JSON.stringify(row)}`);
   logger.debug(`Mapping ${JSON.stringify(mapping)}`);
 
-  const student: Partial<StudentType> = {};
+  const student: Partial<IStudent> = {};
   Object.entries(mapping).forEach(([field, column]) => {
     student[field as StudentField] = row[column];
   });
 
-  return student as StudentType;
+  return student as IStudent;
 };
