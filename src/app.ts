@@ -2,7 +2,6 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
-import cookieParser from "cookie-parser";
 import express, { NextFunction, Request, Response } from "express";
 
 import { sessionRouter, studentsRouter } from "./router";
@@ -44,17 +43,11 @@ app.use(compression());
 
 // Enable CORS
 // https://stackoverflow.com/a/61988727/14174934
-app.use(cors({
-  origin: "http://localhost:5174",
-  credentials: true,
-}));
+app.use(cors());
 
 // Parse JSON and url-encoded query
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// Parse cookies
-app.use(cookieParser());
 
 // Mount API routes
 app.use("/students", studentsRouter());
