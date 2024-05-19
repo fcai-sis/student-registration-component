@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { StudentModel, UserModel } from "@fcai-sis/shared-models";
+import bcrypt from "bcrypt";
 
 type HandlerRequest = Request<
   {},
@@ -49,8 +50,8 @@ const handler = async (req: HandlerRequest, res: Response) => {
     address,
   } = req.body;
   // create a new user for the student
-  const user = await UserModel.create({ password: studentId });
-
+  const hashedPassword = await bcrypt.hash(studentId, 10);
+  const user = await UserModel.create({ password: hashedPassword });
   // create a new student
   const student = new StudentModel({
     studentId,
