@@ -16,7 +16,6 @@ type HandlerRequest = Request<{}, {}, {}>;
  * Saves the staged students in the current active registration session to the mapped students collection
  */
 const precommitHandler = async (_: HandlerRequest, res: Response) => {
-
   // Get the current action registration session
   const currentActiveSession = await RegistrationSessionModel.findOne({
     active: true,
@@ -135,7 +134,8 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
 
       const e = {
         row: index + 1,
-        errors: Object.values(error).map((e: any) => e.message), // TODO: Map error messages to localized human readable messages
+        // errors: Object.values(error).map((e: any) => e.message), // TODO: Map error messages to localized human readable messages
+        errors: Object.values(error.errors).map((e: any) => e.message),
         // errors: [],
       };
 
