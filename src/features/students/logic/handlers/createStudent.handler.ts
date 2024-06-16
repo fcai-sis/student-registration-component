@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { StudentModel, UserModel } from "@fcai-sis/shared-models";
+import {
+  AcademicStudentModel,
+  StudentModel,
+  UserModel,
+} from "@fcai-sis/shared-models";
 import bcrypt from "bcrypt";
 
 type HandlerRequest = Request<
@@ -75,6 +79,19 @@ const handler = async (req: HandlerRequest, res: Response) => {
   });
 
   await student.save();
+
+  if (!student) {
+    return res.status(500).json({
+      code: "student-creation-failed",
+      message: "Failed to create student, please contact support.",
+    });
+  }
+
+  const academicStudent = new AcademicStudentModel({
+    student: student._id,
+  });
+
+  await academicStudent.save();
 
   const response = {
     student: {

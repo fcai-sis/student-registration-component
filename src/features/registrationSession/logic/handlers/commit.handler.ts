@@ -4,7 +4,7 @@ import logger from "../../../../core/logger";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
-import { StudentModel } from "@fcai-sis/shared-models";
+import { AcademicStudentModel, StudentModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{}, {}, {}>;
 
@@ -54,6 +54,15 @@ const handler = async (_: HandlerRequest, res: Response) => {
       message: "Failed to insert mapped students into the students collection",
     });
     return;
+  }
+
+  for (const student of insertResult) {
+    // create a new AcademicStudent document for each student
+    const academicStudent = new AcademicStudentModel({
+      student: student._id,
+    });
+
+    await academicStudent.save();
   }
 
   logger.debug(
