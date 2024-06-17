@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
-import { arabicStudentFields } from "../../data/utils/studentModel.util";
+import { studentLocalizedFields } from "../../data/utils/studentModel.util";
 
 type HandlerRequest = Request<{}, {}, {}>;
 
@@ -30,7 +30,7 @@ const handler = async (_: HandlerRequest, res: Response) => {
 
   res.json({
     registrationSession: result.toObject(),
-    arabicFields: arabicStudentFields
+    fieldNames: studentLocalizedFields,
   });
 };
 
