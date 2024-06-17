@@ -22,11 +22,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
     .skip((page - 1) * pageSize) // pagination
     .limit(pageSize);
 
-  const count = await StudentModel.countDocuments();
+  const totalStudents = await StudentModel.countDocuments();
 
   return res.status(200).json({
     students,
-    count,
+    totalStudents,
   });
 };
 
