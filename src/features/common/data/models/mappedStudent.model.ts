@@ -1,131 +1,97 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-import { IStudent } from "@fcai-sis/shared-models";
-import { userModelName } from "@fcai-sis/shared-models";
+import {
+  GenderEnum,
+  IStudent,
+  NationalityEnum,
+  ReligionEnum,
+  ScientificDivisionEnum,
+  arabicValidator,
+  betweenValidator,
+  integerValidator,
+  numericStringValidator,
+} from "@fcai-sis/shared-models";
 
-const mappedStudentSchema: Schema = new Schema<IStudent>({
+export const mappedStudentModelName = "MappedStudent";
+
+export type StudentWithoutUser = Omit<
+  IStudent,
+  keyof mongoose.Document | "user"
+>;
+
+const mappedStudentSchema = new mongoose.Schema<StudentWithoutUser>({
   studentId: {
     type: String,
     required: [true, "Student ID is required"],
     unique: true,
     validate: {
-      validator: function(value: string) {
-        // ID must be digits
-        return /^\d+$/.test(value);
-      },
+      validator: (v: string) => numericStringValidator("Student ID", v),
       message: "Student ID must be a valid ID",
     },
   },
-
   fullName: {
     type: String,
     required: [true, "Full name is required"],
     validate: {
-      validator: function(value: string) {
-        // name must contain only Arabic characters and allow whitespace
-        return /^[\p{Script=Arabic}\s]+$/gmu.test(value);
-      },
+      validator: (v: string) => arabicValidator("Full Name", v),
       message: "Full name must contain only Arabic letters (أ - ي)",
     },
   },
-  // refers to علمي علوم او رياضة
-  // Group code can only be 1 or 2
-  groupCode: {
-    type: Boolean,
-    required: [true, "Group code is required"],
-    set: function(value: any) {
-      // convert the string to a number if possible
-      const parsedValue = parseInt(String(value), 10);
-      // check if the value is a number before mapping
-      if (typeof parsedValue === "number" && !isNaN(parsedValue)) {
-        // map 1 to true and 2 to false
-        return parsedValue === 1;
-      } else {
-        // for now, let's default to undefined so that it's not mistaken for a boolean
-        return undefined;
+  scientificDivision: {
+    type: String,
+    required: [true, "Scientific division is required"],
+    enum: ScientificDivisionEnum,
+    set: (v: number | string) => {
+      const value = typeof v === "number" ? v : parseInt(v);
+      switch (value) {
+        case 1:
+          return ScientificDivisionEnum[0];
+        case 2:
+          return ScientificDivisionEnum[1];
+        default:
+          return undefined;
       }
-    },
-    validate: {
-      validator: function(value: boolean) {
-        // Validate if it's a boolean (true or false)
-        return typeof value === "boolean";
-      },
-      message: "Group code must be a boolean value",
     },
   },
   gender: {
     type: String,
-    enum: ["male", "female", "other"],
     required: [true, "Gender is required"],
-    set: function(value: number | string) {
-      // convert the string to a number if possible
-      const parsedValue = parseInt(String(value), 10);
-
-      // Map numbers to corresponding strings
-      if (typeof parsedValue === "number") {
-        switch (parsedValue) {
-          case 1:
-            return "male";
-          case 2:
-            return "female";
-          case 3:
-            return "other";
-          default:
-            return undefined;
-        }
-      } else {
-        // If the value is already a string, leave it unchanged
-        return value;
+    enum: GenderEnum,
+    set: (v: number | string) => {
+      const value = typeof v === "number" ? v : parseInt(v);
+      switch (value) {
+        case 1:
+          return GenderEnum[0];
+        case 2:
+          return GenderEnum[1];
+        default:
+          return undefined;
       }
-    },
-    validate: {
-      validator: function(value: string) {
-        return ["male", "female", "other"].includes(value);
-      },
-      message: "Gender must be one of the following: male, female, other",
     },
   },
   religion: {
     type: String,
     required: [true, "Religion is required"],
-    enum: ["muslim", "christian", "other"],
-    set: function(value: number | string) {
-      // convert the string to a number if possible
-      const parsedValue = parseInt(String(value), 10);
-
-      // Map numbers to corresponding strings
-      if (typeof parsedValue === "number") {
-        switch (parsedValue) {
-          case 1:
-            return "muslim";
-          case 2:
-            return "christian";
-          case 3:
-            return "other";
-          default:
-            return undefined;
-        }
-      } else {
-        // If the value is already a string, leave it unchanged
-        return value;
+    enum: ReligionEnum,
+    set: (v: number | string) => {
+      const value = typeof v === "number" ? v : parseInt(v);
+      switch (value) {
+        case 1:
+          return ReligionEnum[0];
+        case 2:
+          return ReligionEnum[1];
+        case 3:
+          return ReligionEnum[2];
+        default:
+          return undefined;
       }
-    },
-    validate: {
-      validator: function(value: string) {
-        return ["muslim", "christian", "other"].includes(value);
-      },
-      message:
-        "Religion must be one of the following: muslim, christian, other",
     },
   },
   nationalId: {
     type: String,
     required: [true, "National ID is required"],
     validate: {
-      validator: function(value: string) {
-        // nationalId must be a string of 14 digits
-        return /^\d{14}$/.test(value);
-      },
+      validator: (v: string) => numericStringValidator("National ID", v, 14),
       message: "National ID must be a 14-digit number",
     },
   },
@@ -133,21 +99,14 @@ const mappedStudentSchema: Schema = new Schema<IStudent>({
     type: String,
     required: [true, "Administration is required"],
     validate: {
-      validator: function(value: string) {
-        // administration must contain only letters and Arabic characters and allow whitespace
-        return /^[\p{Script=Arabic}\s]+$/gmu.test(value);
-      },
-      message: "Administration must contain only letters and Arabic characters",
+      validator: (v: string) => arabicValidator("Administration", v),
     },
   },
   directorate: {
     type: String,
     required: [true, "Directorate is required"],
     validate: {
-      validator: function(value: string) {
-        // directorate must contain only letters and Arabic characters and allow whitespace
-        return /^[\p{Script=Arabic}\s]+$/gmu.test(value);
-      },
+      validator: (v: string) => arabicValidator("Directorate", v),
       message: "Directorate must contain only letters and Arabic characters",
     },
   },
@@ -155,33 +114,24 @@ const mappedStudentSchema: Schema = new Schema<IStudent>({
     type: String,
     required: [true, "Phone number is required"],
     validate: {
-      validator: function(value: string) {
-        // phoneNumber must be a string of 11 digits
-        return /^\d{11}$/.test(value);
-      },
+      validator: (v: string) => numericStringValidator("Phone Number", v, 11),
       message: "Phone number must be an 11-digit number",
     },
-    // TODO: Remove this default value
-    default: "01552452691",
   },
   educationType: {
     type: String,
     required: [true, "Education type is required"],
     validate: {
-      validator: function(value: string) {
-        // educationType must contain only letters and Arabic characters and allow whitespace
-        return /^[\p{Script=Arabic}\s]+$/gmu.test(value);
-      },
-      message: "Education type must contain only letters and Arabic characters",
+      validator: (v: string) => arabicValidator("Education Type", v),
     },
   },
   birthYear: {
     type: Number,
     required: [true, "Birth year is required"],
     validate: {
-      validator: function(value: number) {
-        // birthYear must be a number between 1900 and 2021
-        return value >= 1900 && value <= 2021;
+      validator: (value: number) => {
+        integerValidator("Birth Year", value);
+        betweenValidator("Birth Year", value, 1900, new Date().getFullYear());
       },
       message: "Birth year must be a number between 1900 and 2021",
     },
@@ -190,9 +140,9 @@ const mappedStudentSchema: Schema = new Schema<IStudent>({
     type: Number,
     required: [true, "Birth month is required"],
     validate: {
-      validator: function(value: number) {
-        // birthMonth must be a number between 1 and 12
-        return value >= 1 && value <= 12;
+      validator: (value: number) => {
+        integerValidator("Birth Month", value);
+        betweenValidator("Birth Month", value, 1, 12);
       },
       message: "Birth month must be a number between 1 and 12",
     },
@@ -201,9 +151,9 @@ const mappedStudentSchema: Schema = new Schema<IStudent>({
     type: Number,
     required: [true, "Birth day is required"],
     validate: {
-      validator: function(value: number) {
-        // birthDay must be a number between 1 and 31
-        return value >= 1 && value <= 31;
+      validator: (value: number) => {
+        integerValidator("Birth Day", value);
+        betweenValidator("Birth Day", value, 1, 31);
       },
       message: "Birth day must be a number between 1 and 31",
     },
@@ -212,75 +162,41 @@ const mappedStudentSchema: Schema = new Schema<IStudent>({
     type: String,
     required: [true, "Birth place is required"],
     validate: {
-      validator: function(value: string) {
-        // birthPlace must contain only letters and Arabic characters and allow whitespace
-        return /^[\p{Script=Arabic}\s]+$/gmu.test(value);
-      },
-      message: "Birth place must contain only letters and Arabic characters",
+      validator: (v: string) => arabicValidator("Birth Place", v),
     },
   },
   governorateId: {
     type: Number,
     required: [true, "Governorate ID is required"],
     validate: {
-      validator: function(value: number) {
-        // governorateId must be a number
-
-        return !isNaN(value);
-      },
+      validator: (v: number) => integerValidator("Governorate ID", v),
       message: "Governorate ID must be a number",
     },
   },
   nationality: {
     type: String,
     required: [true, "Nationality is required"],
-    set: function(value: string | number) {
-      // convert the string to a number if possible
-      const parsedValue = parseInt(String(value), 10);
-      // Map numbers to corresponding strings
-
-      // TODO: figure out nationality enums and modify this
-      if (typeof parsedValue === "number") {
-        switch (parsedValue) {
-          case 1:
-            return "egyptian";
-
-          default:
-            return "foreigner";
-        }
-      } else {
-        // If the value is already a string, leave it unchanged
-        return parsedValue;
+    enum: NationalityEnum,
+    set: (v: number | string) => {
+      const value = typeof v === "number" ? v : parseInt(v);
+      switch (value) {
+        case 1:
+          return NationalityEnum[0];
+        case 2:
+          return NationalityEnum[1];
+        default:
+          return undefined;
       }
     },
-    validate: {
-      validator: function(value: string) {
-        return ["egyptian", "foreigner"].includes(value);
-      },
-      message: "Nationality must be 'egyptian' or 'foreigner'",
-    },
   },
-
   address: {
     type: String,
     required: [true, "Address is required"],
-    validate: {
-      validator: function(value: string) {
-        // ensure the address is not empty and not just whitespace
-        return !!value && /\S/.test(value);
-      },
-      message: "Address cannot be empty",
-    },
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: userModelName,
-    required: true,
   },
 });
 
-const MappedStudentModel = mongoose.model<IStudent>(
-  "MappedStudent",
+const MappedStudentModel = mongoose.model<StudentWithoutUser>(
+  mappedStudentModelName,
   mappedStudentSchema
 );
 

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import ExcelMapping from "../../data/types/mapping.type";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
+import { getMappedStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 
 type MiddlewareRequest = Request<{}, {}, { mapping: { [K: string]: any } }>;
@@ -25,7 +25,7 @@ const middleware = async (
   const mapping = req.body.mapping;
   const excelColumnsHeaders = currentActiveSession!.excelColumnsHeaders;
 
-  const mappingKeys = getStudentKeys(mapping as unknown as ExcelMapping);
+  const mappingKeys = getMappedStudentKeys(mapping as unknown as ExcelMapping);
 
   const valuesInMappingThatAreNotInExcelColumns = mappingKeys.filter(
     (key) => !excelColumnsHeaders.includes(mapping[key])
@@ -35,7 +35,7 @@ const middleware = async (
     return res.status(400).send({
       error: {
         message: "Some field values are not present in the excel file",
-        fields: valuesInMappingThatAreNotInExcelColumns
+        fields: valuesInMappingThatAreNotInExcelColumns,
       },
     });
   }

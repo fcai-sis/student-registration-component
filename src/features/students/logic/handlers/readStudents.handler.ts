@@ -1,34 +1,28 @@
+import paginate from "express-paginate";
 import { Request, Response } from "express";
 import { StudentModel } from "@fcai-sis/shared-models";
+import { asyncHandler } from "@fcai-sis/shared-utilities";
 
 type HandlerRequest = Request;
 
 /*
  * Reads all students
  * */
-const handler = async (req: HandlerRequest, res: Response) => {
-  // get the pagination parameters
-  const page = req.context.page;
-  const pageSize = req.context.pageSize;
+const fetchPaginatedStudents = [
+  paginate.middleware(),
+  asyncHandler(async (req: HandlerRequest, res: Response) => {
+    const filter = {};
+    const totalStudents = await StudentModel.countDocuments(filter);
 
-  // read the students from the db
-  const students = await StudentModel.find(
-    {},
-    {
-      __v: 0,
-      userId: 0,
-    }
-  )
-    .skip((page - 1) * pageSize) // pagination
-    .limit(pageSize);
+    const students = await StudentModel.find(filter)
+      .skip(req.skip ?? 0) // pagination
+      .limit(req.query.limit as unknown as number);
 
-  const totalStudents = await StudentModel.countDocuments();
+    return res.status(200).json({
+      students,
+      totalStudents,
+    });
+  }),
+];
 
-  return res.status(200).json({
-    students,
-    totalStudents,
-  });
-};
-
-const readStudentsHandler = handler;
-export default readStudentsHandler;
+export default fetchPaginatedStudents;

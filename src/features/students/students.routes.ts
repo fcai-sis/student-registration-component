@@ -1,17 +1,12 @@
 import { Router } from "express";
 import { asyncHandler } from "@fcai-sis/shared-utilities";
-import {
-  Role,
-  checkRole,
-  paginationQueryParamsMiddleware,
-} from "@fcai-sis/shared-middlewares";
-import validateCreateStudentRequestBodyMiddleware from "./logic/middlewares/validateCreateStudentRequestBody.middleware";
+import { Role, checkRole } from "@fcai-sis/shared-middlewares";
+import validateCreateStudentRequestMiddleware from "./logic/middlewares/validateCreateStudentRequest.middleware";
 import createStudentHandler from "./logic/handlers/createStudent.handler";
-import readStudentsHandler from "./logic/handlers/readStudents.handler";
+import fetchPaginatedStudents from "./logic/handlers/readStudents.handler";
 import ensureStudentIdInParamsMiddleware from "./logic/middlewares/ensureStudentIdInParams.middleware";
 import deleteStudentHandler from "./logic/handlers/deleteStudent.handler";
-import updateStudentValidatorMiddleware from "./logic/middlewares/updateStudentValidator.middleware";
-import countStudentCollectionHandler from "./logic/handlers/countStudents.handler";
+import valiateUpdateStudentRequestMiddleware from "./logic/middlewares/updateStudentValidator.middleware";
 import meHandler from "./logic/handlers/me.handler";
 import updateStudentHandler from "./logic/handlers/updateStudent.handler";
 import findStudentByStudentIdHandler from "./logic/handlers/findStudentByStudentId.handler";
@@ -22,11 +17,8 @@ const studentsRoutes = (router: Router) => {
    **/
   router.post(
     "/create",
-
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Validate request body
-    validateCreateStudentRequestBodyMiddleware,
-
+    validateCreateStudentRequestMiddleware,
     asyncHandler(createStudentHandler)
   );
 
@@ -36,19 +28,7 @@ const studentsRoutes = (router: Router) => {
   router.get(
     "/read",
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Validate request query params for pagination
-    paginationQueryParamsMiddleware,
-
-    asyncHandler(readStudentsHandler)
-  );
-
-  /*
-   * Count all students
-   **/
-  router.get(
-    "/count",
-    checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    asyncHandler(countStudentCollectionHandler)
+    fetchPaginatedStudents
   );
 
   /*
@@ -57,9 +37,7 @@ const studentsRoutes = (router: Router) => {
   router.delete(
     "/delete/:studentId",
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Ensure student id in params
     ensureStudentIdInParamsMiddleware,
-
     asyncHandler(deleteStudentHandler)
   );
 
@@ -68,14 +46,9 @@ const studentsRoutes = (router: Router) => {
    **/
   router.patch(
     "/update/:studentId",
-
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Ensure announcement id in params
     ensureStudentIdInParamsMiddleware,
-
-    // Validate request body
-    updateStudentValidatorMiddleware,
-
+    valiateUpdateStudentRequestMiddleware,
     asyncHandler(updateStudentHandler)
   );
 

@@ -1,24 +1,26 @@
-/**
- * Represents the fields that can be mapped from the registration session to the student model */
+import { MappedStudentField } from "../../types/studentField.type";
 
-const mappableFields = [
-  "studentId",
-  "fullName",
-  "groupCode",
-  "gender",
-  "religion",
-  "nationalId",
-  "administration",
-  "directorate",
-  "phoneNumber",
-  "educationType",
-  "birthYear",
-  "birthMonth",
-  "birthDay",
-  "birthPlace",
-  "governorateId",
-  "nationality",
+/**
+ * The fields that can be mapped from the registration session to the student model
+ * */
+const mappableFields: MappedStudentField[] = [
   "address",
+  "administration",
+  "birthDay",
+  "birthMonth",
+  "birthPlace",
+  "birthYear",
+  "directorate",
+  "educationType",
+  "fullName",
+  "gender",
+  "governorateId",
+  "nationalId",
+  "nationality",
+  "phoneNumber",
+  "religion",
+  "scientificDivision",
+  "studentId",
 ];
 
 export default mappableFields;

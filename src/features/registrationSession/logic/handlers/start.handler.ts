@@ -4,8 +4,9 @@ import logger from "../../../../core/logger";
 import ExcelRow from "../../data/types/excelRow.type";
 import ExcelMapping from "../../data/types/mapping.type";
 import unsetMapping from "../../data/types/unsetMapping.type";
-import StagedStudentType from "../../data/types/stagedStudent.type";
-import StagedStudentModel from "../../data/models/stagedStudents.model";
+import StagedStudentModel, {
+  StagedStudentType,
+} from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 import mappableFields from "../../data/models/constants/mappableFields";
 
@@ -20,7 +21,7 @@ type HandlerRequest = Request<
  *
  * The Excel columns headers are also saved in the session, along with an empty mapping that the employee can modify later.
  */
-const handler = async (req: HandlerRequest, res: Response) => {
+const startHandler = async (req: HandlerRequest, res: Response) => {
   const students = req.body.students;
   const excelColumnsHeaders = req.body.excelColumnsHeaders;
 
@@ -34,7 +35,6 @@ const handler = async (req: HandlerRequest, res: Response) => {
         // Loop through all keys in the mapping
         (mapping, key) => {
           mapping[key as keyof ExcelMapping] = unsetMapping; // TODO: type assertion, idk what that is, typescript shenanigans
-
           return mapping; // Return the mapping object with the new field for the next iteration
         },
         {} as ExcelMapping // The initial value of the mapping is an empty map
@@ -59,7 +59,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   // Generate row IDs for the staged students
   const studentsWithIds = students.map(
     (student): StagedStudentType => ({
-      student: student,
+      student,
       registrationSessionId: registrationSessionCreateResult._id,
     })
   );
@@ -94,4 +94,4 @@ const handler = async (req: HandlerRequest, res: Response) => {
   });
 };
 
-export default handler;
+export default startHandler;

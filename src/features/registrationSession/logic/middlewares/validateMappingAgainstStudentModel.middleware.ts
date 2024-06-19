@@ -4,7 +4,7 @@ import logger from "../../../../core/logger";
 import ExcelMapping from "../../data/types/mapping.type";
 import { StudentModel } from "@fcai-sis/shared-models";
 import HasStudentFields from "../../data/types/hasStudentFields.type";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
+import { getMappedStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import { TokenPayload } from "@fcai-sis/shared-middlewares";
 
 type MiddlewareRequest = Request<
@@ -26,9 +26,9 @@ const middleware = (
 ) => {
   // Get the mapping keys
   const mapping = req.body.mapping;
-  const mappingKeys = getStudentKeys(mapping);
+  const mappingKeys = getMappedStudentKeys(mapping);
 
-  const studentModelFields = getStudentKeys(
+  const studentModelFields = getMappedStudentKeys(
     StudentModel.schema.obj as HasStudentFields
   );
 

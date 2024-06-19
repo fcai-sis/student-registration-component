@@ -7,7 +7,11 @@ import logger from "../../../../core/logger";
  *
  * @returns `400 Bad Request` if there is no file uploaded
  */
-const middleware = (req: Request, res: Response, next: NextFunction) => {
+const ensureFileUploadedMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   if (!req.file) {
     logger.debug(`No file uploaded`);
 
@@ -24,4 +28,4 @@ const middleware = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export default middleware;
+export default ensureFileUploadedMiddleware;

@@ -15,7 +15,11 @@ type HandlerRequest = Request<{}, {}, { workbook: Workbook }>;
  *
  * @returns `400 Bad Request` if the uploaded file is not a valid excel file
  */
-const middleware = async (req: HandlerRequest, res: Response, next: NextFunction) => {
+const ensureFileIsExcelMiddleware = async (
+  req: HandlerRequest,
+  res: Response,
+  next: NextFunction
+) => {
   logger.debug(`Checking if the uploaded file is a valid excel file`);
 
   // Read the uploaded Excel file
@@ -46,5 +50,4 @@ const middleware = async (req: HandlerRequest, res: Response, next: NextFunction
   next();
 };
 
-const ensureFileIsExcelMiddleware = middleware;
 export default ensureFileIsExcelMiddleware;

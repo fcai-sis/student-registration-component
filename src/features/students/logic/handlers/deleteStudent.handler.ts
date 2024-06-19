@@ -6,10 +6,10 @@ type HandlerRequest = Request<{ studentId: string }>;
 /*
  * Deletes a student
  * */
-const handler = async (req: HandlerRequest, res: Response) => {
-  const student = req.params.studentId;
-
-  const deletedStudent = await StudentModel.findByIdAndDelete(student);
+const deleteStudentHandler = async (req: HandlerRequest, res: Response) => {
+  const deletedStudent = await StudentModel.findByIdAndDelete(
+    req.params.studentId
+  );
 
   if (!deletedStudent) {
     return res.status(404).json({
@@ -25,5 +25,4 @@ const handler = async (req: HandlerRequest, res: Response) => {
   });
 };
 
-const deleteStudentHandler = handler;
 export default deleteStudentHandler;

@@ -1,33 +1,39 @@
-import mongoose, { InferSchemaType, Schema } from "mongoose";
+import mongoose from "mongoose";
 import unsetMapping from "../types/unsetMapping.type";
-import HasStudentFields from "../types/hasStudentFields.type";
-import { getStudentKeys } from "../../../common/logic/utils/mapping.utils";
+import { HasMappedStudentFields } from "../types/hasStudentFields.type";
+import { getMappedStudentKeys } from "../../../common/logic/utils/mapping.utils";
 import mappableFields from "./constants/mappableFields";
 
-export const registrationSessionSchema = new Schema({
+export const registrationSessionModelName = "RegistrationSession";
+
+export interface IRegistrationSession extends mongoose.Document {
+  active: boolean;
+  startDate: Date;
+  endDate?: Date;
+  mapping: HasMappedStudentFields;
+  excelColumnsHeaders: string[];
+}
+
+export const registrationSessionSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     required: true,
     default: true,
   },
-
   startDate: {
     type: Date,
     required: true,
     default: Date.now,
   },
-
   endDate: {
     type: Date,
   },
-
   mapping: {
     type: Object,
     validate: {
-      validator: function (mapping: HasStudentFields) {
-        const mappingKeys = getStudentKeys(mapping);
+      validator: function (mapping: HasMappedStudentFields) {
+        const mappingKeys = getMappedStudentKeys(mapping);
         const studentModelFields = mappableFields;
-
         return mappingKeys.every((key) => studentModelFields.includes(key));
       },
     },
@@ -35,7 +41,6 @@ export const registrationSessionSchema = new Schema({
       mappableFields.map((key) => [key, unsetMapping])
     ),
   },
-
   excelColumnsHeaders: {
     type: [String],
     required: true,
@@ -43,15 +48,11 @@ export const registrationSessionSchema = new Schema({
   },
 });
 
-export const registrationSessionModelName = "RegistrationSession";
-
-export type RegistrationSessionType = InferSchemaType<
-  typeof registrationSessionSchema
->;
-
-const RegistrationSessionModel = mongoose.model<RegistrationSessionType>(
-  registrationSessionModelName,
-  registrationSessionSchema
-);
+const RegistrationSessionModel =
+  mongoose.models[registrationSessionModelName] ||
+  mongoose.model<IRegistrationSession>(
+    registrationSessionModelName,
+    registrationSessionSchema
+  );
 
 export default RegistrationSessionModel;

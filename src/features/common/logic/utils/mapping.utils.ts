@@ -1,8 +1,9 @@
-import logger from "../../../../core/logger";
 import ExcelRow from "../../../registrationSession/data/types/excelRow.type";
-import StudentField from "../../../registrationSession/data/types/studentField.type";
-import HasStudentFields from "../../../registrationSession/data/types/hasStudentFields.type";
-import { IStudent } from "@fcai-sis/shared-models";
+import StudentField, {
+  MappedStudentField,
+} from "../../../registrationSession/data/types/studentField.type";
+import { HasMappedStudentFields } from "../../../registrationSession/data/types/hasStudentFields.type";
+import { StudentWithoutUser } from "features/common/data/models/mappedStudent.model";
 
 /**
  * Gets the fields of the Student model as an array of strings.
@@ -12,8 +13,9 @@ import { IStudent } from "@fcai-sis/shared-models";
  * @param object An object that has the fields of the Student model, like a student object or an Excel mapping.
  * @returns The fields of the Student model as an array of strings.
  */
-export const getStudentKeys = (object: HasStudentFields): StudentField[] =>
-  Object.keys(object) as StudentField[];
+export const getMappedStudentKeys = (
+  object: HasMappedStudentFields
+): MappedStudentField[] => Object.keys(object) as MappedStudentField[];
 
 /**
  * Takes a student row from the Excel file and a mapping and returns a student object.
@@ -25,14 +27,11 @@ export const getStudentKeys = (object: HasStudentFields): StudentField[] =>
 export const rowToStudent = (
   row: ExcelRow,
   mapping: Record<StudentField, string>
-): IStudent => {
-  logger.debug(`Row ${JSON.stringify(row)}`);
-  logger.debug(`Mapping ${JSON.stringify(mapping)}`);
-
-  const student: Partial<IStudent> = {};
+): StudentWithoutUser => {
+  const student: Partial<StudentWithoutUser> = {};
   Object.entries(mapping).forEach(([field, column]) => {
-    student[field as StudentField] = row[column];
+    student[field as MappedStudentField] = row[column];
   });
 
-  return student as IStudent;
+  return student as StudentWithoutUser;
 };

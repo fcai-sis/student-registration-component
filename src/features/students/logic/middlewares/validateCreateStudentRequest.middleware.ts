@@ -12,17 +12,28 @@ import {
  */
 const validateCreateStudentRequestMiddleware = [
   validator
-    .body("fullName")
+    .body("student.studentId")
 
-    .optional()
+    .exists()
+    .withMessage("studentId is required")
+
+    .isString()
+    .withMessage("studentId must be a string"),
+
+  validator
+    .body("student.fullName")
+
+    .exists()
+    .withMessage("fullName is required")
 
     .isString()
     .withMessage("fullName must be a string"),
 
   validator
-    .body("scientificDivision")
+    .body("student.scientificDivision")
 
-    .optional()
+    .exists()
+    .withMessage("scientificDivision is required")
 
     .isString()
     .withMessage("scientificDivision must be a string")
@@ -35,9 +46,10 @@ const validateCreateStudentRequestMiddleware = [
     ),
 
   validator
-    .body("gender")
+    .body("student.gender")
 
-    .optional()
+    .exists()
+    .withMessage("gender is required")
 
     .isString()
     .withMessage("gender must be a string")
@@ -48,9 +60,10 @@ const validateCreateStudentRequestMiddleware = [
     ),
 
   validator
-    .body("religion")
+    .body("student.religion")
 
-    .optional()
+    .exists()
+    .withMessage("religion is required")
 
     .isString()
     .withMessage("religion must be a string")
@@ -61,89 +74,100 @@ const validateCreateStudentRequestMiddleware = [
     ),
 
   validator
-    .body("nationalId")
+    .body("student.nationalId")
 
-    .optional()
+    .exists()
+    .withMessage("nationalId is required")
 
     .isString()
     .withMessage("nationalId must be a string"),
 
   validator
-    .body("administration")
+    .body("student.administration")
 
-    .optional()
+    .exists()
+    .withMessage("administration is required")
 
     .isString()
     .withMessage("administration must be a string"),
 
   validator
-    .body("directorate")
+    .body("student.directorate")
 
-    .optional()
+    .exists()
+    .withMessage("directorate is required")
 
     .isString()
     .withMessage("directorate must be a string"),
 
   validator
-    .body("phoneNumber")
+    .body("student.phoneNumber")
 
-    .optional()
+    .exists()
+    .withMessage("phoneNumber is required")
 
     .isString()
     .withMessage("phoneNumber must be a string"),
 
   validator
-    .body("educationType")
+    .body("student.educationType")
 
-    .optional()
+    .exists()
+    .withMessage("educationType is required")
 
     .isString()
     .withMessage("educationType must be a string"),
 
   validator
-    .body("birthYear")
+    .body("student.birthYear")
 
-    .optional()
+    .exists()
+    .withMessage("birthYear is required")
 
     .isInt()
     .withMessage("birthYear must be an integer"),
 
   validator
-    .body("birthMonth")
+    .body("student.birthMonth")
 
-    .optional()
+    .exists()
+    .withMessage("birthMonth is required")
 
     .isInt()
     .withMessage("birthMonth must be an integer"),
 
   validator
-    .body("birthDay")
+    .body("student.birthDay")
 
-    .optional()
+    .exists()
+    .withMessage("birthDay is required")
 
     .isNumeric()
     .withMessage("birthDay must be an integer"),
 
   validator
-    .body("birthPlace")
+    .body("student.birthPlace")
 
-    .optional()
+    .exists()
+    .withMessage("birthPlace is required")
 
     .isString()
     .withMessage("birthPlace must be a string"),
 
   validator
-    .body("governorateId")
+    .body("student.governorateId")
 
-    .optional()
+    .exists()
+    .withMessage("governorateId is required")
 
     .isInt()
     .withMessage("governorateId must be an integer"),
 
   validator
-    .body("nationality")
+    .body("student.nationality")
 
-    .optional()
+    .exists()
+    .withMessage("nationality is required")
 
     .isString()
     .withMessage("nationality must be a string")
@@ -154,9 +178,10 @@ const validateCreateStudentRequestMiddleware = [
     ),
 
   validator
-    .body("address")
+    .body("student.address")
 
-    .optional()
+    .exists()
+    .withMessage("address is required")
 
     .isString()
     .withMessage("address must be a string"),

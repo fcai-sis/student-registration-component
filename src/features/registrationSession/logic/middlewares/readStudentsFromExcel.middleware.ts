@@ -24,17 +24,14 @@ type MiddlewareRequest = Request<
  * Reads the students from the uploaded Excel file,
  * and attaches the students and the Excel columns headers to the request object.
  */
-const middleware = async (
+const readStudentsFromExcelMiddleware = async (
   req: MiddlewareRequest,
   _: Response,
   next: NextFunction
 ) => {
   const workbook = req.body.workbook;
-
   const worksheet = getStudentsWorkSheet(workbook);
-
   const excelRows = getExcelRows(worksheet);
-
   const excelColumnsHeaders = getExcelColumnsHeaders(worksheet);
 
   req.body.students = rowsToStudents(excelRows, excelColumnsHeaders);
@@ -48,4 +45,4 @@ const middleware = async (
   next();
 };
 
-export default middleware;
+export default readStudentsFromExcelMiddleware;

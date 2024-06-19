@@ -1,21 +1,17 @@
 import { Router } from "express";
 
 import { asyncHandler } from "@fcai-sis/shared-utilities";
-import {
-  Role,
-  checkRole,
-  paginationQueryParamsMiddleware,
-} from "@fcai-sis/shared-middlewares";
+import { Role, checkRole } from "@fcai-sis/shared-middlewares";
 
 import commitHandler from "./logic/handlers/commit.handler";
 import precommitHandler from "./logic/handlers/precommit.handler";
-import startSessionHandler from "./logic/handlers/startSession.handler";
+import startSessionHandler from "./logic/handlers/start.handler";
 import updateMappingHandler from "./logic/handlers/updateMapping.handler";
-import cancelSessionHandler from "./logic/handlers/cancelSession.handler";
+import cancelRegistrationSessionHandler from "./logic/handlers/cancel.handler";
 import uploadFileMiddleware from "./logic/middlewares/uploadFile.middleware";
-import readActiveSessionHandler from "./logic/handlers/readActiveSession.handler";
-import readStagedStudentsHandler from "./logic/handlers/readStagedStudents.handler";
-import readMappedStudentsHandler from "./logic/handlers/readMappedStudents.handler";
+import readActiveSessionHandler from "./logic/handlers/fetchActive.handler";
+import fetchPaginatedStagedStudentsHandler from "./logic/handlers/fetchPaginatedStagedStudents.handler";
+import readMappedStudentsHandler from "./logic/handlers/fetchPaginatedMappedStudents";
 import ensureFileIsExcelMiddleware from "./logic/middlewares/ensureFileIsExcel.middleware";
 import ensureFileUploadedMiddleware from "./logic/middlewares/ensureFileUploaded.middleware";
 import checkActiveSessionMiddleware from "./logic/middlewares/checkActiveSession.middleware";
@@ -32,20 +28,16 @@ export default (router: Router) => {
    */
   router.post(
     "/start",
-    // Ensure user is authorized
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Ensure there is no active registration session
-    asyncHandler(checkActiveSessionMiddleware(false)),
 
-    // Validate the uploaded excel file
+    checkActiveSessionMiddleware(false),
+
     uploadFileMiddleware,
     ensureFileUploadedMiddleware,
     asyncHandler(ensureFileIsExcelMiddleware),
 
-    // Read students data from the uploaded excel file
     asyncHandler(readStudentsFromExcelMiddlerware),
 
-    // Start the registration session
     asyncHandler(startSessionHandler)
   );
 
@@ -96,9 +88,7 @@ export default (router: Router) => {
     // Ensure user is authorized
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
     // Check if there is an active registration session
-    asyncHandler(checkActiveSessionMiddleware(true)),
-
-    // Commit the staged students
+    checkActiveSessionMiddleware(true),
     asyncHandler(precommitHandler)
   );
 
@@ -107,14 +97,9 @@ export default (router: Router) => {
    */
   router.post(
     "/cancel",
-
-    // Ensure user is authorized
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Check if there is an active registration session
-    asyncHandler(checkActiveSessionMiddleware(true)),
-
-    // Cancel the active registration session
-    asyncHandler(cancelSessionHandler)
+    checkActiveSessionMiddleware(true),
+    asyncHandler(cancelRegistrationSessionHandler)
   );
 
   /**
@@ -122,13 +107,8 @@ export default (router: Router) => {
    */
   router.get(
     "/active",
-
-    // Ensure user is authorized
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Check if there is an active registration session
-    asyncHandler(checkActiveSessionMiddleware(true)),
-
-    // Read and return the active registration session
+    checkActiveSessionMiddleware(true),
     asyncHandler(readActiveSessionHandler)
   );
 
@@ -137,16 +117,9 @@ export default (router: Router) => {
    */
   router.get(
     "/active/staged",
-    // Ensure user is authorized
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Check if there is an active registration session
-    asyncHandler(checkActiveSessionMiddleware(true)),
-
-    // Validate the page and pageSize query parameters
-    paginationQueryParamsMiddleware,
-
-    // Read and return the staged students
-    asyncHandler(readStagedStudentsHandler)
+    checkActiveSessionMiddleware(true),
+    fetchPaginatedStagedStudentsHandler
   );
 
   /**
@@ -154,15 +127,8 @@ export default (router: Router) => {
    */
   router.get(
     "/active/mapped",
-    // Ensure user is authorized
     checkRole([Role.EMPLOYEE, Role.ADMIN]),
-    // Check if there is an active registration session
-    asyncHandler(checkActiveSessionMiddleware(true)),
-
-    // Validate the page and pageSize query parameters
-    paginationQueryParamsMiddleware,
-
-    // Read and return the mapped students
-    asyncHandler(readMappedStudentsHandler)
+    checkActiveSessionMiddleware(true),
+    readMappedStudentsHandler
   );
 };

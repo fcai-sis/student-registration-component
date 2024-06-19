@@ -1,16 +1,16 @@
-import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 
 import logger from "../../../../core/logger";
 import unsetMapping from "../../data/types/unsetMapping.type";
 import { DBLock, IStudent } from "@fcai-sis/shared-models";
-import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
+import MappedStudentModel, {
+  StudentWithoutUser,
+} from "../../../common/data/models/mappedStudent.model";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 import { mapStagedStudent } from "../utils";
-import { UserModel } from "@fcai-sis/shared-models";
 
-type HandlerRequest = Request<{}, {}, {}>;
+type HandlerRequest = Request;
 
 /**
  * Saves the staged students in the current active registration session to the mapped students collection
@@ -48,12 +48,12 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
   if (unsetFields.length > 0) {
     logger.debug(`Unset fields found in the mapping: ${unsetFields}`);
     await DBLock.deleteOne({ lockName: "precommit" });
-    res.status(400).json({
+
+    return res.status(400).json({
       code: "unset-fields-in-mapping",
       message: "There are unset fields in the mapping",
       unsetFields,
     });
-    return;
   }
 
   // Get the staged students for the current active registration session
@@ -65,11 +65,11 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
   if (!stagedStudents) {
     logger.debug(`No staged students found`);
     await DBLock.deleteOne({ lockName: "precommit" });
-    res.status(400).json({
+
+    return res.status(400).json({
       code: "no-staged-students",
       message: "There are no staged students",
     });
-    return;
   }
 
   logger.debug(
@@ -77,7 +77,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
   );
 
   // Loop over the staged students and save them to the mapped students collection after mapping the fields using the mapping object and the excel columns headers
-  const mappedStudents: IStudent[] = [];
+  const mappedStudents: StudentWithoutUser[] = [];
 
   // TODO: Type the errors array properly
   const errors: any[] = [];
@@ -91,7 +91,6 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
       const mappedStudent = mapStagedStudent(stagedStudent.student, mapping);
       mappedStudents.push(mappedStudent);
     } catch (error) {
-      logger.debug(`Error mapping the staged student: ${stagedStudent}`);
       errors.push(`Error mapping the staged student: ${stagedStudent}`);
       continue;
     }
@@ -114,17 +113,8 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
     // Try to save the mapped student to the mapped students collection
     // If there is an error, catch it and add it to the errors array, which is guaranteed to be empty
     try {
-      const studentPassword = mappedStudent.studentId;
-      const hashedPassword = await bcrypt.hash(studentPassword, 10);
-      // Create a user for each mapped student
-      const user = await UserModel.create({
-        // Default password is the student ID
-        password: hashedPassword,
-      });
-
       await MappedStudentModel.create({
         ...mappedStudent,
-        userId: user._id,
       });
     } catch (error: any) {
       // Get the row that caused the error, and a human readable error message describing the error, and add it to the errors array

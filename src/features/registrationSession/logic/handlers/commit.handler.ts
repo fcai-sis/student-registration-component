@@ -1,10 +1,16 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 
 import logger from "../../../../core/logger";
 import StagedStudentModel from "../../data/models/stagedStudents.model";
 import RegistrationSessionModel from "../../data/models/registrationSession.model";
 import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
-import { AcademicStudentModel, StudentModel } from "@fcai-sis/shared-models";
+import {
+  AcademicStudentModel,
+  IAcademicStudent,
+  StudentModel,
+  UserModel,
+} from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{}, {}, {}>;
 
@@ -12,7 +18,7 @@ type HandlerRequest = Request<{}, {}, {}>;
  * Saves the staged students in the current active registration session to the actual students collection.
  * The active registration session is then marked as inactive.
  */
-const handler = async (_: HandlerRequest, res: Response) => {
+const commitHandler = async (_: HandlerRequest, res: Response) => {
   // Find the current active registration session
   const currentActiveSession = await RegistrationSessionModel.findOne({
     active: true,
@@ -42,37 +48,24 @@ const handler = async (_: HandlerRequest, res: Response) => {
   }
 
   // Copy the mapped students to the students collection
-  const insertResult = await StudentModel.insertMany(mappedStudents);
-
-  // If the insert failed, return an error
-  if (!insertResult) {
-    logger.error(
-      `Failed to insert mapped students into the students collection`
-    );
-    res.status(500).json({
-      code: "failed-insert-mapped-students",
-      message: "Failed to insert mapped students into the students collection",
+  for (const mappedStudent of mappedStudents) {
+    const studentPassword = await bcrypt.hash(mappedStudent.studentId, 10);
+    const user = new UserModel({ password: studentPassword });
+    await user.save();
+    const student = new StudentModel({
+      ...mappedStudent.toJSON(),
+      user: user._id,
     });
-    return;
-  }
-
-  for (const student of insertResult) {
-    // create a new AcademicStudent document for each student
-    const academicStudent = new AcademicStudentModel({
+    await student.save();
+    await new AcademicStudentModel({
       student: student._id,
-    });
-
-    await academicStudent.save();
+      currentGpa: 4.0,
+    }).save();
   }
-
-  logger.debug(
-    `Inserted ${insertResult.length} mapped students into the students collection`
-  );
 
   // End the current active registration session
   currentActiveSession.active = false;
   currentActiveSession.endDate = new Date();
-
   await currentActiveSession.save();
 
   // Clear the staged students and mapped students for the next registration session
@@ -85,4 +78,4 @@ const handler = async (_: HandlerRequest, res: Response) => {
   });
 };
 
-export default handler;
+export default commitHandler;
