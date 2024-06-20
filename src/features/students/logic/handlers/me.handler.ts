@@ -11,13 +11,13 @@ type HandlerRequest = Request<
 >;
 
 /*
- * Find student by Id
+ * Get the current student
  * */
-const meHandler = async (req: HandlerRequest, res: Response) => {
+const fetchMeHandler = async (req: HandlerRequest, res: Response) => {
   const { userId } = req.body.user;
 
   // read the student from the db
-  const student = await StudentModel.findOne({ userId });
+  const student = await StudentModel.findOne({ user: userId });
 
   if (!student) {
     return res.status(404).json({
@@ -41,10 +41,18 @@ const meHandler = async (req: HandlerRequest, res: Response) => {
 
   return res.status(200).send({
     student: {
-      ...student.toObject(),
-      academicStudentData,
+      ...student.toJSON(),
+      user: undefined,
+      _id: undefined,
+      __v: undefined,
+      ...{
+        ...academicStudentData.toJSON(),
+        student: undefined,
+        _id: undefined,
+        __v: undefined,
+      },
     },
   });
 };
 
-export default meHandler;
+export default fetchMeHandler;

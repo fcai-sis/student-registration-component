@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import {
   AcademicStudentModel,
+  AcademicStudentType,
   IAcademicStudent,
   IStudent,
   IUser,
   StudentModel,
+  StudentType,
   UserModel,
+  UserType,
 } from "@fcai-sis/shared-models";
 import bcrypt from "bcrypt";
 
@@ -23,14 +26,14 @@ type HandlerRequest = Request<
 const createStudentHandler = async (req: HandlerRequest, res: Response) => {
   const { student } = req.body;
 
-  const user = new UserModel<Partial<IUser>>({
+  const user = await UserModel.create<UserType>({
     password: await bcrypt.hash(student.studentId!, 10),
   });
 
-  const createdStudent = await new StudentModel<Partial<IStudent>>({
+  const createdStudent = await StudentModel.create<StudentType>({
     ...student,
     user: user._id,
-  }).save();
+  });
 
   if (!createdStudent) {
     return res.status(500).json({
@@ -39,22 +42,21 @@ const createStudentHandler = async (req: HandlerRequest, res: Response) => {
     });
   }
 
-  const academicStudent = await new AcademicStudentModel<
-    Partial<IAcademicStudent>
-  >({
-    student: createdStudent._id,
-  }).save();
+  const academicStudent =
+    await AcademicStudentModel.create<AcademicStudentType>({
+      student: createdStudent._id,
+    });
 
   const response = {
     student: {
       ...createdStudent.toJSON(),
       _id: undefined,
       __v: undefined,
-    },
-    academicDetails: {
-      ...academicStudent.toJSON(),
-      _id: undefined,
-      __v: undefined,
+      ...{
+        ...academicStudent.toJSON(),
+        _id: undefined,
+        __v: undefined,
+      },
     },
   };
 
