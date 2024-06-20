@@ -10,7 +10,8 @@
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production node --env-file=.env dist/index.js",
     "predev": "npm run build",
-    "dev": "concurrently \"npx tsc -w\" \"nodemon\""
+    "dev": "concurrently \"npx tsc -w\" \"nodemon\"",
+    "custom:resetStudentRegistration": "ts-node scripts/resetRegistration.script.ts"
   },
   "keywords": [],
   "author": "",

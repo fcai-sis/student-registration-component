@@ -6,9 +6,9 @@ import logger from "./core/logger";
 /**
  * Connect to MongoDB
  */
-const connectMongo = async (): Promise<Mongoose> => {
+const connectMongo = async (mongoUri?: string): Promise<Mongoose> => {
   try {
-    const db = await connect(env.MONGO_URI!);
+    const db = await connect(mongoUri || env.MONGO_URI!);
     logger.info("MongoDB connected");
     return db;
   } catch (err) {
