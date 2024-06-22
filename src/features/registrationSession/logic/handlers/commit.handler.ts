@@ -7,7 +7,7 @@ import RegistrationSessionModel from "../../data/models/registrationSession.mode
 import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
 import {
   AcademicStudentModel,
-  IAcademicStudent,
+  BylawModel,
   StudentModel,
   UserModel,
 } from "@fcai-sis/shared-models";
@@ -52,9 +52,19 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
     const studentPassword = await bcrypt.hash(mappedStudent.studentId, 10);
     const user = new UserModel({ password: studentPassword });
     await user.save();
+    // Assign the latest bylaw to this student
+    const latestBylaw = await BylawModel.findOne({}).sort({ createdAt: -1 });
+    if (!latestBylaw) {
+      res.status(400).json({
+        code: "no-bylaw",
+        message: "There is no bylaw to assign to the student",
+      });
+      return;
+    }
     const student = new StudentModel({
       ...mappedStudent.toJSON(),
       user: user._id,
+      bylaw: latestBylaw._id,
     });
     await student.save();
     await new AcademicStudentModel({
