@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import {
   AcademicStudentModel,
   AcademicStudentType,
-  IAcademicStudent,
+  BylawModel,
   IStudent,
-  IUser,
   StudentModel,
   StudentType,
   UserModel,
@@ -30,9 +29,19 @@ const createStudentHandler = async (req: HandlerRequest, res: Response) => {
     password: await bcrypt.hash(student.studentId!, 10),
   });
 
+  const latestBylaw = await BylawModel.findOne({}).sort({ createdAt: -1 });
+
+  if (!latestBylaw) {
+    return res.status(400).json({
+      code: "no-bylaw",
+      message: "There is no bylaw to assign to the student",
+    });
+  }
+
   const createdStudent = await StudentModel.create<StudentType>({
     ...student,
     user: user._id,
+    bylaw: latestBylaw._id,
   });
 
   if (!createdStudent) {
