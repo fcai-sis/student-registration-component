@@ -1,7 +1,10 @@
 import { StudentType } from "@fcai-sis/shared-models";
 
 export const studentLocalizedFields: {
-  [key in keyof Omit<StudentType, "user">]: { ar: string; en: string };
+  [key in keyof Omit<StudentType, "user" | "bylaw">]: {
+    ar: string;
+    en: string;
+  };
 } = {
   address: {
     ar: "العنوان",
