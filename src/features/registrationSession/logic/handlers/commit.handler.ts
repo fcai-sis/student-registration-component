@@ -8,6 +8,8 @@ import MappedStudentModel from "../../../common/data/models/mappedStudent.model"
 import {
   AcademicStudentModel,
   BylawModel,
+  DepartmentModel,
+  ProgramEnum,
   StudentModel,
   UserModel,
 } from "@fcai-sis/shared-models";
@@ -69,7 +71,9 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
     await student.save();
     await new AcademicStudentModel({
       student: student._id,
-      currentGpa: 4.0,
+      major: await DepartmentModel.findOne({
+        program: ProgramEnum[0],
+      }),
     }).save();
   }
 
