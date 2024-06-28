@@ -29,7 +29,7 @@ const fetchMeHandler = async (req: HandlerRequest, res: Response) => {
 
   const academicStudentData = await AcademicStudentModel.findOne({
     student: student._id,
-  });
+  }).populate("major");
 
   if (!student) {
     return res.status(404).json({
@@ -50,6 +50,11 @@ const fetchMeHandler = async (req: HandlerRequest, res: Response) => {
         student: undefined,
         _id: undefined,
         __v: undefined,
+        major: {
+          ...academicStudentData.major.toJSON(),
+          _id: undefined,
+          __v: undefined,
+        },
       },
     },
   });
