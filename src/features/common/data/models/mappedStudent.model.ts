@@ -13,6 +13,31 @@ import {
 } from "@fcai-sis/shared-models";
 
 export const mappedStudentModelName = "MappedStudent";
+const nationalityMapping: { [key: number]: string } = {
+  1: "EGYPTIAN",
+  2: "BAHRAINI",
+  3: "COMORAN",
+  4: "DJIBOUTIAN",
+  5: "ALGERIAN",
+  6: "IRAQI",
+  7: "JORDANIAN",
+  8: "KUWAITI",
+  9: "LEBANESE",
+  10: "LIBYAN",
+  11: "MAURITANIAN",
+  12: "MOROCCAN",
+  13: "OMANI",
+  14: "PALESTINIAN",
+  15: "QATARI",
+  16: "SAUDI",
+  17: "SOMALI",
+  18: "SUDANESE",
+  19: "SYRIAN",
+  20: "TUNISIAN",
+  21: "EMIRATI",
+  22: "YEMENI",
+  23: "FOREIGN",
+};
 
 export type StudentWithoutUser = Omit<
   IStudent,
@@ -179,14 +204,11 @@ const mappedStudentSchema = new mongoose.Schema<StudentWithoutUser>({
     enum: NationalityEnum,
     set: (v: number | string) => {
       const value = typeof v === "number" ? v : parseInt(v);
-      switch (value) {
-        case 1:
-          return NationalityEnum[0];
-        case 2:
-          return NationalityEnum[1];
-        default:
-          return undefined;
+      const nationality = nationalityMapping[value];
+      if (!nationality) {
+        throw new Error("Invalid numeric value for nationality");
       }
+      return nationality;
     },
   },
   address: {
