@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { AcademicStudentModel, StudentModel } from "@fcai-sis/shared-models";
+import {
+  AcademicStudentModel,
+  ProgramEnum,
+  StudentModel,
+} from "@fcai-sis/shared-models";
 import { TokenPayload } from "@fcai-sis/shared-middlewares";
 
 type HandlerRequest = Request<
@@ -50,10 +54,12 @@ const fetchMeHandler = async (req: HandlerRequest, res: Response) => {
         student: undefined,
         _id: undefined,
         __v: undefined,
-        major: {
-          ...academicStudentData.major.toJSON(),
-          _id: undefined,
-          __v: undefined,
+        major: academicStudentData.major ?? {
+          name: {
+            en: "No Major",
+            ar: "بدون تخصص",
+          },
+          program: ProgramEnum[0],
         },
       },
     },

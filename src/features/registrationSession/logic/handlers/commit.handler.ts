@@ -71,9 +71,6 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
     await student.save();
     await new AcademicStudentModel({
       student: student._id,
-      major: await DepartmentModel.findOne({
-        program: ProgramEnum[0],
-      }),
     }).save();
   }
 

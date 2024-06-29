@@ -56,9 +56,6 @@ const createStudentHandler = async (req: HandlerRequest, res: Response) => {
   const academicStudent =
     await AcademicStudentModel.create<AcademicStudentType>({
       student: createdStudent._id,
-      major: await DepartmentModel.findOne({
-        program: ProgramEnum[0],
-      }),
     });
 
   const response = {
