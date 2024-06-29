@@ -9,6 +9,7 @@ import {
   AcademicStudentModel,
   BylawModel,
   DepartmentModel,
+  IByLaw,
   ProgramEnum,
   StudentModel,
   UserModel,
@@ -55,7 +56,9 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
     const user = new UserModel({ password: studentPassword });
     await user.save();
     // Assign the latest bylaw to this student
-    const latestBylaw = await BylawModel.findOne({}).sort({ createdAt: -1 });
+    const latestBylaw: IByLaw = await BylawModel.findOne({}).sort({
+      createdAt: -1,
+    });
     if (!latestBylaw) {
       res.status(400).json({
         code: "no-bylaw",
@@ -71,6 +74,7 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
     await student.save();
     await new AcademicStudentModel({
       student: student._id,
+      gpa: latestBylaw.gpaScale,
     }).save();
   }
 

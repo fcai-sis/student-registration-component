@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import {
   AcademicStudentModel,
   AcademicStudentType,
+  ByLawType,
   BylawModel,
   DepartmentModel,
+  IByLaw,
   IStudent,
   ProgramEnum,
   StudentModel,
@@ -31,7 +33,9 @@ const createStudentHandler = async (req: HandlerRequest, res: Response) => {
     password: await bcrypt.hash(student.studentId!, 10),
   });
 
-  const latestBylaw = await BylawModel.findOne({}).sort({ createdAt: -1 });
+  const latestBylaw: IByLaw = await BylawModel.findOne({}).sort({
+    createdAt: -1,
+  });
 
   if (!latestBylaw) {
     return res.status(400).json({
@@ -56,6 +60,7 @@ const createStudentHandler = async (req: HandlerRequest, res: Response) => {
   const academicStudent =
     await AcademicStudentModel.create<AcademicStudentType>({
       student: createdStudent._id,
+      gpa: latestBylaw.gpaScale,
     });
 
   const response = {
