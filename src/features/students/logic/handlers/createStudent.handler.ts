@@ -8,6 +8,7 @@ import {
   IByLaw,
   IStudent,
   ProgramEnum,
+  RoleEnum,
   StudentModel,
   StudentType,
   UserModel,
@@ -31,6 +32,7 @@ const createStudentHandler = async (req: HandlerRequest, res: Response) => {
 
   const user = await UserModel.create<UserType>({
     password: await bcrypt.hash(student.studentId!, 10),
+    role: RoleEnum[1],
   });
 
   const latestBylaw: IByLaw = await BylawModel.findOne({}).sort({

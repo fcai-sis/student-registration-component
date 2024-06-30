@@ -11,6 +11,7 @@ import {
   DepartmentModel,
   IByLaw,
   ProgramEnum,
+  RoleEnum,
   StudentModel,
   UserModel,
 } from "@fcai-sis/shared-models";
@@ -53,7 +54,10 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
   // Copy the mapped students to the students collection
   for (const mappedStudent of mappedStudents) {
     const studentPassword = await bcrypt.hash(mappedStudent.studentId, 10);
-    const user = new UserModel({ password: studentPassword });
+    const user = new UserModel({
+      password: studentPassword,
+      role: RoleEnum[1],
+    });
     await user.save();
     // Assign the latest bylaw to this student
     const latestBylaw: IByLaw = await BylawModel.findOne({}).sort({
