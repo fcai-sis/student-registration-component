@@ -54,8 +54,8 @@ export default (router: Router) => {
 
     // Validate the mapping
     validateMappingJsonMiddleware,
-    validateMappingAgainstStudentModelMiddleware,
-    validateMappingAgainstExcelFileMiddleware,
+    validateMappingAgainstStudentModelMiddleware as any,
+    validateMappingAgainstExcelFileMiddleware as any,
 
     // Update the mapping
     asyncHandler(updateMappingHandler)
