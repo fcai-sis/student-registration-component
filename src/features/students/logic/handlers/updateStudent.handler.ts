@@ -1,5 +1,11 @@
 import { Request, Response } from "express";
-import { StudentModel } from "@fcai-sis/shared-models";
+import {
+  GenderEnumType,
+  NationalityEnumType,
+  ReligionEnumType,
+  ScientificDivision,
+  StudentModel,
+} from "@fcai-sis/shared-models";
 
 type UpdateHandlerRequest = Request<
   {
@@ -8,9 +14,9 @@ type UpdateHandlerRequest = Request<
   {},
   {
     fullName?: string;
-    groupCode?: boolean;
-    gender?: "male" | "female" | "other";
-    religion?: "christian" | "muslim" | "other";
+    scientificDivision?: ScientificDivision;
+    gender?: GenderEnumType;
+    religion?: ReligionEnumType;
     nationalId?: string;
     administration?: string;
     directorate?: string;
@@ -21,7 +27,7 @@ type UpdateHandlerRequest = Request<
     birthDay?: number;
     birthPlace?: string;
     governorateId?: string;
-    nationality?: "egyptian" | "foreigner";
+    nationality?: NationalityEnumType;
     address?: string;
   }
 >;
@@ -30,7 +36,7 @@ const handler = async (req: UpdateHandlerRequest, res: Response) => {
   const studentId = req.params.studentId;
   const {
     fullName,
-    groupCode,
+    scientificDivision,
     gender,
     religion,
     nationalId,
@@ -51,7 +57,7 @@ const handler = async (req: UpdateHandlerRequest, res: Response) => {
     { studentId },
     {
       ...(fullName && { fullName }),
-      ...(groupCode && { groupCode }),
+      ...(scientificDivision && { scientificDivision }),
       ...(gender && { gender }),
       ...(religion && { religion }),
       ...(nationalId && { nationalId }),
@@ -67,7 +73,7 @@ const handler = async (req: UpdateHandlerRequest, res: Response) => {
       ...(nationality && { nationality }),
       ...(address && { address }),
     },
-    { new: true }
+    { new: true, runValidators: true }
   );
 
   if (!student) {
