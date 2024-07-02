@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
-import RegistrationSessionModel from '../../data/models/registrationSession.model';
-import MappedStudentModel from '../../../common/data/models/mappedStudent.model';
+import RegistrationSessionModel from "../../data/models/registrationSession.model";
+import MappedStudentModel from "../../../common/data/models/mappedStudent.model";
 
 type HandlerRequest = Request;
 
@@ -17,8 +17,12 @@ const handler = async (req: HandlerRequest, res: Response) => {
   // If there is no active registration session, throw an error
   if (!currentActiveSession) {
     res.status(400).json({
-      code: "no-active-registration-session",
-      message: "There is no active registration session",
+      errors: [
+        {
+          code: "no-active-registration-session",
+          message: "There is no active registration session",
+        },
+      ],
     });
     return;
   }

@@ -45,10 +45,12 @@ const startHandler = async (req: HandlerRequest, res: Response) => {
   // If the creation failed, throw an error
   if (!registrationSessionCreateResult) {
     res.status(500).json({
-      error: {
-        message:
-          "Failed to create registration session, please contact support.",
-      },
+      errors: [
+        {
+          message:
+            "Failed to create registration session, please contact support.",
+        },
+      ],
     });
   }
 
@@ -72,9 +74,11 @@ const startHandler = async (req: HandlerRequest, res: Response) => {
   // If the creation failed, throw an error
   if (!stagedStudentsCreateResult) {
     res.status(500).json({
-      error: {
-        message: "Failed to create staged students, please contact support.",
-      },
+      errors: [
+        {
+          message: "Failed to create staged students, please contact support.",
+        },
+      ],
     });
   }
 

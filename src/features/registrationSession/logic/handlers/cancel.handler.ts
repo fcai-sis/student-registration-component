@@ -24,8 +24,13 @@ const cancelRegistrationSessionHandler = async (
     );
   } catch (error) {
     return res.status(500).json({
-      code: "registration-session-cancellation-failed",
-      message: "Failed to cancel registration session, please contact support.",
+      errors: [
+        {
+          code: "registration-session-cancellation-failed",
+          message:
+            "Failed to cancel registration session, please contact support.",
+        },
+      ],
     });
   }
 

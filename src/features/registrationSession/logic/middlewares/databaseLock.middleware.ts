@@ -1,13 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { DBLock } from "@fcai-sis/shared-models";
 
-
 export default function databaseLockMiddleware(lockName: string) {
-  return async (
-    _: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  return async (_: Request, res: Response, next: NextFunction) => {
     let lock = await DBLock.findOne({ lockName });
 
     if (!lock) {
@@ -18,7 +13,11 @@ export default function databaseLockMiddleware(lockName: string) {
     }
 
     return res.status(409).json({
-      message: `The lock ${lockName} is already locked.`,
+      errors: [
+        {
+          message: `The lock ${lockName} is already locked.`,
+        },
+      ],
     });
   };
 }

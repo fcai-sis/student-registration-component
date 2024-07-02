@@ -21,17 +21,21 @@ const middleware = (checkIfExists: boolean) =>
       // If there is no active registration session and we are checking for an active registration session, return an error
       if (checkIfExists && !thereIsAnActiveSession)
         return res.status(404).json({
-          error: {
-            message: "There is no active registration session",
-          },
+          errors: [
+            {
+              message: "There is no active registration session",
+            },
+          ],
         });
 
       // If there is an active registration session and we are checking for no active registration session, return an error
       if (!checkIfExists && thereIsAnActiveSession)
         return res.status(409).json({
-          error: {
-            message: "There is already an active registration session",
-          },
+          errors: [
+            {
+              message: "There is already an active registration session",
+            },
+          ],
         });
 
       next();

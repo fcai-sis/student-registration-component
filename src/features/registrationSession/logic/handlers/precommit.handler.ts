@@ -26,8 +26,12 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
     logger.debug(`No active registration session found`);
     await DBLock.deleteOne({ lockName: "precommit" });
     res.status(400).json({
-      code: "no-active-registration-session",
-      message: "There is no active registration session",
+      errors: [
+        {
+          code: "no-active-registration-session",
+          message: "There is no active registration session",
+        },
+      ],
     });
     return;
   }
@@ -50,9 +54,13 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
     await DBLock.deleteOne({ lockName: "precommit" });
 
     return res.status(400).json({
-      code: "unset-fields-in-mapping",
-      message: "There are unset fields in the mapping",
-      unsetFields,
+      errors: [
+        {
+          code: "unset-fields-in-mapping",
+          message: "There are unset fields in the mapping",
+          unsetFields,
+        },
+      ],
     });
   }
 
@@ -67,8 +75,12 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
     await DBLock.deleteOne({ lockName: "precommit" });
 
     return res.status(400).json({
-      code: "no-staged-students",
-      message: "There are no staged students",
+      errors: [
+        {
+          code: "no-staged-students",
+          message: "There are no staged students",
+        },
+      ],
     });
   }
 
@@ -119,8 +131,6 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
     } catch (error: any) {
       // Get the row that caused the error, and a human readable error message describing the error, and add it to the errors array
       const index = mappedStudents.indexOf(mappedStudent);
-
-      console.log("THE FUCKING ERROR", JSON.stringify(error));
 
       const e = {
         row: index + 1,

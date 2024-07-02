@@ -32,8 +32,12 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
   if (!currentActiveSession) {
     logger.debug(`No active registration session found`);
     res.status(400).json({
-      code: "no-active-registration-session",
-      message: "There is no active registration session",
+      errors: [
+        {
+          code: "no-active-registration-session",
+          message: "There is no active registration session",
+        },
+      ],
     });
     return;
   }
@@ -45,8 +49,12 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
   if (mappedStudents.length === 0) {
     logger.debug(`No mapped students found`);
     res.status(400).json({
-      code: "no-mapped-students",
-      message: "There are no mapped students to commit",
+      errors: [
+        {
+          code: "no-mapped-students",
+          message: "There are no mapped students to commit",
+        },
+      ],
     });
     return;
   }
@@ -65,8 +73,12 @@ const commitHandler = async (_: HandlerRequest, res: Response) => {
     });
     if (!latestBylaw) {
       res.status(400).json({
-        code: "no-bylaw",
-        message: "There is no bylaw to assign to the student",
+        errors: [
+          {
+            code: "no-bylaw",
+            message: "There is no bylaw to assign to the student",
+          },
+        ],
       });
       return;
     }

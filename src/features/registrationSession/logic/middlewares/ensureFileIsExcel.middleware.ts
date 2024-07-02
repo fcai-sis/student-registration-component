@@ -39,9 +39,11 @@ const ensureFileIsExcelMiddleware = async (
 
     // If the parsing failed, the file is not a valid excel file
     res.status(400).json({
-      error: {
-        message: "File must be an excel file",
-      },
+      errors: [
+        {
+          message: "File must be an excel file",
+        },
+      ],
     });
 
     return;

@@ -2,12 +2,9 @@ import { Request, Response } from "express";
 import {
   AcademicStudentModel,
   AcademicStudentType,
-  ByLawType,
   BylawModel,
-  DepartmentModel,
   IByLaw,
   IStudent,
-  ProgramEnum,
   RoleEnum,
   StudentModel,
   StudentType,
@@ -41,8 +38,12 @@ const createStudentHandler = async (req: HandlerRequest, res: Response) => {
 
   if (!latestBylaw) {
     return res.status(400).json({
-      code: "no-bylaw",
-      message: "There is no bylaw to assign to the student",
+      errors: [
+        {
+          code: "no-bylaw",
+          message: "There is no bylaw to assign to the student",
+        },
+      ],
     });
   }
 
@@ -54,8 +55,12 @@ const createStudentHandler = async (req: HandlerRequest, res: Response) => {
 
   if (!createdStudent) {
     return res.status(500).json({
-      code: "student-creation-failed",
-      message: "Failed to create student, please contact support.",
+      errors: [
+        {
+          code: "student-creation-failed",
+          message: "Failed to create student, please contact support.",
+        },
+      ],
     });
   }
 
