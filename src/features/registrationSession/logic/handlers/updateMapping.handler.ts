@@ -17,9 +17,9 @@ const handler = async (req: HandlerRequest, res: Response) => {
   });
 
   if (!activeRegistrationSession) {
-    return res
-      .status(404)
-      .json({ error: "No active registration session found" });
+    return res.status(404).json({
+      errors: [{ message: "There is no active registration session" }],
+    });
   }
 
   // update only the keys that are present in the mapping

@@ -16,9 +16,11 @@ const ensureFileUploadedMiddleware = (
     logger.debug(`No file uploaded`);
 
     res.status(400).json({
-      error: {
-        message: "File is required",
-      },
+      errors: [
+        {
+          message: "File is required",
+        },
+      ],
     });
     return;
   }

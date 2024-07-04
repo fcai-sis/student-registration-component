@@ -43,9 +43,13 @@ const middleware = (
       )}`
     );
     return res.status(400).send({
-      error: `The following fields are not present in the Student model: ${fieldsInMappingThatAreNotInStudentModel.join(
-        ", "
-      )}`,
+      errors: [
+        {
+          message: `The following fields are not present in the Student model: ${fieldsInMappingThatAreNotInStudentModel.join(
+            ", "
+          )}]`,
+        },
+      ],
     });
   }
 

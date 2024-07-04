@@ -1,6 +1,10 @@
 import paginate from "express-paginate";
 import { Request, Response } from "express";
-import { IStudent, StudentModel, StudentType } from "@fcai-sis/shared-models";
+import {
+  AcademicStudentModel,
+  DepartmentModel,
+  ProgramEnum,
+} from "@fcai-sis/shared-models";
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 
 type HandlerRequest = Request;
@@ -11,44 +15,74 @@ type HandlerRequest = Request;
 const fetchPaginatedStudents = [
   paginate.middleware(),
   asyncHandler(async (req: HandlerRequest, res: Response) => {
-    const departmentFilter = req.query.department;
-    const levelFilter = req.query.level;
-    const genderFilter = req.query.gender;
-    const queryFilter = req.query.query;
+    const departmentFilter = req.query.department as string | undefined;
+    const levelFilter = req.query.level as string | undefined;
+    const genderFilter = req.query.gender as string | undefined;
+    const queryFilter = req.query.query as string | undefined;
 
-    const filters: any[] = [];
+    const departmentQuery = departmentFilter
+      ? await DepartmentModel.findOne({
+          code: departmentFilter,
+        })
+      : null;
 
-    if (genderFilter)
-      filters.push({
-        gender: genderFilter,
-      });
+    const filters: any = {};
 
-    if (queryFilter)
-      filters.push({
-        // use the query filter on full name and student id and email and phone number
-        $or: [
-          { fullName: { $regex: queryFilter, $options: "i" } },
-          { studentId: { $regex: queryFilter, $options: "i" } },
-          { email: { $regex: queryFilter, $options: "i" } },
-          { phoneNumber: { $regex: queryFilter, $options: "i" } },
-        ],
-      });
-
-    const filter: any = {};
-
-    if (filters.length > 0) {
-      filter["$and"] = filters;
+    if (departmentQuery) {
+      filters["major"] = departmentQuery._id;
     }
 
-    const totalStudents = await StudentModel.countDocuments(filter);
+    if (levelFilter) {
+      filters["level"] = levelFilter;
+    }
 
-    const students = await StudentModel.find<IStudent>(filter)
-      .skip(req.skip ?? 0) // pagination
-      .limit(req.query.limit as unknown as number);
+    const academicStudents = await AcademicStudentModel.find(filters)
+      .populate({
+        path: "student",
+      })
+      .populate("major");
+
+    const filteredStudents = academicStudents.filter((academicStudent) => {
+      const { student } = academicStudent;
+
+      const genderMatch = genderFilter ? student.gender === genderFilter : true;
+
+      const queryMatch = queryFilter
+        ? new RegExp(queryFilter, "i").test(student.fullName) ||
+          new RegExp(queryFilter, "i").test(student.studentId) ||
+          new RegExp(queryFilter, "i").test(student.email) ||
+          new RegExp(queryFilter, "i").test(student.phoneNumber)
+        : true;
+
+      return genderMatch && queryMatch;
+    });
+
+    const paginatedStudents = filteredStudents.slice(
+      req.skip ?? 0,
+      (req.skip ?? 0) + (req.query.limit as unknown as number)
+    );
 
     return res.status(200).json({
-      students,
-      totalStudents,
+      students: paginatedStudents.map((academicStudent) => ({
+        ...academicStudent.student.toJSON(),
+        user: undefined,
+        _id: undefined,
+        __v: undefined,
+        ...{
+          ...academicStudent.toJSON(),
+          student: undefined,
+          _id: undefined,
+          __v: undefined,
+          major: academicStudent.major ?? {
+            name: {
+              en: "No Major",
+              ar: "بدون تخصص",
+            },
+            program: ProgramEnum[0],
+          },
+        },
+      })),
+      totalStudents: filteredStudents.length,
     });
   }),
 ];

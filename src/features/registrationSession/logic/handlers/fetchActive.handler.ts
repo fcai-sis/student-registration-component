@@ -22,8 +22,12 @@ const handler = async (_: HandlerRequest, res: Response) => {
   // If there is no active registration session, throw an error
   if (!result) {
     res.status(404).json({
-      code: "no-active-registration-session",
-      message: "There is no active registration session.",
+      errors: [
+        {
+          code: "no-active-registration-session",
+          message: "There is no active registration session.",
+        },
+      ],
     });
     return;
   }

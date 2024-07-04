@@ -19,8 +19,12 @@ const fetchPaginatedStagedStudentsHandler = [
 
     if (!currentActiveSession) {
       res.status(400).json({
-        code: "no-active-registration-session",
-        message: "There is no active registration session",
+        errors: [
+          {
+            code: "no-active-registration-session",
+            message: "There is no active registration session",
+          },
+        ],
       });
       return;
     }
@@ -33,8 +37,12 @@ const fetchPaginatedStagedStudentsHandler = [
 
     if (!stagedStudents) {
       res.status(400).json({
-        code: "no-staged-students",
-        message: "There are no staged students",
+        errors: [
+          {
+            code: "no-staged-students",
+            message: "There are no staged students",
+          },
+        ],
       });
       return;
     }
