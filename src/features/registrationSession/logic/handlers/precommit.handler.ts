@@ -136,6 +136,7 @@ const precommitHandler = async (_: HandlerRequest, res: Response) => {
         row: index + 1,
         // errors: Object.values(error).map((e: any) => e.message), // TODO: Map error messages to localized human readable messages
         errors: Object.values(error.errors).map((e: any) => e.message),
+        data: mappedStudent,
         // errors: [],
       };
 
