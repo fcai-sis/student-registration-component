@@ -21,7 +21,9 @@ const fetchMeHandler = async (req: HandlerRequest, res: Response) => {
   const { userId } = req.body.user;
 
   // read the student from the db
-  const student = await StudentModel.findOne({ user: userId });
+  const student = await StudentModel.findOne({ user: userId }).populate(
+    "bylaw"
+  );
 
   if (!student) {
     return res.status(404).json({
